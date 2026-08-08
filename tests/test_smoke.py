@@ -24,17 +24,25 @@ class TestRamsNet:
         torch = pytest.importorskip("torch")
         net = RamsNet(feat_dim=26, horizon=8, quantile=True)
         x = torch.randn(4, 24, 26)
-        m1, m2 = net(x)
+        m1, m2, m4 = net(x)
         assert m1.shape == (4, 24), f"M1 形状错误: {m1.shape}"
         assert m2.shape == (4, 2), f"M2 形状错误: {m2.shape}"
+        assert m4 is not None and m4.shape == (4, 4), f"M4 形状错误: {m4.shape}"
 
     def test_forward_small(self):
         torch = pytest.importorskip("torch")
         net = RamsNet(feat_dim=6, horizon=3, hidden=8, quantile=False)
         x = torch.randn(2, 10, 6)
-        m1, m2 = net(x)
+        m1, m2, m4 = net(x)
         assert m1.shape == (2, 3)
         assert m2.shape == (2, 2)
+        assert m4.shape == (2, 4)
+
+    def test_no_m4(self):
+        torch = pytest.importorskip("torch")
+        net = RamsNet(feat_dim=6, horizon=3, hidden=8, use_m4=False)
+        m1, m2, m4 = net(torch.randn(2, 10, 6))
+        assert m4 is None
 
     def test_parameters(self):
         torch = pytest.importorskip("torch")
@@ -46,7 +54,7 @@ class TestRamsNet:
     def test_predict_interval(self):
         torch = pytest.importorskip("torch")
         net = RamsNet(feat_dim=6, horizon=3, hidden=8, quantile=True)
-        m1, _ = net(torch.randn(2, 10, 6))
+        m1, _, _ = net(torch.randn(2, 10, 6))
         pred = net.predict_mean(m1)
         p10, p90 = net.predict_interval(m1)
         assert pred.shape == (2, 3)
@@ -82,11 +90,12 @@ class TestTensorBuilder:
 
         cfg = TensorConfig(T=12, H=3)
         ds = TensorBuilder(cfg).build(p)
-        X_tr, y_tr, s_tr = ds["train"]
+        X_tr, y_tr, s_tr, w_tr = ds["train"]
         # 合成表 3 深度 + 6 气象列 → feat_dim = 3 + 6 = 9
         assert X_tr.shape[2] == 9, f"feat_dim 应为 9 (3温+6气), 实际 {X_tr.shape[2]}"
         assert X_tr.shape[0] > 0
         assert s_tr is not None
+        assert w_tr is None  # 默认 warn_as_task=False
 
 
 class TestTrainer:
@@ -101,8 +110,11 @@ class TestTrainer:
         X = np.random.randn(64, 10, 6).astype(np.float32)
         y = np.random.randn(64, 3).astype(np.float32)
         s = np.random.randint(0, 2, 64)
+        w = np.random.randint(0, 4, 64)  # 预警标签（四级）
         tr = Trainer(model, w_m2=3.0)
-        tr.fit(X, y, s, X, y, s, epochs=2, batch_size=16, fast_dev_run=True)
-        res = tr.evaluate(X, y, s, y_sd=1.0)
+        tr.fit(X, y, s, X, y, s, warn_tr=w, warn_va=w, epochs=2, batch_size=16,
+               fast_dev_run=True)
+        res = tr.evaluate(X, y, s, w, y_sd=1.0)
         assert "rmse" in res and np.isfinite(res["rmse"])
         assert "acc" in res and np.isfinite(res["acc"])
+        assert "warn_acc" in res and np.isfinite(res["warn_acc"])

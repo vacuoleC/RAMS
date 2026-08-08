@@ -69,25 +69,48 @@ class M2Head(nn.Module):
         return self.mlp(h)
 
 
-class RamsNet(nn.Module):
-    """共享 backbone + M1/M2 双头（第一版多任务架构）。
+class M4Head(nn.Module):
+    """M4 藻华预警分级头（多分类：安全/注意/警告/危险）。
 
-    forward 返回 (m1_out, m2_out)；m1_out 为 (B, 3H) 分位数或 (B, H)。
+    用共享表征直接预测预警等级（文献共识：直接预测等级优于回归转阈值）。
+    """
+
+    def __init__(self, hidden: int, n_levels: int = 4):
+        super().__init__()
+        self.mlp = nn.Sequential(
+            nn.Linear(hidden, hidden), nn.ReLU(),
+            nn.Linear(hidden, n_levels),
+        )
+
+    def forward(self, h: torch.Tensor) -> torch.Tensor:
+        return self.mlp(h)
+
+
+class RamsNet(nn.Module):
+    """共享 backbone + M1/M2/M4 三头（多任务架构）。
+
+    forward 返回 (m1_out, m2_out, m4_out)：
+      - m1_out: (B, 3H) 分位数或 (B, H)
+      - m2_out: (B, n_classes) 分层分类
+      - m4_out: (B, n_levels) 预警分级（可选）
     """
 
     def __init__(self, feat_dim: int, horizon: int, hidden: int = 64,
                  n_layers: int = 1, quantile: bool = True, n_classes: int = 2,
-                 dropout: float = 0.0):
+                 n_levels: int = 4, use_m4: bool = True, dropout: float = 0.0):
         super().__init__()
         self.backbone = SharedGRU(feat_dim, hidden, n_layers, dropout)
         self.m1 = M1Head(hidden, horizon, quantile)
         self.m2 = M2Head(hidden, n_classes)
+        self.m4 = M4Head(hidden, n_levels) if use_m4 else None
         self.horizon = horizon
         self.quantile = quantile
+        self.use_m4 = use_m4
 
-    def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+    def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor | None]:
         h = self.backbone(x)
-        return self.m1(h), self.m2(h)
+        m4 = self.m4(h) if self.m4 is not None else None
+        return self.m1(h), self.m2(h), m4
 
     def predict_mean(self, m1_out: torch.Tensor) -> torch.Tensor:
         """从分位数输出取中位数预测。"""

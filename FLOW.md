@@ -79,7 +79,8 @@
 - 🔄 **3.2 Backbone**：`ChannelEmbedding`→`TemporalBlock`→`VerticalBlock`→`FusionBlock`，**打印验证参数量 ≈1.9M**。
   - **✅ 已实现（探索版）**：`rams/models/rams_net.py` 共享 GRU backbone（27,674 参数）。参数量约束已按新定位放宽（见架构蓝图 §5）。
 - 🔄 **3.3 五个头**：M1/M2/M3(GAT+贪心)/M4/M5。
-  - **✅ M1/M2 已实现**（M1 分位数回归 + M2 分层分类，多任务训练）。**待实现**：M3 GAT+贪心、M4 预警分级、M5 PCMCI+。
+  - **✅ M1/M2/M4 已实现**（M1 分位数回归 + M2 分层分类 + M4 预警分级，三头多任务训练）。M4 实证：测试 acc=0.939（见架构蓝图 §3.5）。
+  - **待实现**：M3 GAT+贪心、M5 PCMCI+。
 - 🔄 **3.4 训练编排**：`trainer.py` 两阶段（联合预训练→冻结微调），**必带 `fast_dev_run`**，接本地 MLflow。
   - **✅ 已实现**：`rams/training/trainer.py`（多任务 loss 加权 + 分位数损失 + fast_dev_run + 3-seed 支持）。**待补**：两阶段冻结微调、MLflow 接入。
   - **实证结果**：30 epoch 真实数据训练 → M1 RMSE=3.58、M2 acc=0.965、覆盖率 85%。

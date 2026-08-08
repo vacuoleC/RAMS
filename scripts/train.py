@@ -25,7 +25,9 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--w-m2", type=float, default=3.0, help="M2 分层任务权重")
+    parser.add_argument("--w-m4", type=float, default=2.0, help="M4 预警任务权重")
     parser.add_argument("--no-quantile", action="store_true", help="关闭分位数输出")
+    parser.add_argument("--no-warn", action="store_true", help="关闭 M4 预警任务")
     parser.add_argument("--fast-dev-run", action="store_true", help="冒烟模式")
     args = parser.parse_args()
 
@@ -33,29 +35,35 @@ def main() -> None:
     from rams.models.rams_net import RamsNet
     from rams.training.trainer import Trainer
 
-    cfg = TensorConfig(T=args.T, H=args.H)
+    cfg = TensorConfig(T=args.T, H=args.H, warn_as_task=not args.no_warn)
     ds = TensorBuilder(cfg).build(args.parquet)
-    (X_tr, y_tr, s_tr), (X_va, y_va, s_va), (X_te, y_te, s_te) = (
+    (X_tr, y_tr, s_tr, w_tr), (X_va, y_va, s_va, w_va), (X_te, y_te, s_te, w_te) = (
         ds["train"], ds["val"], ds["test"])
     print(f"数据: train {X_tr.shape} val {X_va.shape} test {X_te.shape}", flush=True)
 
     model = RamsNet(
         feat_dim=ds["feat_dim"], horizon=args.H,
         hidden=args.hidden, quantile=not args.no_quantile,
+        use_m4=not args.no_warn,
     )
     n_params = sum(p.numel() for p in model.parameters())
     print(f"模型参数量: {n_params:,}", flush=True)
 
-    trainer = Trainer(model, lr=args.lr, w_m2=args.w_m2)
+    trainer = Trainer(model, lr=args.lr, w_m2=args.w_m2, w_m4=args.w_m4)
     trainer.fit(X_tr, y_tr, s_tr, X_va, y_va, s_va,
+                warn_tr=w_tr if not args.no_warn else None,
+                warn_va=w_va if not args.no_warn else None,
                 epochs=args.epochs, batch_size=args.batch_size,
                 fast_dev_run=args.fast_dev_run)
 
     if not args.fast_dev_run:
-        res = trainer.evaluate(X_te, y_te, s_te, ds["y_sd"])
+        res = trainer.evaluate(X_te, y_te, s_te, w_te if not args.no_warn else None,
+                               ds["y_sd"])
         print("\n=== 测试结果 ===", flush=True)
         print(f"  M1 RMSE = {res['rmse']:.4f}（原始浓度单位）", flush=True)
         print(f"  M2 acc  = {res['acc']:.4f}", flush=True)
+        if "warn_acc" in res:
+            print(f"  M4 预警 acc = {res['warn_acc']:.4f}", flush=True)
         if "coverage" in res:
             print(f"  p10-p90 覆盖率 = {res['coverage']:.3f}", flush=True)
             print(f"  平均区间宽 = {res['interval_width']:.3f}", flush=True)
