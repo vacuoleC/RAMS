@@ -19,6 +19,18 @@
 | 0 | `.gitignore` | `./.gitignore` | ✅ | 0.1，含 `data/ *.xls* *.parquet __pycache__/ *.pt *.ckpt mlruns/ .venv/ outputs/` 等 |
 | 0 | `FLOW.md` / `LOG.md` 活文件副本 | `./FLOW.md`、`./LOG.md` | ✅ | 0.1，由 `.clinerules/` 复制到项目根；后续只改根版本 |
 | 0 | `README.md` | `./README.md` | ✅ | 0.1（已在之前产出） |
+| 0 | Git 初始化（首次提交 `3a169fe`） | `./.git/` | ✅ | 0.3，`data/` 不被追踪，保密满足 |
+| 1 | 数据预处理模块 | `rams/data/preprocessing.py` | ✅ | 探索推进，真实数据跑通，产出 standard.parquet（258,542×23） |
+| 1 | 张量构建模块 | `rams/data/tensor_builder.py` | ✅ | 探索推进，长表→(B,T,D,C) + 分层标签，冒烟通过 |
+| 1 | 数据画像脚本 | `scripts/explore/profile_data.py` | ✅ | 探索推进，无原始数值泄露 |
+| 3 | 模型（共享 GRU + M1/M2 双头 + 分位数） | `rams/models/rams_net.py` | ✅ | 探索推进，27,674 参数 |
+| 3 | 训练编排 | `rams/training/trainer.py` | ✅ | 探索推进，30ep RMSE=3.58/acc=0.965/覆盖85% |
+| 3 | CLI 入口 | `scripts/build_dataset.py`、`scripts/train.py` | ✅ | 探索推进 |
+| 3 | 冒烟测试 | `tests/test_smoke.py` | ✅ | 6/6 通过 |
+| 3 | 探索测试脚本 | `scripts/explore/`（p1-p4,m4,prep,profile） | ✅ | H100 实证 |
+| 6 | 架构蓝图 | `docs/architecture_blueprint.md` | ✅ | 2026-08-09 |
+| 6 | 文献综述 | `docs/literature_review.md` | ✅ | 2026-08-09 |
+| 6 | 站位计划 | `docs/standing_plan.md` | ✅ | 2026-08-09 |
 | | | | | |
 
 ---
@@ -41,6 +53,33 @@
 > 每完成一步追加一条。模板见文末。
 
 <!-- 在这一行下方追加新记录 -->
+
+### [2026-08-09 04:05] Stage 0-3 探索推进 —— 算力机实证 + 核心代码 + Git 初始化
+- 目标：按新需求（真实项目/五任务全做/算力充足/追求最大精度/不追迁移）在 sensecore H100 上探索性推进，验证架构方向并落地核心代码
+- 前置：用户明确了项目新定位，确定了算力环境（sensecore 商汤 H100，可扩容）；数据上传至 `/data/RAMS/`
+- 探索测试（H100 实证，3-seed）：
+  - P1 数据管线：发现**各深度层时间戳错位 4-5 分钟（精确交集=0）**，floor 到 3h 网格后 97.8% 对齐 → 清洗脚本用 merge_asof
+  - P2 时序基线：GRU 预测 24h RMSE=4.26 vs 持久化 12.96（好 67%）
+  - P3 垂直信息：**单层 6.51 → 20 层 4.22（降 35%）**，证实垂直分层是核心资产
+  - P4 loss 加权：时序任务下**归一化 > 未归一化**（修正第一轮当期回归的假象）；M2 分类优先（w2=3.0）最优
+  - P5 分位数：覆盖率 80.9%，RMSE 不损失
+- 正式代码（写入 `rams/` 包）：
+  - `rams/data/preprocessing.py`：xlsx → standard.parquet（258,542×23），真实数据跑通
+  - `rams/data/tensor_builder.py`：长表 → (B,T,D,C) + 分层标签
+  - `rams/models/rams_net.py`：共享 GRU backbone + M1 分位数头 + M2 分层头
+  - `rams/training/trainer.py`：多任务 loss 加权 + 分位数损失 + fast_dev_run
+  - `scripts/build_dataset.py` / `scripts/train.py`：CLI 入口
+  - `tests/test_smoke.py`：6 项冒烟测试全部通过
+- 正式训练结果：30 epoch → M1 RMSE=3.58、M2 acc=0.965、p10-p90 覆盖率 85%
+- 文档：`docs/architecture_blueprint.md`（架构决策实证）、`docs/literature_review.md`（文献综述）、`docs/standing_plan.md`（站位计划）
+- Git：0.3 初始化完成（提交 `3a169fe`，`data/` 不被追踪 ✅ 保密满足）
+- 失误：探索脚本多个路径硬编码（Windows 绝对路径在算力机失效）→ 改相对/参数化；sheet 自带 depth 列冲突 → 转名后删除；pivot 后 258k 行（各层时间戳独立）→ 先 groupby(ts3h, depth) 聚合。均已在正式代码修复。
+- 冒烟：✅ 通过（6/6 测试 + 真实数据 fast_dev_run + 30 epoch 训练）
+- 交付物：核心代码 4 模块 + 2 CLI + 测试 + 3 文档 + Git 首次提交
+- 状态：✅ 完成
+- 下一步：实现 M3（GAT+贪心点位优化）/M4（预警分级）/M5（PCMCI+）；或按新需求修订 00-核心规则 架构约束（参数量、Stage 7 INT8 可放宽）
+
+---
 
 ### [2026-06-08 11:50] Stage 0 · 任务 0.1 补充 —— 更新 README
 - 目标：用户要求「readme  请你更新一下」，将 README 反映项目当前实际状态（0.1 已就位）
