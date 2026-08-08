@@ -54,6 +54,26 @@
 
 <!-- 在这一行下方追加新记录 -->
 
+### [2026-08-09 04:40] Stage 3 · M4 预警分级实现 + 类别加权完善
+- 目标：实现 M4 藻华预警分级（三级/四级），作为第三任务头加入多任务训练；处理预警等级不平衡
+- 改动文件：
+  - `rams/models/rams_net.py`：新增 M4Head，RamsNet 扩展为 M1/M2/M4 三头
+  - `rams/data/tensor_builder.py`：TensorConfig 加 warn_as_task；生成预警等级标签（未来 24h 峰值 + 训练段分位数阈值 p75/p90/p97，防泄漏）
+  - `rams/training/trainer.py`：MultiTaskLoss 加 M4 项 + 类别加权（自动从训练段标签算逆频率权重）；Trainer 支持 warn 标签
+  - `scripts/train.py`：加 --no-warn/--w-m4 参数，支持 M4
+  - `tests/test_smoke.py`：新增 M4 相关测试，7/7 通过
+- 执行命令与结果：
+  - `pytest tests/test_smoke.py`：**7 passed**
+  - `train.py --epochs 30 --w-m2 3.0 --w-m4 2.0`（不加权）：M1 RMSE=3.64, M2 acc=0.962, M4 acc=0.939, 覆盖 80.1%
+  - `train.py --epochs 30`（类别加权）：M1 RMSE=3.59, M2 acc=0.954, M4 acc=0.898, 覆盖 87.4%
+- 失误：`_make_windows` 里 warn 用 `yw.max` 但 yw 是 list 未 stack → 改用 y；`predict_interval`/`test_build` 解包三元组→四元组。均已修复。
+- 冒烟：✅ 通过（7/7 测试）
+- 交付物：M4 预警头（三头多任务）+ 类别加权 + 文档更新
+- 状态：✅ 完成
+- 下一步：M3（GAT+贪心点位优化）/ M5（PCMCI+ 因果时滞）并行子代理进行中
+
+---
+
 ### [2026-08-09 04:05] Stage 0-3 探索推进 —— 算力机实证 + 核心代码 + Git 初始化
 - 目标：按新需求（真实项目/五任务全做/算力充足/追求最大精度/不追迁移）在 sensecore H100 上探索性推进，验证架构方向并落地核心代码
 - 前置：用户明确了项目新定位，确定了算力环境（sensecore 商汤 H100，可扩容）；数据上传至 `/data/RAMS/`
