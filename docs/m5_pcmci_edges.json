@@ -1,0 +1,698 @@
+[
+  {
+    "from": "conc_surf",
+    "to": "conc_surf",
+    "lag": 1,
+    "lag_hours": 12,
+    "mci_corr": 0.6185838638059588,
+    "p": 0.0
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 1,
+    "lag_hours": 12,
+    "mci_corr": 0.593956309910802,
+    "p": 2.515934165667061e-303
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 1,
+    "lag_hours": 12,
+    "mci_corr": 0.5898096368103704,
+    "p": 3.472648996478467e-298
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 1,
+    "lag_hours": 12,
+    "mci_corr": 0.5674508910526436,
+    "p": 5.087071290347196e-271
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 2,
+    "lag_hours": 24,
+    "mci_corr": 0.3734064135960882,
+    "p": 2.52293170246273e-104
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 2,
+    "lag_hours": 24,
+    "mci_corr": 0.35870661051159547,
+    "p": 1.1925495790671117e-95
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 2,
+    "lag_hours": 24,
+    "mci_corr": 0.3093359628145133,
+    "p": 9.197073968420968e-70
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 3,
+    "lag_hours": 36,
+    "mci_corr": -0.2758764338361611,
+    "p": 9.274250929514022e-55
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 5,
+    "lag_hours": 60,
+    "mci_corr": -0.2414835079230707,
+    "p": 2.0719256040828483e-41
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 6,
+    "lag_hours": 72,
+    "mci_corr": 0.18996191124702372,
+    "p": 4.256138112832325e-25
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 10,
+    "lag_hours": 120,
+    "mci_corr": 0.17435847491076337,
+    "p": 4.984871549950308e-21
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 5,
+    "lag_hours": 60,
+    "mci_corr": -0.17227840390195118,
+    "p": 1.5996244442605588e-20
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 14,
+    "lag_hours": 168,
+    "mci_corr": 0.16415195457565498,
+    "p": 1.4962963115978159e-18
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 8,
+    "lag_hours": 96,
+    "mci_corr": 0.1532574445901458,
+    "p": 4.483785559293429e-16
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 8,
+    "lag_hours": 96,
+    "mci_corr": 0.14739253958870357,
+    "p": 7.448545993050245e-15
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 59,
+    "lag_hours": 708,
+    "mci_corr": -0.1452721349250228,
+    "p": 1.9201515711893354e-14
+  },
+  {
+    "from": "conc_surf",
+    "to": "conc_surf",
+    "lag": 2,
+    "lag_hours": 24,
+    "mci_corr": 0.14386785775165495,
+    "p": 3.634419242919738e-14
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_mean",
+    "lag": 3,
+    "lag_hours": 36,
+    "mci_corr": -0.1337121984432803,
+    "p": 3.5683082397151848e-12
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 22,
+    "lag_hours": 264,
+    "mci_corr": 0.1288973709884175,
+    "p": 2.6717760786884566e-11
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 27,
+    "lag_hours": 324,
+    "mci_corr": -0.12756007005771472,
+    "p": 4.594558168082792e-11
+  },
+  {
+    "from": "wind_u",
+    "to": "temp_surf",
+    "lag": 2,
+    "lag_hours": 24,
+    "mci_corr": 0.12526763743713892,
+    "p": 1.1410101666153056e-10
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 11,
+    "lag_hours": 132,
+    "mci_corr": -0.11908511801332468,
+    "p": 1.1880949574176446e-09
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 19,
+    "lag_hours": 228,
+    "mci_corr": -0.1141824465008333,
+    "p": 6.8930781182719385e-09
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 15,
+    "lag_hours": 180,
+    "mci_corr": -0.11360373704060267,
+    "p": 8.341823067138574e-09
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 40,
+    "lag_hours": 480,
+    "mci_corr": 0.11323403085089355,
+    "p": 9.50307902295082e-09
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 33,
+    "lag_hours": 396,
+    "mci_corr": -0.11312072002739036,
+    "p": 9.734586197093823e-09
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 31,
+    "lag_hours": 372,
+    "mci_corr": -0.11018259735749598,
+    "p": 2.854436715052973e-08
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 39,
+    "lag_hours": 468,
+    "mci_corr": -0.10980138576164727,
+    "p": 3.1958655411884866e-08
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 26,
+    "lag_hours": 312,
+    "mci_corr": 0.10915559561029828,
+    "p": 3.975747797439672e-08
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 41,
+    "lag_hours": 492,
+    "mci_corr": -0.10889107649987946,
+    "p": 4.339623320268342e-08
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 9,
+    "lag_hours": 108,
+    "mci_corr": -0.10439216845519035,
+    "p": 1.9824435729945938e-07
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 34,
+    "lag_hours": 408,
+    "mci_corr": 0.10332854366024619,
+    "p": 2.779199354285994e-07
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 11,
+    "lag_hours": 132,
+    "mci_corr": -0.10321754693213571,
+    "p": 2.865678648634455e-07
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 38,
+    "lag_hours": 456,
+    "mci_corr": 0.10018242381402812,
+    "p": 7.525696203292736e-07
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 30,
+    "lag_hours": 360,
+    "mci_corr": 0.09957951836777787,
+    "p": 8.94949608114391e-07
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 42,
+    "lag_hours": 504,
+    "mci_corr": 0.09711643845318478,
+    "p": 1.8466354924021037e-06
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 24,
+    "lag_hours": 288,
+    "mci_corr": 0.09687222045627383,
+    "p": 1.986433844188087e-06
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 35,
+    "lag_hours": 420,
+    "mci_corr": -0.0963695034915856,
+    "p": 2.2938130697168497e-06
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 59,
+    "lag_hours": 708,
+    "mci_corr": -0.09620549968196596,
+    "p": 2.3804085155422135e-06
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_mean",
+    "lag": 33,
+    "lag_hours": 396,
+    "mci_corr": -0.09561666403020111,
+    "p": 2.800395813593982e-06
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 20,
+    "lag_hours": 240,
+    "mci_corr": 0.09475789107602468,
+    "p": 3.55592796437838e-06
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 32,
+    "lag_hours": 384,
+    "mci_corr": 0.09370331202065464,
+    "p": 4.82327298246659e-06
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_surf",
+    "lag": 3,
+    "lag_hours": 36,
+    "mci_corr": -0.09294260001259819,
+    "p": 5.986242277212213e-06
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 60,
+    "lag_hours": 720,
+    "mci_corr": 0.0893767912437598,
+    "p": 1.6314667079290996e-05
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 55,
+    "lag_hours": 660,
+    "mci_corr": -0.08799434500428852,
+    "p": 2.3690047085498195e-05
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 7,
+    "lag_hours": 84,
+    "mci_corr": -0.08681701936138422,
+    "p": 3.2705579680170116e-05
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 21,
+    "lag_hours": 252,
+    "mci_corr": -0.08601831421756288,
+    "p": 3.9767777296997506e-05
+  },
+  {
+    "from": "conc_surf",
+    "to": "conc_surf",
+    "lag": 10,
+    "lag_hours": 120,
+    "mci_corr": 0.08288047363274079,
+    "p": 9.143521925148013e-05
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 7,
+    "lag_hours": 84,
+    "mci_corr": -0.08157844794175288,
+    "p": 0.00012429100897735644
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 17,
+    "lag_hours": 204,
+    "mci_corr": -0.07866150423930376,
+    "p": 0.00026133948237639976
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 15,
+    "lag_hours": 180,
+    "mci_corr": -0.07849367032106482,
+    "p": 0.0002722293953252213
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 33,
+    "lag_hours": 396,
+    "mci_corr": -0.07824186259621804,
+    "p": 0.00028993739337236467
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 29,
+    "lag_hours": 348,
+    "mci_corr": -0.07793421182035004,
+    "p": 0.0003097947777619658
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 58,
+    "lag_hours": 696,
+    "mci_corr": 0.077371843721787,
+    "p": 0.00035389598178469067
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 28,
+    "lag_hours": 336,
+    "mci_corr": 0.07693583798708596,
+    "p": 0.00039230030645179384
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_surf",
+    "lag": 13,
+    "lag_hours": 156,
+    "mci_corr": -0.07623825719530716,
+    "p": 0.0004634740606692226
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 27,
+    "lag_hours": 324,
+    "mci_corr": -0.07571248038826374,
+    "p": 0.0005221079882022196
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 19,
+    "lag_hours": 228,
+    "mci_corr": -0.07570703758119943,
+    "p": 0.0005221079882022196
+  },
+  {
+    "from": "conc_surf",
+    "to": "conc_surf",
+    "lag": 3,
+    "lag_hours": 36,
+    "mci_corr": -0.07553231866228967,
+    "p": 0.0005403205986717937
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 51,
+    "lag_hours": 612,
+    "mci_corr": -0.07514213231602167,
+    "p": 0.0005929020618034502
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 5,
+    "lag_hours": 60,
+    "mci_corr": -0.07505724191711625,
+    "p": 0.0006037821938128043
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 30,
+    "lag_hours": 360,
+    "mci_corr": 0.07481569927536008,
+    "p": 0.0006376610961668887
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 41,
+    "lag_hours": 492,
+    "mci_corr": -0.07437941936992241,
+    "p": 0.0007049729537320061
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 17,
+    "lag_hours": 204,
+    "mci_corr": -0.07415706724848602,
+    "p": 0.0007431613121042082
+  },
+  {
+    "from": "wind_u",
+    "to": "cyano_surf",
+    "lag": 1,
+    "lag_hours": 12,
+    "mci_corr": 0.07232346059994701,
+    "p": 0.0011097888300169866
+  },
+  {
+    "from": "wind_u",
+    "to": "temp_surf",
+    "lag": 4,
+    "lag_hours": 48,
+    "mci_corr": 0.07221958457567516,
+    "p": 0.0011349029620723434
+  },
+  {
+    "from": "wind_u",
+    "to": "temp_mean",
+    "lag": 3,
+    "lag_hours": 36,
+    "mci_corr": -0.07207030159716474,
+    "p": 0.0011698447441707783
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_mean",
+    "lag": 31,
+    "lag_hours": 372,
+    "mci_corr": -0.07159903279468839,
+    "p": 0.0012924208480945426
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_surf",
+    "lag": 33,
+    "lag_hours": 396,
+    "mci_corr": -0.07007359868048908,
+    "p": 0.0017958880035979926
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 28,
+    "lag_hours": 336,
+    "mci_corr": 0.06827863636933001,
+    "p": 0.002620237502304549
+  },
+  {
+    "from": "cyano_surf",
+    "to": "cyano_surf",
+    "lag": 36,
+    "lag_hours": 432,
+    "mci_corr": 0.06818138756048303,
+    "p": 0.0026727995393871487
+  },
+  {
+    "from": "wind_u",
+    "to": "temp_mean",
+    "lag": 12,
+    "lag_hours": 144,
+    "mci_corr": 0.06732368531690526,
+    "p": 0.0031602137866799723
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 34,
+    "lag_hours": 408,
+    "mci_corr": 0.06723736306748662,
+    "p": 0.0032081189084600444
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 9,
+    "lag_hours": 108,
+    "mci_corr": -0.06633274808827377,
+    "p": 0.003883109050004721
+  },
+  {
+    "from": "wind_u",
+    "to": "temp_mean",
+    "lag": 1,
+    "lag_hours": 12,
+    "mci_corr": -0.06463914836945922,
+    "p": 0.005421344111127205
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 36,
+    "lag_hours": 432,
+    "mci_corr": 0.06344764330968378,
+    "p": 0.006962488115899262
+  },
+  {
+    "from": "temp_surf",
+    "to": "temp_mean",
+    "lag": 29,
+    "lag_hours": 348,
+    "mci_corr": -0.06234068796499088,
+    "p": 0.008528108216633534
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 31,
+    "lag_hours": 372,
+    "mci_corr": -0.06228018136457935,
+    "p": 0.008618778503767506
+  },
+  {
+    "from": "humidity",
+    "to": "temp_surf",
+    "lag": 3,
+    "lag_hours": 36,
+    "mci_corr": 0.05831397123277715,
+    "p": 0.01836671526827396
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 23,
+    "lag_hours": 276,
+    "mci_corr": -0.05728395819785264,
+    "p": 0.021905923372068273
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 56,
+    "lag_hours": 672,
+    "mci_corr": 0.05684773076633466,
+    "p": 0.023583597705776806
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 39,
+    "lag_hours": 468,
+    "mci_corr": -0.056391413001264434,
+    "p": 0.025590552373145555
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 13,
+    "lag_hours": 156,
+    "mci_corr": -0.055217733987678486,
+    "p": 0.03144426206148431
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 35,
+    "lag_hours": 420,
+    "mci_corr": -0.054382612093508934,
+    "p": 0.03623909676917607
+  },
+  {
+    "from": "wind_u",
+    "to": "cyano_surf",
+    "lag": 33,
+    "lag_hours": 396,
+    "mci_corr": 0.05359808869587269,
+    "p": 0.040878850741099045
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 49,
+    "lag_hours": 588,
+    "mci_corr": -0.05348344825012576,
+    "p": 0.04152166281444433
+  },
+  {
+    "from": "temp_mean",
+    "to": "temp_mean",
+    "lag": 57,
+    "lag_hours": 684,
+    "mci_corr": -0.052535304163846164,
+    "p": 0.048606933766108064
+  }
+]

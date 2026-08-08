@@ -31,6 +31,10 @@
 | 6 | 架构蓝图 | `docs/architecture_blueprint.md` | ✅ | 2026-08-09 |
 | 6 | 文献综述 | `docs/literature_review.md` | ✅ | 2026-08-09 |
 | 6 | 站位计划 | `docs/standing_plan.md` | ✅ | 2026-08-09 |
+| 5 | M5 PCMCI+ 因果时滞脚本 | `scripts/explore/m5_pcmci.py` | ✅ | 2026-08-09，12h 降采样+ACF 定滞+ParCorr，实测跑通 |
+| 5 | M5 因果时滞结果报告 | 算力机 `docs/m5_pcmci_results.md` / `m5_pcmci_edges.json` / `m5_pcmci_graph.png` | ✅ | 2026-08-09，tau_max=60（30 天） |
+| 3 | M3 点位优化探索脚本 | `scripts/explore/m3_sensor_placement.py` | ✅ | 2026-08-09，GAT+贪心，3-seed |
+| 3 | M3 点位优化结果报告 | `docs/m3_sensor_placement.md` | ✅ | 2026-08-09，最优 5 层部署建议 |
 | | | | | |
 
 ---
@@ -44,6 +48,8 @@
 |---|---|---|---|---|
 | 2026-06-08 | 0.1 移动 xlsx | `Move-Item : δҵ·еĳ֡` | (1) `data/raw` 目录尚未存在；(2) PowerShell 默认输出编码 GBK，文件名为中文时控制台显示乱码（实际是编码问题不是文件问题） | 先执行 `New-Item -ItemType Directory data\raw` 创好目录；再重跑 `Move-Item`；乱码问题仅影响控制台显示，不影响脚本逻辑。 |
 | 2026-06-08 | 0.1 补充 README 更新 | 对 README.md 三次**并行** `replace_in_file` 全部失败，工具提示 `The file was reverted to its original state: <empty>`，实际 `README.md` 被清空丢失 | 在一次响应中**并行发起多个对同一文件的 replace_in_file** 会触发工具的“回滚到原状态”机制，第一个失败时另外两个也会被撤，最终文件被置空。 | （1）以后修改同一个文件**串行**做，且一个响应里只发一个 `replace_in_file`；（2）遇失败时优先 `read_file` 拿真实内容再重试；（3）实在不行用 `write_to_file` 整体重写——但要谨慎，会丢失原内容。最终用户要求“更新一下”时直接走 `write_to_file` 重建 + 一次性嵌入更新。 |
+| 2026-08-09 | 5 PCMCI+ 超参爆炸 | 全图 12²×τmax=27,648 条候选边，PCMCI+ 卡死 182 分钟被杀 | tigramite 官方 #208：总成本 ∝ 链接数 × 条件数，τ_max 是线性放大系数；3h 网格对水库过程过采样 | 12h 均值降采样 + ACF 定 τ_max + link_assumptions 剪枝（6912→1184）+ max_conds=5 约束；全候选空间下 30 天滞仅需 7.4 分钟 |
+| 2026-08-09 | 5 link_assumptions 伪边 | 用 link_assumptions（`-?>`）剪枝后，graph 里出现大量 val=0/p=1 的 `-->` 伪边（未真正过 MCI 检验） | tigramite 5.2 会把 `-?>` 链接带进最终 graph，未检验的边 val/p 保持初值 | 默认跑全候选空间（link_assumptions=None），collect_edges 额外按 p<alpha 过滤，保证每条边都有真实 MCI 统计量 |
 | | | | | |
 
 ---
@@ -54,6 +60,27 @@
 
 <!-- 在这一行下方追加新记录 -->
 
+### [2026-08-09 06:20] Stage 3 · M5 PCMCI+ 气象-藻类因果时滞分析（算力机实测）
+- 目标：分析"气象/水温 → 藻类浓度"的因果驱动与时滞（谁真正驱动、滞后多久、输出因果图），对标文献滞后（降水 13-20d、风 20-29d、气温 25-30d）
+- 改动文件：
+  - 新建 `scripts/explore/m5_pcmci.py`：standard.parquet → 3h 插值 → 12h 均值降采样 → 季节 sin/cos 编码 → 风转 u/v → log1p+zscore → tigramite PCMCI+（ParCorr）。变量 12 个（季节2+藻类2+水温2+气象6），目标 conc_surf/cyano_surf/temp_surf/temp_mean
+  - 算力机产出 `docs/m5_pcmci_results.md` + `m5_pcmci_edges.json` + `m5_pcmci_graph.png`
+- 执行命令与结果（H100，全候选空间，max_conds=5）：
+  - 快速验证 tau_max=48/5000 样本（3h 网格）：跑通，确认边缘效应
+  - 正式 tau_max=60（30 天）12h 网格：**7.4 分钟完成**，8640 候选边扫描 2400
+  - ACF 定滞：conc/cyano 自相关衰减到噪声需 149/179 个 12h 步（75-90 天）→ 强季节性记忆
+- M5 结论：
+  - 藻类浓度由**自身历史主导**（conc τ=1 r=0.63；cyano τ=1 r=0.57，τ=2 r=0.37），是强自回归过程
+  - 气象直驱弱且短滞：wind_u→temp_surf τ=2 r=+0.13、wind_u→cyano τ=1 r=+0.07、humidity→temp_surf τ=3 r=+0.06；**未见降水/风/气温 20-30 天长滞显著直驱**
+  - 水温对藻类无显著因果中介（temp→conc 无 MCI 显著边）；20-30 天表现出的"滞后相关"（如 air_temp→cyano 原始 r=0.32@23.5d）经季节+自回归条件化后被解释为**季节共变而非因果**——PCMCI+ 已用 sin/cos 季节项吸收
+  - 季节项本身显著驱动（季节→藻类/水温全滞显著）
+- 失误：见第二节表格 3 条（PCMCI+ 参数爆炸 182min、link_assumptions 伪边 val=0、season 编码索引不对齐 NaN）
+- 冒烟：✅ 通过（脚本在真实数据上出完整结果）
+- 交付物：M5 脚本 + 3 个结果文件（因果图/边表/说明）
+- 状态：✅ 完成
+- 下一步：M5 结果回流——藻华预警（M4）可用 wind_u 短滞特征 + 藻类自身长记忆；如需非线性再试 CMIknn（慢 10-100×）
+
+---
 ### [2026-08-09 04:40] Stage 3 · M4 预警分级实现 + 类别加权完善
 - 目标：实现 M4 藻华预警分级（三级/四级），作为第三任务头加入多任务训练；处理预警等级不平衡
 - 改动文件：
