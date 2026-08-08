@@ -1,0 +1,123 @@
+# —— 依据：.clinerules/00-核心规则.md 第 5、11 节 ——
+
+# ===== 数据（涉密，绝不提交）=====
+data/
+*.xls
+*.xlsx
+*.xlsm
+*.parquet
+*.feather
+*.csv
+*.tsv
+data/**/*.parquet
+data/**/*.xls*
+
+# ===== 模型与训练产物 =====
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.pkl
+*.joblib
+*.npy
+*.npz
+*.h5
+*.hdf5
+
+# ===== 实验追踪（本地 MLflow）=====
+mlruns/
+mlflow.db
+mlflow.db-*
+
+# ===== Python 缓存 =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# —— 安装的 wheel ——
+*.whl
+
+# —— 虚拟环境 ——
+.venv/
+venv/
+env/
+ENV/
+conda-env/
+.python-version
+
+# —— pytest / coverage ——
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.cache
+.pyright/
+.mypy_cache/
+.ruff_cache/
+
+# —— IDE / 编辑器 ——
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# —— Jupyter ——
+.ipynb_checkpoints/
+profile_default/
+
+# —— 系统 ——
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# —— Hydra 输出 ——
+outputs/
+multirun/
+hydra/
+
+# —— 日志 ——
+*.log
+logs/
+
+# —— 临时 / 中间文件 ——
+*.tmp
+*.bak
+*.swp
+tmp/
+temp/
+
+# —— 密钥 / 凭证（防御性，绝不提交）=====
+*.pem
+*.key
+*.crt
+.env
+.env.local
+secrets/
+credentials/
+
+# —— 报告渲染中间产物 =====
+*.aux
+*.bbl
+*.blg
+*.toc
+*.out
