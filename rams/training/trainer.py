@@ -25,8 +25,12 @@ class MultiTaskLoss(nn.Module):
     """多任务损失：M1 分位数损失 + M2 交叉熵 + M4 交叉熵，可配权。"""
 
     def __init__(self, horizon: int, w_m1: float = 1.0, w_m2: float = 3.0,
-                 w_m4: float = 2.0, use_m4: bool = True):
-        """w_m2/w_m4 高于 w_m1：探索结论——辅助任务高权重对 M1 有正则/信息增益。"""
+                 w_m4: float = 2.0, use_m4: bool = True,
+                 warn_class_weights: torch.Tensor | None = None):
+        """w_m2/w_m4 高于 w_m1：探索结论——辅助任务高权重对 M1 有正则/信息增益。
+
+        warn_class_weights: M4 类别权重（处理预警等级不平衡），形状 (n_levels,)。
+        """
         super().__init__()
         self.horizon = horizon
         self.w_m1 = w_m1
@@ -34,6 +38,7 @@ class MultiTaskLoss(nn.Module):
         self.w_m4 = w_m4
         self.use_m4 = use_m4
         self.ce = nn.CrossEntropyLoss()
+        self.ce_warn = nn.CrossEntropyLoss(weight=warn_class_weights) if warn_class_weights is not None else nn.CrossEntropyLoss()
 
     def forward(self, m1_out, m2_out, y, strat_label, m4_out=None, warn_label=None):
         """m1_out: (B, 3H) 分位数; y: (B, H); strat_label: (B,); m4/warn 可选。"""
@@ -50,10 +55,10 @@ class MultiTaskLoss(nn.Module):
         # M2 交叉熵
         l2 = self.ce(m2_out, strat_label)
 
-        # M4 预警交叉熵（可选）
+        # M4 预警交叉熵（可选，用类别权重处理不平衡）
         l4 = None
         if self.use_m4 and m4_out is not None and warn_label is not None:
-            l4 = self.ce(m4_out, warn_label)
+            l4 = self.ce_warn(m4_out, warn_label)
 
         total = self.w_m1 * l1 + self.w_m2 * l2
         if l4 is not None:
@@ -65,17 +70,25 @@ class Trainer:
     """轻量训练器（不依赖 Lightning，探索阶段够用）。"""
 
     def __init__(self, model: RamsNet, lr: float = 1e-3, w_m1: float = 1.0,
-                 w_m2: float = 3.0, w_m4: float = 2.0, device: str = "cuda"):
+                 w_m2: float = 3.0, w_m4: float = 2.0, device: str = "cuda",
+                 warn_class_weights: torch.Tensor | None = None):
         self.model = model.to(device)
         self.device = device
         self.opt = torch.optim.Adam(model.parameters(), lr=lr)
         self.use_m4 = model.use_m4
-        self.criterion = MultiTaskLoss(model.horizon, w_m1, w_m2, w_m4, self.use_m4)
+        self.criterion = MultiTaskLoss(model.horizon, w_m1, w_m2, w_m4, self.use_m4,
+                                       warn_class_weights)
 
     def fit(self, X_tr, y_tr, strat_tr, X_va, y_va, strat_va,
             warn_tr=None, warn_va=None, epochs: int = 30,
             batch_size: int = 128, fast_dev_run: bool = False):
         """训练。fast_dev_run=True 时只跑 1-2 个 batch 冒烟。"""
+        # 若未显式给类别权重，则从训练段 M4 标签自动计算（逆频率，处理不平衡）
+        if self.use_m4 and warn_tr is not None and self.criterion.ce_warn.weight is None:
+            counts = np.bincount(warn_tr, minlength=self.model.m4.mlp[-1].out_features)
+            inv = 1.0 / (counts.astype(np.float64) + 1.0)
+            weights = torch.tensor(inv / inv.sum() * len(counts), dtype=torch.float32)
+            self.criterion.ce_warn = nn.CrossEntropyLoss(weight=weights.to(self.device))
         # 构建数据集（含可选的 M4 标签）
         tensors = [torch.tensor(X_tr), torch.tensor(y_tr), torch.tensor(strat_tr)]
         if self.use_m4 and warn_tr is not None:
