@@ -1,7 +1,8 @@
 # —— 依据：.clinerules/00-核心规则.md 第 5、11 节 ——
 
 # ===== 数据（涉密，绝不提交）=====
-data/
+# 注意：用 /data/ 根锚定，避免误忽略 rams/data/ 源码目录
+/data/
 *.xls
 *.xlsx
 *.xlsm
@@ -9,8 +10,8 @@ data/
 *.feather
 *.csv
 *.tsv
-data/**/*.parquet
-data/**/*.xls*
+/data/**/*.parquet
+/data/**/*.xls*
 
 # ===== 模型与训练产物 =====
 *.pt
