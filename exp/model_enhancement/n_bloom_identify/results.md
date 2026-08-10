@@ -2,7 +2,7 @@
 
 > 探索标记：`exp/model_enhancement/n_bloom_identify/`（2026-08-10）
 > 实验脚本：`run_bloom.py` ｜ 统计量：`results.json`（无原始数据行）
-> 数据：`data/processed/standard.parquet`（20 层逐层浓度，3h 网格，12848 时刻，2021-03 ~ 2025-09，单站 0902）
+> 数据：`data/processed/standard.parquet`（20 层逐层浓度，3h 网格，12848 时刻，2021-03 ~ 2025-09，单站 SITE_X）
 > 方法：纯 pandas 统计 + 事件检测规则。保密：只输出聚合统计量。
 
 ## TL;DR

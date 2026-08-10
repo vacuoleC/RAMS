@@ -2,7 +2,7 @@
 
 > 标记：`exp/model_enhancement/o_multilayer_link/`（2026-08-10）
 > 脚本：`run_multilayer.py`（主分析）＋ `analyze_extra.py`（昼夜伪影剔除 + N 事件锚定复核）
-> 数据：`data/processed/standard.parquet`（20 层 total_conc + water_temp，3h 网格，12848 时刻，2021-03 ~ 2025-09，单站 0902）
+> 数据：`data/processed/standard.parquet`（20 层 total_conc + water_temp，3h 网格，12848 时刻，2021-03 ~ 2025-09，单站 SITE_X）
 > 输出：只含统计量，不含原始数据行。
 
 ## 核心结论（一句话）

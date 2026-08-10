@@ -248,7 +248,7 @@
       },
       "seas_holdout": {
         "coverage_mean": 0.8047546265697292,
-        "coverage_std": 0.09340902602615846,
+        "coverage_std": 0.0934SITE_X602615846,
         "coverage_windows": [
           0.875877808988764,
           0.9352176966292135,
