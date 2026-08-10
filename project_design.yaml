@@ -140,7 +140,7 @@ inputs:
   input_id: standard-parquet
   license: 涉密数据，仅本地
   path_or_reference: data/processed/standard.parquet
-  provenance: 单站0902，2021-03至2025-09，藻类+气象实测
+  provenance: 单站（已匿名），2021-2025，藻类+气象实测
   read_only: true
   scale: 258542 rows x 23 cols
   schema: configs/data/schema.yaml
