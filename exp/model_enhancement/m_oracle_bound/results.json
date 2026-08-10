@@ -1,0 +1,199 @@
+{
+  "protocol": {
+    "train_days": 730,
+    "test_days": 90,
+    "stride_days": 45,
+    "T": 24,
+    "H8": 8,
+    "H64": 64,
+    "epochs": 30,
+    "n_windows": 1,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "w": {
+      "m1": 1.0,
+      "m2": 3.0,
+      "m4": 2.0
+    },
+    "arch": "base/ar_only: RamsNet; oracle arms: OracleRamsNet(通道+头注入)",
+    "oracle_note": "oracle 通道=未来 N 天真实 conc（诊断探针，非部署，明确标注未来真实值）"
+  },
+  "arms": {
+    "base8": {
+      "crps_all": 2.2989,
+      "crps_all_std": 0.1237,
+      "crps_eff_all": 2.2989,
+      "crps_day1_eff": 2.2989,
+      "crps_day1_eff_std": 0.1237,
+      "crps_day8_eff": NaN,
+      "crps_day8_eff_std": NaN,
+      "crps_tail": 2.2989,
+      "rmse_day1_h1": 4.0523,
+      "crps_persist": 3.0136,
+      "skill_vs_persist_pct": 23.72,
+      "crps_oracle_persist": NaN
+    },
+    "base": {
+      "crps_all": 3.5952,
+      "crps_all_std": 0.1021,
+      "crps_eff_all": 3.5952,
+      "crps_day1_eff": 3.0445,
+      "crps_day1_eff_std": 0.0614,
+      "crps_day8_eff": 3.8938,
+      "crps_day8_eff_std": 0.1966,
+      "crps_tail": 3.5952,
+      "rmse_day1_h1": 5.1388,
+      "crps_persist": 4.8285,
+      "skill_vs_persist_pct": 25.54,
+      "crps_oracle_persist": NaN
+    },
+    "ar_only": {
+      "crps_all": 3.1287,
+      "crps_all_std": 0.1704,
+      "crps_eff_all": 3.1287,
+      "crps_day1_eff": 2.6298,
+      "crps_day1_eff_std": 0.1063,
+      "crps_day8_eff": 3.2642,
+      "crps_day8_eff_std": 0.223,
+      "crps_tail": 3.1287,
+      "rmse_day1_h1": 4.7664,
+      "crps_persist": 4.8285,
+      "skill_vs_persist_pct": 35.2,
+      "crps_oracle_persist": NaN
+    },
+    "oracle_1": {
+      "crps_all": 2.9369,
+      "crps_all_std": 0.0585,
+      "crps_eff_all": 2.6657,
+      "crps_day1_eff": 0.0,
+      "crps_day1_eff_std": 0.0,
+      "crps_day8_eff": 3.2554,
+      "crps_day8_eff_std": 0.0981,
+      "crps_tail": 3.0466,
+      "rmse_day1_h1": 4.3063,
+      "crps_persist": 4.8285,
+      "skill_vs_persist_pct": 39.18,
+      "crps_oracle_persist": 4.0121
+    },
+    "oracle_3": {
+      "crps_all": 2.7973,
+      "crps_all_std": 0.1724,
+      "crps_eff_all": 1.9487,
+      "crps_day1_eff": 0.0,
+      "crps_day1_eff_std": 0.0,
+      "crps_day8_eff": 3.3223,
+      "crps_day8_eff_std": 0.3556,
+      "crps_tail": 3.118,
+      "rmse_day1_h1": 4.3259,
+      "crps_persist": 4.8285,
+      "skill_vs_persist_pct": 42.07,
+      "crps_oracle_persist": 2.5674
+    },
+    "oracle_7": {
+      "crps_all": 2.424,
+      "crps_all_std": 0.098,
+      "crps_eff_all": 0.3364,
+      "crps_day1_eff": 0.0,
+      "crps_day1_eff_std": 0.0,
+      "crps_day8_eff": 2.6913,
+      "crps_day8_eff_std": 0.1145,
+      "crps_tail": 2.6913,
+      "rmse_day1_h1": 4.434,
+      "crps_persist": 4.8285,
+      "skill_vs_persist_pct": 49.8,
+      "crps_oracle_persist": 0.3653
+    }
+  },
+  "day_crps": {
+    "base8": [
+      2.2989,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN,
+      NaN
+    ],
+    "base": [
+      3.0445,
+      3.3347,
+      3.5372,
+      3.7381,
+      3.7032,
+      3.7322,
+      3.7783,
+      3.8938
+    ],
+    "ar_only": [
+      2.6298,
+      2.9541,
+      3.1407,
+      3.3401,
+      3.2579,
+      3.2183,
+      3.2249,
+      3.2642
+    ],
+    "oracle_1": [
+      0.0,
+      2.692,
+      2.9039,
+      3.1275,
+      3.0678,
+      3.1234,
+      3.156,
+      3.2554
+    ],
+    "oracle_3": [
+      0.0,
+      0.0,
+      0.0,
+      2.8761,
+      2.9844,
+      3.1876,
+      3.2197,
+      3.3223
+    ],
+    "oracle_7": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.6913
+    ]
+  },
+  "worldview": {
+    "staircase_1day": {
+      "known0_base_d1": 3.0445,
+      "known1_oracle1_d2": 2.692,
+      "known3_oracle3_d4": 2.8761,
+      "known7_oracle7_d8": 2.6913
+    },
+    "base_day1": 3.0445,
+    "base_day8": 3.8938,
+    "oracle7_day8": 2.6913,
+    "gap_d8_unknown_cost": 1.2025,
+    "ar_only_day1": 2.6298,
+    "feat_gain_pct": -15.77,
+    "corr_gap_range": NaN,
+    "corr_gap_p50": NaN,
+    "corr_gap_std": NaN
+  },
+  "windows": [
+    {
+      "window": 1,
+      "start": "2021-03-01 00:00:00",
+      "end": "2023-07-26 12:00:00",
+      "conc_p50": 8.319999694824219,
+      "conc_range": 24.47999906539917,
+      "conc_std": 10.1472212915062
+    }
+  ]
+}
