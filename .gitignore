@@ -129,3 +129,14 @@ monitor.yaml
 whatwedo.jsonl
 .claude/settings.json
 .claude/hooks/
+
+# ===== 治理/规则（最小复现不保留）=====
+.clinerules/
+skills/
+modules/
+adapters/
+schemas/
+artifacts/
+project_design.yaml
+data_design.yaml
+controller_manifest.json
