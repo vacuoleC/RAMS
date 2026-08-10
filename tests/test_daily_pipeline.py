@@ -113,6 +113,34 @@ class TestDailyTensorBuilder:
         assert ds.dates[ds.n_train] >= tr - pd.Timedelta(days=cfg.H)
         assert ds.dates[ds.n_train] <= tr + pd.Timedelta(days=cfg.H)
 
+    def test_rolling_split_when_trts_absent(self, tmp_path):
+        """回归（mdl-baseline-compare 发现的 w12 缺口 bug）：tr_ts 不在日级索引时，
+        n_train 必须仍按行计数（daily.index < tr_ts），不得退回 fit_frac。
+        数据缺口日恰好是切点 → 旧实现会把约 30% 训练段样本误当测试样本。"""
+        p = _make_parquet(tmp_path)
+        cfg = DailyConfig(T=30, H=7)
+        d0 = pd.Timestamp("2022-01-01")
+        anchors = make_rolling_anchors(d0, train_days=60, test_days=20, stride_days=30, n_windows=1)
+        start, tr, end = anchors[0]
+        # 无缺口基线：n_train 按行计数
+        ds_ok = DailyTensorBuilder(cfg).build(p, start_ts=start, tr_ts=tr, end_ts=end)
+        n_tr_correct = ds_ok.n_train
+        # 有缺口：从合成数据删掉 tr 当天的所有 3h 行，另写 parquet（模拟数据缺口切点）
+        df = pd.read_parquet(p)
+        gap_ts = tr
+        df_gap = df[~df["timestamp"].dt.floor("3h").eq(gap_ts)]
+        p_gap = tmp_path / "standard_gap.parquet"
+        df_gap.to_parquet(p_gap, index=False)
+        ds_gap = DailyTensorBuilder(cfg).build(p_gap, start_ts=start, tr_ts=tr, end_ts=end)
+        # 正确 n_train：预测目标末端 < tr（行计数），缺口只缺 tr 当天、不影响 < tr 计数
+        assert ds_gap.n_train > 0
+        assert ds_gap.n_train < len(ds_gap.X)
+        assert ds_gap.n_train == n_tr_correct, (
+            f"切点缺日不得改变 n_train：{ds_gap.n_train} vs {n_tr_correct}"
+        )
+        # 且必须远小于 0.7*len(X)（旧 bug 的退回值）
+        assert ds_gap.n_train < 0.75 * len(ds_gap.X)
+
 
 class TestBloomLabeler:
     def test_bloom_label_positive_in_synthetic_bloom(self, tmp_path):

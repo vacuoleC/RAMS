@@ -494,8 +494,10 @@ class DailyTensorBuilder:
         lab.fit(daily, tr_ts=tr_ts)
         bloom_full = lab.predict(daily)
         ds = self.make_windows(daily, bloom_signal=bloom_full)
-        # 训练样本数：预测末端索引 i+T+H-1 < tr 行位置（与探索协议一致）
-        if tr_ts is not None and tr_ts in daily.index:
+        # 训练样本数：预测末端索引 i+T+H-1 < tr 行位置（与探索协议一致）。
+        # 注意：只要 tr_ts 给定，就按行计数（daily.index < tr_ts），
+        # 不要求 tr_ts 恰好出现在日级索引里（数据缺口日缺失时按行计数仍正确）。
+        if tr_ts is not None:
             n_tr_rows = int((daily.index < tr_ts).sum())
             ds.n_train = max(0, n_tr_rows - self.cfg.T - self.cfg.H + 1)
         else:

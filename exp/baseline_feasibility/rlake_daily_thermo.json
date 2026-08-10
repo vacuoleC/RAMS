@@ -1,0 +1,14 @@
+{
+  "n_dates_total": 1638,
+  "n_thermo_ok": 1054,
+  "thermo_mean": 8.245757957352446,
+  "thermo_sd": 1.7905252116107337,
+  "corr_thermo_delta_T": 0.40451873503542973,
+  "corr_thermo_thermo_grad": -0.3894085805089042,
+  "corr_thermo_conc0_5": 0.017536286153107167,
+  "corr_thermo_bloom": -0.04663678594613608,
+  "corr_thermo_doy": 0.392758706734786,
+  "corr_thermo_t_conc7": -0.03928167174904785,
+  "corr_deltaT_t_conc7": 0.1649796010754088,
+  "corr_thermo_grad_t_conc7": 0.44521352282335036
+}

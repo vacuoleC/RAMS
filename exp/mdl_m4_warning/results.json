@@ -78,7 +78,7 @@
       "end": "2024-08-27"
     }
   ],
-  "m4_acc_window_mean": 0.8255567778888098,
+  "m4_acc_window_mean": 0.8238664465838739,
   "coverage_days": 787,
   "sweep_n_events": [
     {
@@ -124,8 +124,8 @@
       ],
       "n_warning_episodes": 12,
       "false_positive_episodes": 8,
-      "false_positive_days": 159,
-      "fpr_days": 0.2,
+      "false_positive_days": 160,
+      "fpr_days": 0.20125786163522014,
       "fp_episodes": [
         {
           "start": "2023-05-18",
@@ -159,8 +159,8 @@
         },
         {
           "start": "2024-09-22",
-          "end": "2024-09-23",
-          "days": 2
+          "end": "2024-09-24",
+          "days": 3
         },
         {
           "start": "2024-09-28",
@@ -463,8 +463,8 @@
       ],
       "n_warning_episodes": 12,
       "false_positive_episodes": 12,
-      "false_positive_days": 198,
-      "fpr_days": 0.2490566037735849,
+      "false_positive_days": 199,
+      "fpr_days": 0.25031446540880503,
       "fp_episodes": [
         {
           "start": "2023-04-11",
@@ -518,8 +518,8 @@
         },
         {
           "start": "2024-09-22",
-          "end": "2024-09-23",
-          "days": 2
+          "end": "2024-09-24",
+          "days": 3
         },
         {
           "start": "2024-09-28",
@@ -951,7 +951,7 @@
       "end": "2024-08-23",
       "in_eval_period": true,
       "bloom_days_near": 0,
-      "max_p_lead": 0.2180035213629405,
+      "max_p_lead": 0.1905442054073016,
       "hit_0.5": "✗",
       "lead_0.5": null
     },
@@ -961,7 +961,7 @@
       "end": "2024-08-27",
       "in_eval_period": true,
       "bloom_days_near": 0,
-      "max_p_lead": 0.2731999705235163,
+      "max_p_lead": 0.24891447275877,
       "hit_0.5": "✗",
       "lead_0.5": null
     },
@@ -976,5 +976,5 @@
       "lead_0.5": null
     }
   ],
-  "wall_seconds": 132.9
+  "wall_seconds": 138.5
 }
