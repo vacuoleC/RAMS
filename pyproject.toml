@@ -36,10 +36,6 @@ dev = [
 [project.scripts]
 rams-build-dataset = "scripts.build_dataset:main"
 rams-train = "scripts.train:main"
-rams-eval = "scripts.eval:main"
-rams-predict = "scripts.predict:main"
-rams-export = "scripts.export:main"
-rams-serve = "scripts.serve:main"
 
 # —— 包发现 ——
 [tool.setuptools]
