@@ -78,6 +78,9 @@ ignore = [
 "notebooks/**/*.py" = ["E402", "F811"]
 # 张量维度变量（X/T/H/delta_T）沿用张量领域命名约定（与原 0.1.0 一致）
 "rams/data/tensor_builder.py" = ["N806"]
+"rams/models/rams_net.py" = ["N806"]
+"rams/training/trainer.py" = ["N803", "N806"]
+"rams/training/smoke_roll.py" = ["N806"]
 
 # —— black：与 ruff 对齐 ——
 [tool.black]
