@@ -1,0 +1,1462 @@
+{
+  "n_timestamps": 12848,
+  "n_depths": 20,
+  "depths": [
+    0.5,
+    1.0,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.5,
+    4.0,
+    4.5,
+    5.0,
+    5.5,
+    6.0,
+    6.5,
+    7.0,
+    7.5,
+    8.0,
+    8.5,
+    9.0,
+    9.5,
+    10.0
+  ],
+  "time_range": [
+    "2021-03-01 00:00:00",
+    "2025-09-30 21:00:00"
+  ],
+  "layer_stats": {
+    "0.5": {
+      "mean": 8.735,
+      "p50": 5.44,
+      "p90": 15.226,
+      "p95": 24.668,
+      "p99": 64.373,
+      "max": 131.93
+    },
+    "1.0": {
+      "mean": 9.415,
+      "p50": 5.75,
+      "p90": 16.061,
+      "p95": 28.509,
+      "p99": 70.921,
+      "max": 129.85
+    },
+    "1.5": {
+      "mean": 9.596,
+      "p50": 5.83,
+      "p90": 16.37,
+      "p95": 29.21,
+      "p99": 71.83,
+      "max": 131.45
+    },
+    "2.0": {
+      "mean": 9.826,
+      "p50": 5.93,
+      "p90": 16.74,
+      "p95": 30.762,
+      "p99": 74.282,
+      "max": 129.34
+    },
+    "2.5": {
+      "mean": 10.151,
+      "p50": 6.02,
+      "p90": 17.574,
+      "p95": 31.864,
+      "p99": 81.14,
+      "max": 128.97
+    },
+    "3.0": {
+      "mean": 10.523,
+      "p50": 6.1,
+      "p90": 18.675,
+      "p95": 32.777,
+      "p99": 89.293,
+      "max": 129.75
+    },
+    "3.5": {
+      "mean": 10.912,
+      "p50": 6.23,
+      "p90": 20.17,
+      "p95": 32.995,
+      "p99": 96.844,
+      "max": 137.17
+    },
+    "4.0": {
+      "mean": 11.22,
+      "p50": 6.36,
+      "p90": 21.377,
+      "p95": 32.835,
+      "p99": 99.277,
+      "max": 142.71
+    },
+    "4.5": {
+      "mean": 11.419,
+      "p50": 6.51,
+      "p90": 22.096,
+      "p95": 32.292,
+      "p99": 96.105,
+      "max": 141.05
+    },
+    "5.0": {
+      "mean": 11.375,
+      "p50": 6.64,
+      "p90": 22.338,
+      "p95": 33.401,
+      "p99": 86.445,
+      "max": 130.43
+    },
+    "5.5": {
+      "mean": 10.963,
+      "p50": 6.73,
+      "p90": 20.98,
+      "p95": 33.354,
+      "p99": 69.807,
+      "max": 122.83
+    },
+    "6.0": {
+      "mean": 10.431,
+      "p50": 6.72,
+      "p90": 19.69,
+      "p95": 31.74,
+      "p99": 59.301,
+      "max": 96.57
+    },
+    "6.5": {
+      "mean": 9.845,
+      "p50": 6.59,
+      "p90": 18.637,
+      "p95": 30.05,
+      "p99": 52.547,
+      "max": 90.65
+    },
+    "7.0": {
+      "mean": 9.237,
+      "p50": 6.41,
+      "p90": 17.238,
+      "p95": 27.755,
+      "p99": 47.117,
+      "max": 84.85
+    },
+    "7.5": {
+      "mean": 8.54,
+      "p50": 6.11,
+      "p90": 15.71,
+      "p95": 24.58,
+      "p99": 43.114,
+      "max": 82.54
+    },
+    "8.0": {
+      "mean": 7.835,
+      "p50": 5.702,
+      "p90": 13.898,
+      "p95": 21.368,
+      "p99": 39.167,
+      "max": 74.56
+    },
+    "8.5": {
+      "mean": 7.109,
+      "p50": 5.27,
+      "p90": 12.928,
+      "p95": 17.912,
+      "p99": 34.672,
+      "max": 69.74
+    },
+    "9.0": {
+      "mean": 6.425,
+      "p50": 4.84,
+      "p90": 12.19,
+      "p95": 15.461,
+      "p99": 27.664,
+      "max": 62.65
+    },
+    "9.5": {
+      "mean": 5.83,
+      "p50": 4.51,
+      "p90": 11.716,
+      "p95": 13.876,
+      "p99": 21.524,
+      "max": 59.78
+    },
+    "10.0": {
+      "mean": 5.351,
+      "p50": 4.23,
+      "p90": 11.09,
+      "p95": 13.05,
+      "p99": 18.15,
+      "max": 39.76
+    }
+  },
+  "surface_exceed_counts": {
+    "p90": 1267,
+    "p95": 634,
+    "p99": 127
+  },
+  "linkage_surface_ex_p90": {
+    "n_surface_exceed": 1267,
+    "near_mean_other_layers": 4.359,
+    "near_ge3_frac": 0.886,
+    "near_ge5_frac": 0.777,
+    "deep_mean": 6.094,
+    "all_mean": 10.453,
+    "all_ge3_frac": 0.965
+  },
+  "linkage_surface_ex_p95": {
+    "n_surface_exceed": 634,
+    "near_mean_other_layers": 4.281,
+    "near_ge3_frac": 0.863,
+    "near_ge5_frac": 0.784,
+    "deep_mean": 4.585,
+    "all_mean": 8.866,
+    "all_ge3_frac": 0.91
+  },
+  "linkage_surface_ex_p99": {
+    "n_surface_exceed": 127,
+    "near_mean_other_layers": 3.346,
+    "near_ge3_frac": 0.693,
+    "near_ge5_frac": 0.559,
+    "deep_mean": 2.898,
+    "all_mean": 6.244,
+    "all_ge3_frac": 0.701
+  },
+  "surface_isolated_p90": {
+    "isolated_frac": 0.058,
+    "cooccur_ge1_frac": 0.942,
+    "cooccur_ge3_frac": 0.886
+  },
+  "surface_isolated_p95": {
+    "isolated_frac": 0.085,
+    "cooccur_ge1_frac": 0.915,
+    "cooccur_ge3_frac": 0.863
+  },
+  "deep_layer_stability": {
+    "deep_cv": 1.092,
+    "surface_cv": 1.361
+  },
+  "run_length_p90": {
+    "n_runs": 179,
+    "p50_pts": 4,
+    "p75_pts": 6,
+    "p90_pts": 14,
+    "max_pts": 119,
+    "frac_1pt": 0.279,
+    "frac_le2pt": 0.397,
+    "frac_ge16pt": 0.073,
+    "frac_ge32pt": 0.034
+  },
+  "run_length_p95": {
+    "n_runs": 84,
+    "p50_pts": 5,
+    "p75_pts": 6,
+    "p90_pts": 13,
+    "max_pts": 81,
+    "frac_1pt": 0.19,
+    "frac_le2pt": 0.25,
+    "frac_ge16pt": 0.083,
+    "frac_ge32pt": 0.048
+  },
+  "run_length_p99": {
+    "n_runs": 35,
+    "p50_pts": 4,
+    "p75_pts": 5,
+    "p90_pts": 6,
+    "max_pts": 9,
+    "frac_1pt": 0.257,
+    "frac_le2pt": 0.314,
+    "frac_ge16pt": 0.0,
+    "frac_ge32pt": 0.0
+  },
+  "threshold_sensitivity": {
+    "p90": {
+      "threshold_value": 15.226,
+      "n_runs_any": 179,
+      "n_runs_ge1d": 27,
+      "n_runs_ge2d": 13,
+      "n_runs_ge3d": 10,
+      "n_runs_ge5d": 5
+    },
+    "p95": {
+      "threshold_value": 24.668,
+      "n_runs_any": 84,
+      "n_runs_ge1d": 15,
+      "n_runs_ge2d": 7,
+      "n_runs_ge3d": 4,
+      "n_runs_ge5d": 2
+    },
+    "p99": {
+      "threshold_value": 64.373,
+      "n_runs_any": 35,
+      "n_runs_ge1d": 2,
+      "n_runs_ge2d": 0,
+      "n_runs_ge3d": 0,
+      "n_runs_ge5d": 0
+    },
+    "abs_15": {
+      "threshold_value": 15.0,
+      "n_runs_any": 173,
+      "n_runs_ge1d": 27,
+      "n_runs_ge2d": 14,
+      "n_runs_ge3d": 10,
+      "n_runs_ge5d": 5
+    },
+    "abs_20": {
+      "threshold_value": 20.0,
+      "n_runs_any": 104,
+      "n_runs_ge1d": 17,
+      "n_runs_ge2d": 8,
+      "n_runs_ge3d": 5,
+      "n_runs_ge5d": 4
+    },
+    "abs_25": {
+      "threshold_value": 25.0,
+      "n_runs_any": 83,
+      "n_runs_ge1d": 15,
+      "n_runs_ge2d": 7,
+      "n_runs_ge3d": 4,
+      "n_runs_ge5d": 2
+    },
+    "abs_30": {
+      "threshold_value": 30.0,
+      "n_runs_any": 83,
+      "n_runs_ge1d": 11,
+      "n_runs_ge2d": 6,
+      "n_runs_ge3d": 3,
+      "n_runs_ge5d": 2
+    },
+    "abs_40": {
+      "threshold_value": 40.0,
+      "n_runs_any": 58,
+      "n_runs_ge1d": 7,
+      "n_runs_ge2d": 3,
+      "n_runs_ge3d": 2,
+      "n_runs_ge5d": 2
+    },
+    "abs_50": {
+      "threshold_value": 50.0,
+      "n_runs_any": 49,
+      "n_runs_ge1d": 5,
+      "n_runs_ge2d": 1,
+      "n_runs_ge3d": 1,
+      "n_runs_ge5d": 0
+    }
+  },
+  "abs_threshold_sensitivity": {
+    "abs_10": {
+      "threshold_value": 10.0,
+      "bloom_days_total": 465.5,
+      "n_runs_any": 249,
+      "n_runs_ge2d": 46,
+      "by_year_days": {
+        "2021": 192.375,
+        "2022": 38.625,
+        "2023": 109.125,
+        "2024": 96.625,
+        "2025": 28.75
+      }
+    },
+    "abs_15": {
+      "threshold_value": 15.0,
+      "bloom_days_total": 196.125,
+      "n_runs_any": 147,
+      "n_runs_ge2d": 10,
+      "by_year_days": {
+        "2021": 132.125,
+        "2022": 9.75,
+        "2023": 37.375,
+        "2024": 12.25,
+        "2025": 4.625
+      }
+    },
+    "abs_20": {
+      "threshold_value": 20.0,
+      "bloom_days_total": 120.25,
+      "n_runs_any": 74,
+      "n_runs_ge2d": 5,
+      "by_year_days": {
+        "2021": 99.0,
+        "2022": 0.0,
+        "2023": 20.375,
+        "2024": 0.375,
+        "2025": 0.5
+      }
+    },
+    "abs_25": {
+      "threshold_value": 25.0,
+      "bloom_days_total": 94.375,
+      "n_runs_any": 61,
+      "n_runs_ge2d": 6,
+      "by_year_days": {
+        "2021": 80.625,
+        "2022": 0.0,
+        "2023": 13.625,
+        "2024": 0.0,
+        "2025": 0.125
+      }
+    },
+    "abs_30": {
+      "threshold_value": 30.0,
+      "bloom_days_total": 80.5,
+      "n_runs_any": 61,
+      "n_runs_ge2d": 9,
+      "by_year_days": {
+        "2021": 71.0,
+        "2022": 0.0,
+        "2023": 9.5,
+        "2024": 0.0,
+        "2025": 0.0
+      }
+    }
+  },
+  "event_counts": {
+    "k1_d1d": 12,
+    "k1_d2d": 7,
+    "k1_d3d": 6,
+    "k2_d1d": 11,
+    "k2_d2d": 6,
+    "k2_d3d": 5,
+    "k3_d1d": 11,
+    "k3_d2d": 7,
+    "k3_d3d": 6
+  },
+  "event_samples": {
+    "k1_d1d": [
+      {
+        "start": "2021-04-01 03:00:00",
+        "end": "2021-04-03 18:00:00",
+        "duration_pt": 22,
+        "duration_days": 2.75,
+        "peak": 40.279998779296875,
+        "peak_ts": "2021-04-02 15:00:00",
+        "mean_near_layers": 3.409
+      },
+      {
+        "start": "2021-04-06 18:00:00",
+        "end": "2021-04-07 15:00:00",
+        "duration_pt": 8,
+        "duration_days": 1.0,
+        "peak": 66.20999908447266,
+        "peak_ts": "2021-04-07 15:00:00",
+        "mean_near_layers": 5.0
+      },
+      {
+        "start": "2021-04-12 03:00:00",
+        "end": "2021-04-13 21:00:00",
+        "duration_pt": 15,
+        "duration_days": 1.875,
+        "peak": 112.51000213623047,
+        "peak_ts": "2021-04-13 18:00:00",
+        "mean_near_layers": 5.0
+      },
+      {
+        "start": "2021-04-14 18:00:00",
+        "end": "2021-04-17 15:00:00",
+        "duration_pt": 24,
+        "duration_days": 3.0,
+        "peak": 131.92999267578125,
+        "peak_ts": "2021-04-15 18:00:00",
+        "mean_near_layers": 4.708
+      },
+      {
+        "start": "2021-04-18 15:00:00",
+        "end": "2021-05-07 03:00:00",
+        "duration_pt": 138,
+        "duration_days": 17.25,
+        "peak": 126.36000061035156,
+        "peak_ts": "2021-04-20 03:00:00",
+        "mean_near_layers": 4.21
+      },
+      {
+        "start": "2021-05-07 18:00:00",
+        "end": "2021-05-09 03:00:00",
+        "duration_pt": 12,
+        "duration_days": 1.5,
+        "peak": 52.650001525878906,
+        "peak_ts": "2021-05-07 18:00:00",
+        "mean_near_layers": 3.333
+      },
+      {
+        "start": "2021-05-09 18:00:00",
+        "end": "2021-05-21 03:00:00",
+        "duration_pt": 91,
+        "duration_days": 11.375,
+        "peak": 47.2400016784668,
+        "peak_ts": "2021-05-15 21:00:00",
+        "mean_near_layers": 4.066
+      },
+      {
+        "start": "2021-05-22 18:00:00",
+        "end": "2021-06-23 03:00:00",
+        "duration_pt": 252,
+        "duration_days": 31.5,
+        "peak": 81.0199966430664,
+        "peak_ts": "2021-06-16 12:00:00",
+        "mean_near_layers": 4.651
+      },
+      {
+        "start": "2023-04-07 18:00:00",
+        "end": "2023-04-09 03:00:00",
+        "duration_pt": 12,
+        "duration_days": 1.5,
+        "peak": 43.72999954223633,
+        "peak_ts": "2023-04-09 03:00:00",
+        "mean_near_layers": 3.333
+      },
+      {
+        "start": "2023-04-10 18:00:00",
+        "end": "2023-04-16 03:00:00",
+        "duration_pt": 44,
+        "duration_days": 5.5,
+        "peak": 46.779998779296875,
+        "peak_ts": "2023-04-14 03:00:00",
+        "mean_near_layers": 3.682
+      },
+      {
+        "start": "2023-04-16 18:00:00",
+        "end": "2023-04-20 03:00:00",
+        "duration_pt": 27,
+        "duration_days": 3.375,
+        "peak": 41.84000015258789,
+        "peak_ts": "2023-04-17 18:00:00",
+        "mean_near_layers": 3.074
+      },
+      {
+        "start": "2023-04-23 18:00:00",
+        "end": "2023-04-25 03:00:00",
+        "duration_pt": 12,
+        "duration_days": 1.5,
+        "peak": 31.020000457763672,
+        "peak_ts": "2023-04-23 21:00:00",
+        "mean_near_layers": 2.083
+      }
+    ],
+    "k1_d2d": [
+      {
+        "start": "2021-04-01 03:00:00",
+        "end": "2021-04-03 18:00:00",
+        "duration_pt": 22,
+        "duration_days": 2.75,
+        "peak": 40.279998779296875,
+        "peak_ts": "2021-04-02 15:00:00",
+        "mean_near_layers": 3.409
+      },
+      {
+        "start": "2021-04-14 18:00:00",
+        "end": "2021-04-17 15:00:00",
+        "duration_pt": 24,
+        "duration_days": 3.0,
+        "peak": 131.92999267578125,
+        "peak_ts": "2021-04-15 18:00:00",
+        "mean_near_layers": 4.708
+      },
+      {
+        "start": "2021-04-18 15:00:00",
+        "end": "2021-05-07 03:00:00",
+        "duration_pt": 138,
+        "duration_days": 17.25,
+        "peak": 126.36000061035156,
+        "peak_ts": "2021-04-20 03:00:00",
+        "mean_near_layers": 4.21
+      },
+      {
+        "start": "2021-05-09 18:00:00",
+        "end": "2021-05-21 03:00:00",
+        "duration_pt": 91,
+        "duration_days": 11.375,
+        "peak": 47.2400016784668,
+        "peak_ts": "2021-05-15 21:00:00",
+        "mean_near_layers": 4.066
+      },
+      {
+        "start": "2021-05-22 18:00:00",
+        "end": "2021-06-23 03:00:00",
+        "duration_pt": 252,
+        "duration_days": 31.5,
+        "peak": 81.0199966430664,
+        "peak_ts": "2021-06-16 12:00:00",
+        "mean_near_layers": 4.651
+      },
+      {
+        "start": "2023-04-10 18:00:00",
+        "end": "2023-04-16 03:00:00",
+        "duration_pt": 44,
+        "duration_days": 5.5,
+        "peak": 46.779998779296875,
+        "peak_ts": "2023-04-14 03:00:00",
+        "mean_near_layers": 3.682
+      },
+      {
+        "start": "2023-04-16 18:00:00",
+        "end": "2023-04-20 03:00:00",
+        "duration_pt": 27,
+        "duration_days": 3.375,
+        "peak": 41.84000015258789,
+        "peak_ts": "2023-04-17 18:00:00",
+        "mean_near_layers": 3.074
+      }
+    ],
+    "k1_d3d": [
+      {
+        "start": "2021-04-14 18:00:00",
+        "end": "2021-04-17 15:00:00",
+        "duration_pt": 24,
+        "duration_days": 3.0,
+        "peak": 131.92999267578125,
+        "peak_ts": "2021-04-15 18:00:00",
+        "mean_near_layers": 4.708
+      },
+      {
+        "start": "2021-04-18 15:00:00",
+        "end": "2021-05-07 03:00:00",
+        "duration_pt": 138,
+        "duration_days": 17.25,
+        "peak": 126.36000061035156,
+        "peak_ts": "2021-04-20 03:00:00",
+        "mean_near_layers": 4.21
+      },
+      {
+        "start": "2021-05-09 18:00:00",
+        "end": "2021-05-21 03:00:00",
+        "duration_pt": 91,
+        "duration_days": 11.375,
+        "peak": 47.2400016784668,
+        "peak_ts": "2021-05-15 21:00:00",
+        "mean_near_layers": 4.066
+      },
+      {
+        "start": "2021-05-22 18:00:00",
+        "end": "2021-06-23 03:00:00",
+        "duration_pt": 252,
+        "duration_days": 31.5,
+        "peak": 81.0199966430664,
+        "peak_ts": "2021-06-16 12:00:00",
+        "mean_near_layers": 4.651
+      },
+      {
+        "start": "2023-04-10 18:00:00",
+        "end": "2023-04-16 03:00:00",
+        "duration_pt": 44,
+        "duration_days": 5.5,
+        "peak": 46.779998779296875,
+        "peak_ts": "2023-04-14 03:00:00",
+        "mean_near_layers": 3.682
+      },
+      {
+        "start": "2023-04-16 18:00:00",
+        "end": "2023-04-20 03:00:00",
+        "duration_pt": 27,
+        "duration_days": 3.375,
+        "peak": 41.84000015258789,
+        "peak_ts": "2023-04-17 18:00:00",
+        "mean_near_layers": 3.074
+      }
+    ],
+    "k2_d1d": [
+      {
+        "start": "2021-04-01 03:00:00",
+        "end": "2021-04-03 18:00:00",
+        "duration_pt": 22,
+        "duration_days": 2.75,
+        "peak": 40.279998779296875,
+        "peak_ts": "2021-04-02 15:00:00",
+        "mean_near_layers": 3.409
+      },
+      {
+        "start": "2021-04-06 18:00:00",
+        "end": "2021-04-07 15:00:00",
+        "duration_pt": 8,
+        "duration_days": 1.0,
+        "peak": 66.20999908447266,
+        "peak_ts": "2021-04-07 15:00:00",
+        "mean_near_layers": 5.0
+      },
+      {
+        "start": "2021-04-12 03:00:00",
+        "end": "2021-04-13 21:00:00",
+        "duration_pt": 15,
+        "duration_days": 1.875,
+        "peak": 112.51000213623047,
+        "peak_ts": "2021-04-13 18:00:00",
+        "mean_near_layers": 5.0
+      },
+      {
+        "start": "2021-04-14 18:00:00",
+        "end": "2021-04-17 15:00:00",
+        "duration_pt": 24,
+        "duration_days": 3.0,
+        "peak": 131.92999267578125,
+        "peak_ts": "2021-04-15 18:00:00",
+        "mean_near_layers": 4.708
+      },
+      {
+        "start": "2021-04-18 15:00:00",
+        "end": "2021-05-07 03:00:00",
+        "duration_pt": 138,
+        "duration_days": 17.25,
+        "peak": 126.36000061035156,
+        "peak_ts": "2021-04-20 03:00:00",
+        "mean_near_layers": 4.21
+      },
+      {
+        "start": "2021-05-09 18:00:00",
+        "end": "2021-05-21 03:00:00",
+        "duration_pt": 91,
+        "duration_days": 11.375,
+        "peak": 47.2400016784668,
+        "peak_ts": "2021-05-15 21:00:00",
+        "mean_near_layers": 4.066
+      },
+      {
+        "start": "2021-05-22 18:00:00",
+        "end": "2021-06-23 03:00:00",
+        "duration_pt": 252,
+        "duration_days": 31.5,
+        "peak": 81.0199966430664,
+        "peak_ts": "2021-06-16 12:00:00",
+        "mean_near_layers": 4.651
+      },
+      {
+        "start": "2023-04-07 18:00:00",
+        "end": "2023-04-09 03:00:00",
+        "duration_pt": 12,
+        "duration_days": 1.5,
+        "peak": 43.72999954223633,
+        "peak_ts": "2023-04-09 03:00:00",
+        "mean_near_layers": 3.333
+      },
+      {
+        "start": "2023-04-10 18:00:00",
+        "end": "2023-04-16 03:00:00",
+        "duration_pt": 44,
+        "duration_days": 5.5,
+        "peak": 46.779998779296875,
+        "peak_ts": "2023-04-14 03:00:00",
+        "mean_near_layers": 3.682
+      },
+      {
+        "start": "2023-04-16 18:00:00",
+        "end": "2023-04-18 03:00:00",
+        "duration_pt": 11,
+        "duration_days": 1.375,
+        "peak": 41.84000015258789,
+        "peak_ts": "2023-04-17 18:00:00",
+        "mean_near_layers": 3.636
+      },
+      {
+        "start": "2023-04-23 18:00:00",
+        "end": "2023-04-25 03:00:00",
+        "duration_pt": 12,
+        "duration_days": 1.5,
+        "peak": 31.020000457763672,
+        "peak_ts": "2023-04-23 21:00:00",
+        "mean_near_layers": 2.083
+      }
+    ],
+    "k2_d2d": [
+      {
+        "start": "2021-04-01 03:00:00",
+        "end": "2021-04-03 18:00:00",
+        "duration_pt": 22,
+        "duration_days": 2.75,
+        "peak": 40.279998779296875,
+        "peak_ts": "2021-04-02 15:00:00",
+        "mean_near_layers": 3.409
+      },
+      {
+        "start": "2021-04-14 18:00:00",
+        "end": "2021-04-17 15:00:00",
+        "duration_pt": 24,
+        "duration_days": 3.0,
+        "peak": 131.92999267578125,
+        "peak_ts": "2021-04-15 18:00:00",
+        "mean_near_layers": 4.708
+      },
+      {
+        "start": "2021-04-18 15:00:00",
+        "end": "2021-05-07 03:00:00",
+        "duration_pt": 138,
+        "duration_days": 17.25,
+        "peak": 126.36000061035156,
+        "peak_ts": "2021-04-20 03:00:00",
+        "mean_near_layers": 4.21
+      },
+      {
+        "start": "2021-05-09 18:00:00",
+        "end": "2021-05-21 03:00:00",
+        "duration_pt": 91,
+        "duration_days": 11.375,
+        "peak": 47.2400016784668,
+        "peak_ts": "2021-05-15 21:00:00",
+        "mean_near_layers": 4.066
+      },
+      {
+        "start": "2021-05-22 18:00:00",
+        "end": "2021-06-23 03:00:00",
+        "duration_pt": 252,
+        "duration_days": 31.5,
+        "peak": 81.0199966430664,
+        "peak_ts": "2021-06-16 12:00:00",
+        "mean_near_layers": 4.651
+      },
+      {
+        "start": "2023-04-10 18:00:00",
+        "end": "2023-04-16 03:00:00",
+        "duration_pt": 44,
+        "duration_days": 5.5,
+        "peak": 46.779998779296875,
+        "peak_ts": "2023-04-14 03:00:00",
+        "mean_near_layers": 3.682
+      }
+    ],
+    "k2_d3d": [
+      {
+        "start": "2021-04-14 18:00:00",
+        "end": "2021-04-17 15:00:00",
+        "duration_pt": 24,
+        "duration_days": 3.0,
+        "peak": 131.92999267578125,
+        "peak_ts": "2021-04-15 18:00:00",
+        "mean_near_layers": 4.708
+      },
+      {
+        "start": "2021-04-18 15:00:00",
+        "end": "2021-05-07 03:00:00",
+        "duration_pt": 138,
+        "duration_days": 17.25,
+        "peak": 126.36000061035156,
+        "peak_ts": "2021-04-20 03:00:00",
+        "mean_near_layers": 4.21
+      },
+      {
+        "start": "2021-05-09 18:00:00",
+        "end": "2021-05-21 03:00:00",
+        "duration_pt": 91,
+        "duration_days": 11.375,
+        "peak": 47.2400016784668,
+        "peak_ts": "2021-05-15 21:00:00",
+        "mean_near_layers": 4.066
+      },
+      {
+        "start": "2021-05-22 18:00:00",
+        "end": "2021-06-23 03:00:00",
+        "duration_pt": 252,
+        "duration_days": 31.5,
+        "peak": 81.0199966430664,
+        "peak_ts": "2021-06-16 12:00:00",
+        "mean_near_layers": 4.651
+      },
+      {
+        "start": "2023-04-10 18:00:00",
+        "end": "2023-04-16 03:00:00",
+        "duration_pt": 44,
+        "duration_days": 5.5,
+        "peak": 46.779998779296875,
+        "peak_ts": "2023-04-14 03:00:00",
+        "mean_near_layers": 3.682
+      }
+    ],
+    "k3_d1d": [
+      {
+        "start": "2021-04-01 15:00:00",
+        "end": "2021-04-03 18:00:00",
+        "duration_pt": 18,
+        "duration_days": 2.25,
+        "peak": 40.279998779296875,
+        "peak_ts": "2021-04-02 15:00:00",
+        "mean_near_layers": 4.056
+      },
+      {
+        "start": "2021-04-06 18:00:00",
+        "end": "2021-04-07 15:00:00",
+        "duration_pt": 8,
+        "duration_days": 1.0,
+        "peak": 66.20999908447266,
+        "peak_ts": "2021-04-07 15:00:00",
+        "mean_near_layers": 5.0
+      },
+      {
+        "start": "2021-04-12 03:00:00",
+        "end": "2021-04-13 21:00:00",
+        "duration_pt": 15,
+        "duration_days": 1.875,
+        "peak": 112.51000213623047,
+        "peak_ts": "2021-04-13 18:00:00",
+        "mean_near_layers": 5.0
+      },
+      {
+        "start": "2021-04-14 18:00:00",
+        "end": "2021-04-17 15:00:00",
+        "duration_pt": 24,
+        "duration_days": 3.0,
+        "peak": 131.92999267578125,
+        "peak_ts": "2021-04-15 18:00:00",
+        "mean_near_layers": 4.708
+      },
+      {
+        "start": "2021-04-18 15:00:00",
+        "end": "2021-05-03 03:00:00",
+        "duration_pt": 106,
+        "duration_days": 13.25,
+        "peak": 126.36000061035156,
+        "peak_ts": "2021-04-20 03:00:00",
+        "mean_near_layers": 4.321
+      },
+      {
+        "start": "2021-05-03 18:00:00",
+        "end": "2021-05-07 03:00:00",
+        "duration_pt": 28,
+        "duration_days": 3.5,
+        "peak": 81.45999908447266,
+        "peak_ts": "2021-05-03 21:00:00",
+        "mean_near_layers": 4.107
+      },
+      {
+        "start": "2021-05-09 18:00:00",
+        "end": "2021-05-20 00:00:00",
+        "duration_pt": 82,
+        "duration_days": 10.25,
+        "peak": 47.2400016784668,
+        "peak_ts": "2021-05-15 21:00:00",
+        "mean_near_layers": 4.341
+      },
+      {
+        "start": "2021-05-22 18:00:00",
+        "end": "2021-06-23 03:00:00",
+        "duration_pt": 252,
+        "duration_days": 31.5,
+        "peak": 81.0199966430664,
+        "peak_ts": "2021-06-16 12:00:00",
+        "mean_near_layers": 4.651
+      },
+      {
+        "start": "2023-04-07 21:00:00",
+        "end": "2023-04-09 03:00:00",
+        "duration_pt": 11,
+        "duration_days": 1.375,
+        "peak": 43.72999954223633,
+        "peak_ts": "2023-04-09 03:00:00",
+        "mean_near_layers": 3.455
+      },
+      {
+        "start": "2023-04-10 18:00:00",
+        "end": "2023-04-16 03:00:00",
+        "duration_pt": 44,
+        "duration_days": 5.5,
+        "peak": 46.779998779296875,
+        "peak_ts": "2023-04-14 03:00:00",
+        "mean_near_layers": 3.682
+      },
+      {
+        "start": "2023-04-16 18:00:00",
+        "end": "2023-04-18 03:00:00",
+        "duration_pt": 11,
+        "duration_days": 1.375,
+        "peak": 41.84000015258789,
+        "peak_ts": "2023-04-17 18:00:00",
+        "mean_near_layers": 3.636
+      }
+    ],
+    "k3_d2d": [
+      {
+        "start": "2021-04-01 15:00:00",
+        "end": "2021-04-03 18:00:00",
+        "duration_pt": 18,
+        "duration_days": 2.25,
+        "peak": 40.279998779296875,
+        "peak_ts": "2021-04-02 15:00:00",
+        "mean_near_layers": 4.056
+      },
+      {
+        "start": "2021-04-14 18:00:00",
+        "end": "2021-04-17 15:00:00",
+        "duration_pt": 24,
+        "duration_days": 3.0,
+        "peak": 131.92999267578125,
+        "peak_ts": "2021-04-15 18:00:00",
+        "mean_near_layers": 4.708
+      },
+      {
+        "start": "2021-04-18 15:00:00",
+        "end": "2021-05-03 03:00:00",
+        "duration_pt": 106,
+        "duration_days": 13.25,
+        "peak": 126.36000061035156,
+        "peak_ts": "2021-04-20 03:00:00",
+        "mean_near_layers": 4.321
+      },
+      {
+        "start": "2021-05-03 18:00:00",
+        "end": "2021-05-07 03:00:00",
+        "duration_pt": 28,
+        "duration_days": 3.5,
+        "peak": 81.45999908447266,
+        "peak_ts": "2021-05-03 21:00:00",
+        "mean_near_layers": 4.107
+      },
+      {
+        "start": "2021-05-09 18:00:00",
+        "end": "2021-05-20 00:00:00",
+        "duration_pt": 82,
+        "duration_days": 10.25,
+        "peak": 47.2400016784668,
+        "peak_ts": "2021-05-15 21:00:00",
+        "mean_near_layers": 4.341
+      },
+      {
+        "start": "2021-05-22 18:00:00",
+        "end": "2021-06-23 03:00:00",
+        "duration_pt": 252,
+        "duration_days": 31.5,
+        "peak": 81.0199966430664,
+        "peak_ts": "2021-06-16 12:00:00",
+        "mean_near_layers": 4.651
+      },
+      {
+        "start": "2023-04-10 18:00:00",
+        "end": "2023-04-16 03:00:00",
+        "duration_pt": 44,
+        "duration_days": 5.5,
+        "peak": 46.779998779296875,
+        "peak_ts": "2023-04-14 03:00:00",
+        "mean_near_layers": 3.682
+      }
+    ],
+    "k3_d3d": [
+      {
+        "start": "2021-04-14 18:00:00",
+        "end": "2021-04-17 15:00:00",
+        "duration_pt": 24,
+        "duration_days": 3.0,
+        "peak": 131.92999267578125,
+        "peak_ts": "2021-04-15 18:00:00",
+        "mean_near_layers": 4.708
+      },
+      {
+        "start": "2021-04-18 15:00:00",
+        "end": "2021-05-03 03:00:00",
+        "duration_pt": 106,
+        "duration_days": 13.25,
+        "peak": 126.36000061035156,
+        "peak_ts": "2021-04-20 03:00:00",
+        "mean_near_layers": 4.321
+      },
+      {
+        "start": "2021-05-03 18:00:00",
+        "end": "2021-05-07 03:00:00",
+        "duration_pt": 28,
+        "duration_days": 3.5,
+        "peak": 81.45999908447266,
+        "peak_ts": "2021-05-03 21:00:00",
+        "mean_near_layers": 4.107
+      },
+      {
+        "start": "2021-05-09 18:00:00",
+        "end": "2021-05-20 00:00:00",
+        "duration_pt": 82,
+        "duration_days": 10.25,
+        "peak": 47.2400016784668,
+        "peak_ts": "2021-05-15 21:00:00",
+        "mean_near_layers": 4.341
+      },
+      {
+        "start": "2021-05-22 18:00:00",
+        "end": "2021-06-23 03:00:00",
+        "duration_pt": 252,
+        "duration_days": 31.5,
+        "peak": 81.0199966430664,
+        "peak_ts": "2021-06-16 12:00:00",
+        "mean_near_layers": 4.651
+      },
+      {
+        "start": "2023-04-10 18:00:00",
+        "end": "2023-04-16 03:00:00",
+        "duration_pt": 44,
+        "duration_days": 5.5,
+        "peak": 46.779998779296875,
+        "peak_ts": "2023-04-14 03:00:00",
+        "mean_near_layers": 3.682
+      }
+    ]
+  },
+  "surface_dropout": {
+    "n_timestamps": 128,
+    "frac": 0.01,
+    "n_runs": 38,
+    "max_run_pts": 35,
+    "p90_run_pts": 6,
+    "by_year": {
+      "2021": 127,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 1
+    }
+  },
+  "bloom_days": {
+    "total_pts": 1279,
+    "total_days": 159.875,
+    "by_year": {
+      "2021": 118.125,
+      "2022": 2.5,
+      "2023": 30.125,
+      "2024": 6.5,
+      "2025": 2.625
+    },
+    "frac_by_year": {
+      "2021": 0.404,
+      "2022": 0.007,
+      "2023": 0.087,
+      "2024": 0.018,
+      "2025": 0.01
+    }
+  },
+  "final_event_list": [
+    {
+      "start": "2021-03-27 15:00:00",
+      "end": "2021-07-07 03:00:00",
+      "duration_pt": 799,
+      "duration_days": 99.875,
+      "peak": 131.92999267578125,
+      "peak_ts": "2021-04-15 18:00:00",
+      "mean_col_layers": 9.523
+    },
+    {
+      "start": "2021-08-06 09:00:00",
+      "end": "2021-08-08 09:00:00",
+      "duration_pt": 17,
+      "duration_days": 2.125,
+      "peak": 17.049999237060547,
+      "peak_ts": "2021-08-06 15:00:00",
+      "mean_col_layers": 7.0
+    },
+    {
+      "start": "2021-08-09 15:00:00",
+      "end": "2021-08-20 15:00:00",
+      "duration_pt": 89,
+      "duration_days": 11.125,
+      "peak": 24.5,
+      "peak_ts": "2021-08-16 12:00:00",
+      "mean_col_layers": 6.461
+    },
+    {
+      "start": "2021-10-01 03:00:00",
+      "end": "2021-10-12 12:00:00",
+      "duration_pt": 92,
+      "duration_days": 11.5,
+      "peak": 25.110000610351562,
+      "peak_ts": "2021-10-07 15:00:00",
+      "mean_col_layers": 6.848
+    },
+    {
+      "start": "2022-05-18 18:00:00",
+      "end": "2022-05-24 18:00:00",
+      "duration_pt": 19,
+      "duration_days": 2.375,
+      "peak": 17.899999618530273,
+      "peak_ts": "2022-05-23 15:00:00",
+      "mean_col_layers": 4.211
+    },
+    {
+      "start": "2022-06-01 00:00:00",
+      "end": "2022-06-03 15:00:00",
+      "duration_pt": 22,
+      "duration_days": 2.75,
+      "peak": 17.239999771118164,
+      "peak_ts": "2022-06-03 00:00:00",
+      "mean_col_layers": 4.636
+    },
+    {
+      "start": "2023-04-02 00:00:00",
+      "end": "2023-05-03 00:00:00",
+      "duration_pt": 248,
+      "duration_days": 31.0,
+      "peak": 46.779998779296875,
+      "peak_ts": "2023-04-14 03:00:00",
+      "mean_col_layers": 8.016
+    },
+    {
+      "start": "2023-05-04 18:00:00",
+      "end": "2023-05-15 03:00:00",
+      "duration_pt": 77,
+      "duration_days": 9.625,
+      "peak": 31.850000381469727,
+      "peak_ts": "2023-05-10 03:00:00",
+      "mean_col_layers": 6.922
+    },
+    {
+      "start": "2023-10-17 00:00:00",
+      "end": "2023-10-22 03:00:00",
+      "duration_pt": 42,
+      "duration_days": 5.25,
+      "peak": 18.520000457763672,
+      "peak_ts": "2023-10-19 21:00:00",
+      "mean_col_layers": 3.595
+    },
+    {
+      "start": "2024-08-16 21:00:00",
+      "end": "2024-08-23 06:00:00",
+      "duration_pt": 52,
+      "duration_days": 6.5,
+      "peak": 20.670000076293945,
+      "peak_ts": "2024-08-23 03:00:00",
+      "mean_col_layers": 3.5
+    },
+    {
+      "start": "2024-08-25 03:00:00",
+      "end": "2024-08-27 12:00:00",
+      "duration_pt": 20,
+      "duration_days": 2.5,
+      "peak": 20.09000015258789,
+      "peak_ts": "2024-08-26 06:00:00",
+      "mean_col_layers": 6.0
+    },
+    {
+      "start": "2025-09-27 12:00:00",
+      "end": "2025-09-30 15:00:00",
+      "duration_pt": 26,
+      "duration_days": 3.25,
+      "peak": 19.610000610351562,
+      "peak_ts": "2025-09-30 15:00:00",
+      "mean_col_layers": 4.269
+    }
+  ],
+  "final_definition": {
+    "rule": "藻华状态 = 顶层带(0.5-3.0m)中位数 > 带 p90 且 0.5-5.0m 带 ≥3 层 > 各自 p90；藻华事件 = 连续藻华状态 ≥2 天（≥16 个 3h 点），相邻段间隔 ≤24h 合并。对表层单层 dropout 稳健（顶层带中位数不受单层尖峰/掉零影响）",
+    "n_events": 12,
+    "bloom_days_total": 159.875
+  },
+  "band_signal": {
+    "band_p90": 16.575,
+    "band_p95": 30.195,
+    "n_band_runs_any": 128,
+    "n_band_runs_ge1d": 11,
+    "n_band_runs_ge2d": 8,
+    "n_band_runs_ge3d": 7,
+    "by_year_ge2d": {
+      "2021": 7,
+      "2023": 1
+    }
+  },
+  "final_event_by_year": {
+    "2021": 4,
+    "2022": 2,
+    "2023": 3,
+    "2024": 2,
+    "2025": 1
+  },
+  "final_event_peak": {
+    "p50": 20.38,
+    "min": 17.05,
+    "max": 131.93
+  },
+  "final_event_duration_days": {
+    "p50": 5.875,
+    "min": 2.125,
+    "max": 99.875
+  },
+  "leading_window_p75_days": {
+    "p25": 30.0,
+    "p50": 30.062,
+    "p75": 33.375,
+    "min": 26.625,
+    "max": 38.625
+  },
+  "leading_window_p50_days": {
+    "p25": 30.0,
+    "p50": 30.062,
+    "p75": 33.375,
+    "min": 26.625,
+    "max": 38.625
+  },
+  "ramp_days_to_peak": {
+    "p25": 2.656,
+    "p50": 5.125,
+    "p75": 6.594,
+    "max": 19.125
+  },
+  "leading_window_from_min_days": {
+    "p25": 15.25,
+    "p50": 19.5,
+    "p75": 23.75,
+    "min": 12.25,
+    "max": 27.375
+  },
+  "event_detail_lead": [
+    {
+      "start": "2021-03-27 15:00:00",
+      "end": "2021-07-07 03:00:00",
+      "duration_days": 99.875,
+      "peak": 131.92999267578125,
+      "baseline_min": 4.815,
+      "ratio_start_over_min": 3.858,
+      "lead_from_min_days": 18.375,
+      "ramp_to_peak_days": 19.125
+    },
+    {
+      "start": "2021-08-06 09:00:00",
+      "end": "2021-08-08 09:00:00",
+      "duration_days": 2.125,
+      "peak": 17.049999237060547,
+      "baseline_min": 0.0,
+      "ratio_start_over_min": 1815.0,
+      "lead_from_min_days": 24.125,
+      "ramp_to_peak_days": 0.25
+    },
+    {
+      "start": "2021-08-09 15:00:00",
+      "end": "2021-08-20 15:00:00",
+      "duration_days": 11.125,
+      "peak": 24.5,
+      "baseline_min": 0.0,
+      "ratio_start_over_min": 2315.0,
+      "lead_from_min_days": 27.375,
+      "ramp_to_peak_days": 6.875
+    },
+    {
+      "start": "2021-10-01 03:00:00",
+      "end": "2021-10-12 12:00:00",
+      "duration_days": 11.5,
+      "peak": 25.110000610351562,
+      "baseline_min": 8.285,
+      "ratio_start_over_min": 2.003,
+      "lead_from_min_days": 13.375,
+      "ramp_to_peak_days": 6.5
+    },
+    {
+      "start": "2022-05-18 18:00:00",
+      "end": "2022-05-24 18:00:00",
+      "duration_days": 2.375,
+      "peak": 17.899999618530273,
+      "baseline_min": 4.96,
+      "ratio_start_over_min": 3.375,
+      "lead_from_min_days": 15.25,
+      "ramp_to_peak_days": 4.875
+    },
+    {
+      "start": "2022-06-01 00:00:00",
+      "end": "2022-06-03 15:00:00",
+      "duration_days": 2.75,
+      "peak": 17.239999771118164,
+      "baseline_min": 5.75,
+      "ratio_start_over_min": 2.897,
+      "lead_from_min_days": 24.5,
+      "ramp_to_peak_days": 2.0
+    },
+    {
+      "start": "2023-04-02 00:00:00",
+      "end": "2023-05-03 00:00:00",
+      "duration_days": 31.0,
+      "peak": 46.779998779296875,
+      "baseline_min": 0.85,
+      "ratio_start_over_min": 19.912,
+      "lead_from_min_days": 23.625,
+      "ramp_to_peak_days": 12.125
+    },
+    {
+      "start": "2023-05-04 18:00:00",
+      "end": "2023-05-15 03:00:00",
+      "duration_days": 9.625,
+      "peak": 31.850000381469727,
+      "baseline_min": 6.64,
+      "ratio_start_over_min": 3.332,
+      "lead_from_min_days": 15.25,
+      "ramp_to_peak_days": 5.375
+    },
+    {
+      "start": "2023-10-17 00:00:00",
+      "end": "2023-10-22 03:00:00",
+      "duration_days": 5.25,
+      "peak": 18.520000457763672,
+      "baseline_min": 7.03,
+      "ratio_start_over_min": 2.374,
+      "lead_from_min_days": 21.0,
+      "ramp_to_peak_days": 2.875
+    },
+    {
+      "start": "2024-08-16 21:00:00",
+      "end": "2024-08-23 06:00:00",
+      "duration_days": 6.5,
+      "peak": 20.670000076293945,
+      "baseline_min": 4.15,
+      "ratio_start_over_min": 4.073,
+      "lead_from_min_days": 17.25,
+      "ramp_to_peak_days": 6.25
+    },
+    {
+      "start": "2024-08-25 03:00:00",
+      "end": "2024-08-27 12:00:00",
+      "duration_days": 2.5,
+      "peak": 20.09000015258789,
+      "baseline_min": 6.39,
+      "ratio_start_over_min": 2.776,
+      "lead_from_min_days": 20.625,
+      "ramp_to_peak_days": 1.125
+    },
+    {
+      "start": "2025-09-27 12:00:00",
+      "end": "2025-09-30 15:00:00",
+      "duration_days": 3.25,
+      "peak": 19.610000610351562,
+      "baseline_min": 6.965,
+      "ratio_start_over_min": 2.515,
+      "lead_from_min_days": 12.25,
+      "ramp_to_peak_days": 3.125
+    }
+  ],
+  "event_pre_ev_conc": {
+    "pre7d_mean": 12.891,
+    "event_mean": 20.285,
+    "ratio": 1.574
+  },
+  "meteo_context": {
+    "water_temp": {
+      "event_mean": 20.354,
+      "nonevent_mean": 18.979,
+      "event_p25": 14.85,
+      "event_p75": 25.96,
+      "nonevent_p25": 10.83,
+      "nonevent_p75": 26.09
+    },
+    "wind_speed": {
+      "event_mean": 1.884,
+      "nonevent_mean": 1.995,
+      "event_p25": 1.133,
+      "event_p75": 2.411,
+      "nonevent_p25": 1.183,
+      "nonevent_p75": 2.578
+    },
+    "air_temp": {
+      "event_mean": 22.002,
+      "nonevent_mean": 18.144,
+      "event_p25": 18.042,
+      "event_p75": 26.043,
+      "nonevent_p25": 9.853,
+      "nonevent_p75": 26.3
+    },
+    "rainfall": {
+      "event_mean": 1.884,
+      "nonevent_mean": 2.441,
+      "event_p25": 0.0,
+      "event_p75": 0.001,
+      "nonevent_p25": 0.0,
+      "nonevent_p75": 0.0
+    },
+    "pressure": {
+      "event_mean": 1003.057,
+      "nonevent_mean": 1008.041,
+      "event_p25": 998.489,
+      "event_p75": 1007.817,
+      "nonevent_p25": 1000.241,
+      "nonevent_p75": 1015.506
+    },
+    "strat_0_8": {
+      "event_mean": 6.242,
+      "nonevent_mean": 2.478,
+      "event_p25": 3.22,
+      "event_p75": 9.38,
+      "nonevent_p25": 0.01,
+      "nonevent_p75": 4.68
+    }
+  }
+}
