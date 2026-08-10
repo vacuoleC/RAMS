@@ -48,6 +48,10 @@
 | 3 | A 方向探索结果报告 | `exp/model_enhancement/a_mt_increment/results.md` / `results.json` | ✅ | 2026-08-10，多任务不叠加点精度但校准达标（覆盖 0.672→0.806） |
 | T4 | CRPS+滚动窗口评估脚本 | `scripts/explore/t4_crps_eval.py` | ✅ | 冒烟通过（正式全量待算力机跑） |
 | T4 | CRPS 评估报告 | `docs/t4_crps_eval.md` | ✅ | 2026-08-10，M1+conc 平均优于持久化 18.8%、气候学 3.85×（冒烟口径） |
+| 3 | K 方向两阶段训练探索脚本 | `exp/model_enhancement/k_two_stage/run_k.py` | ✅ | 2026-08-10，Stage1 单任务+Stage2 冻结/解冻微调多头，3-seed 17 窗口 |
+| 3 | K 方向两阶段训练结果报告 | `exp/model_enhancement/k_two_stage/results.md` / `results.json` | ✅ | 2026-08-10，ts_freeze 全 arm 最优点精度（0.808/1.583）+覆盖抬到 0.704，但未追平多任务校准 |
+| 3 | J 方向慢变量特征探索脚本 | `exp/model_enhancement/j_slow_vars/run_j.py` | ✅ | 2026-08-10，conc/air_temp 过去 30/60/90 天均值/斜率/方差喂增量，3-seed 17 窗口 |
+| 3 | J 方向慢变量特征结果报告 | `exp/model_enhancement/j_slow_vars/results.md` / `results.json` | ✅ | 2026-08-10，只帮覆盖窗口std（-6.5%），伤方向AUC（-0.016 显著）+点精度（RMSE +2.25% 显著），不建议加 |
 | | | | | |
 
 ---
@@ -69,6 +73,26 @@
 ---
 
 ## 三、执行日志（按时间追加，最新在最上）
+
+### [2026-08-10 16:50] K 方向探索——两阶段训练（解"精度 vs 校准"矛盾，部分解开）
+- 目标：A 方向证实单任务增量点精度好（CRPS 0.857）但区间欠校准（覆盖 0.672）、多任务保校准（0.806）但稀释精度（0.891）。假设：两阶段（Stage1 单任务训 M1 增量保精度 → Stage2 冻结/解冻 backbone 微调多任务头保校准）能否同时拿到两者。
+- 改动文件：
+  - 新建 `exp/model_enhancement/k_two_stage/`（探索标记）：`run_k.py`（实验）、`results.md`（结果）、`results.json`（统计量，无原始数据行）、`run_full.log`、`rethinking.md`、`trydoing.jsonl`、`whatwedo.md`
+- 执行命令与结果：
+  - 本地冒烟（`--smoke` CPU 1 窗口 3 seed）：全链路通过；窗口1 持久化 3.0136 与 A 一致（协议对齐）
+  - H100 全量：`cd /data/RAMS/proj && nohup python3 exp/model_enhancement/k_two_stage/run_k.py --epochs 30 --ep1 20 --ep2 10 --device cuda` → ~1.5h，4 arm × 3 seed × 17 窗口
+- 结果（3-seed 均值，17 窗口，conc 单位）：
+  - single（A 基准）：CRPS 0.857±0.357（+24.0%）、RMSE 1.665、覆盖 0.672 —— **逐位复现 A**
+  - multi（A 基准）：CRPS 0.891±0.422（+21.0%）、RMSE 1.774、覆盖 0.806、M2=0.955/M4=0.863 —— **逐位复现 A**
+  - **ts_freeze（Stage1 单任务 20ep → Stage2 冻结 backbone 只训头 10ep）：CRPS 0.808±0.306（+28.4%）、RMSE 1.583、覆盖 0.704、M2=0.953/M4=0.880**
+  - ts_full（Stage2 解冻全部 10ep）：CRPS 0.868±0.380（+23.0%）、RMSE 1.735、覆盖 0.742、M2=0.967/M4=0.863
+  - **结论：ts_freeze 拿到 4 arm 最优点精度（CRPS/RMSE 全场最低，全部 8 视界最优，16:1 胜 p<0.001），比单任务还低 5.7%；覆盖率显著抬到 0.704（+3.2pp p<0.001）但未追平多任务 0.806/80% 目标——两阶段部分解开精度-校准矛盾。冻结 backbone 是保住 Stage1 精度的必要条件（ts_full 解冻后精度回落到 ≈单任务 p=0.927、校准仅 0.742）。**
+  - 协议一致性：single/multi 逐位复现 A；持久化 CRPS 1.1281 = A/B7
+- 失误：无（本地 python3.14 缺 pandas → pip 补装；Stage1 用 RamsNet 只训 M1 loss 而非 IncrementQuantileNet，保证 Stage2 多头存在，loss 构成是唯一变量）
+- 冒烟：通过（本地 CPU + H100 全量）
+- 交付物：`exp/model_enhancement/k_two_stage/` 全套（脚本/结果/思考/日志）
+- 状态：✅ 完成
+- 下一步：M1 精度优先 + 免费 M2/M4 + 校准优于单任务 → 生产可采纳 ts_freeze（20+10，冻结 backbone）；覆盖达标 80% 仍需多任务或 ts_freeze 加事后共形/更长 Stage2/更高 w_m2/w_m4；可探 Stage2 只训 p10/p90 头
 
 ### [2026-08-10 13:20] E 方向探索——分层状态趋势喂增量（负结果，与 M5 中介结论互相印证）
 - 目标：M5 证水温对藻类无因果中介（temp→conc 无 MCI 边）。检验补充物理链"分层状态变化 → 垂向混合 → 藻类分布变化"是否在**增量 Δ** 上浮现——把分层状态（delta_T/thermo_grad）的**趋势**（3 天差分/斜率，非当前值）作为特征喂增量预测。
