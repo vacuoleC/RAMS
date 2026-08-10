@@ -52,6 +52,8 @@
 | 3 | K 方向两阶段训练结果报告 | `exp/model_enhancement/k_two_stage/results.md` / `results.json` | ✅ | 2026-08-10，ts_freeze 全 arm 最优点精度（0.808/1.583）+覆盖抬到 0.704，但未追平多任务校准 |
 | 3 | J 方向慢变量特征探索脚本 | `exp/model_enhancement/j_slow_vars/run_j.py` | ✅ | 2026-08-10，conc/air_temp 过去 30/60/90 天均值/斜率/方差喂增量，3-seed 17 窗口 |
 | 3 | J 方向慢变量特征结果报告 | `exp/model_enhancement/j_slow_vars/results.md` / `results.json` | ✅ | 2026-08-10，只帮覆盖窗口std（-6.5%），伤方向AUC（-0.016 显著）+点精度（RMSE +2.25% 显著），不建议加 |
+| 3 | **st-train-v020 正式训练验收脚本** | `scripts/train_v020.py` | ✅ | 2026-08-10，日级两阶段 ts_freeze（T=30/H=7，M4 bloom），`--fast-dev` 冒烟 / 全量 3-seed |
+| 3 | **st-train-v020 正式训练结果** | `exp/model_enhancement/st-train-v020/results.json` + `docs/mdl_model_integrate_results.md` §6 | ✅ | 2026-08-10，sensecore H100 109s；CRPS 1.182、技能 **+21.9%**、覆盖 **0.776**，3-seed 全超 +20%，验收达标 |
 | | | | | |
 
 ---
@@ -75,6 +77,29 @@
 ---
 
 ## 三、执行日志（按时间追加，最新在最上）
+
+### [2026-08-10 22:20] st-train-v020 —— mdl-model-integrate 正式训练验收（CRPS>+20% 达标 ✅）
+- 目标：在算力机 sensecore H100 上跑 3-seed × 17 窗口日级两阶段正式训练，验证冻结验收标准（CRPS 相对持久化 >+20%、覆盖率接近/超过探索 ts_freeze 0.704），冒烟→全量顺序确认链路。
+- 改动文件：
+  - 新建 `scripts/train_v020.py`（正式训练验收脚本：DailyTensorBuilder 日级 T=30/H=7 + RamsNet q9 + fit_two_stage 20+10ep 冻结 backbone + M4 bloom 标签 + 滚动 730/90/45 × 17 窗口 + 逐窗口/逐视界/总体 CRPS·技能·覆盖率·RMSE·M2/M4 acc 评估）
+  - 新建 `exp/model_enhancement/st-train-v020/`（results.json + train_full.log，统计量无原始数据行）
+  - 更新 `docs/mdl_model_integrate_results.md`（追加 §6 正式训练验收）、`LOG.md`（本记录）
+- 执行命令与结果（sensecore H100，torch 2.3.1+cu121）：
+  - 本地 CPU 冒烟（`--fast-dev --windows 1 --seeds 1`）：窗口1 CRPS 3.275 / 持久化 3.588 / 技能 **+8.7%**（随机初始化，与既有冒烟 +7.8% 同量级，链路正确）；M4 bloom acc 0.862
+  - 算力机 GPU 冒烟：结果与本地逐位一致（+8.7%），CUDA 链路通过
+  - 全量：`nohup python3 scripts/train_v020.py --out .../results.json > train_full.log 2>&1` → **109s**，51 次两阶段训练，收敛正常（Stage1 loss 0.16→0.08、Stage2 3.1→1.1 量级）
+- 结果（3-seed × 17 窗口展平，conc 单位）：
+  - **CRPS 1.182 ± 0.561 | 持久化 1.512 | CRPS 相对技能 +21.9% ± 5.3pp（3-seed 全部 >+20%：+20.1/+22.7/+23.0）**
+  - **覆盖率 [p10,p90] 0.776 ± 0.115（高于探索 ts_freeze 0.704，+7.2pp）**；p50 RMSE 2.141 ± 0.994；M2 acc 0.828；M4（bloom）acc 0.826
+  - 全部 7 视界技能 >+20%（h1 +20.9% … h4 +22.8%），15/17 窗口 >+15%
+  - **验收达标：CRPS 相对持久化 +21.9% > +20% ✅；覆盖率 0.776 达标（超探索参考）✅；3-seed 稳定（技能极差 2.9pp）✅**
+  - 与探索 ts_freeze（+28.4%/覆盖 0.704）对比：技能绝对值低为协议尺度不同（正式日级 H=7 vs 探索 3h 网格 H=8，持久化基线 1.512 vs 1.128，不可直接比）；覆盖率反超 +7.2pp（M4 换 bloom 二分类 + 日级协议 + 逆频率权重）
+- 失误：无
+- 冒烟：通过（本地 CPU + H100 GPU 双端一致）
+- 交付物：`scripts/train_v020.py`、`exp/model_enhancement/st-train-v020/`、`docs/mdl_model_integrate_results.md` §6
+- 状态：✅ 完成（mdl-model-integrate · evt-model-v020 正式训练验收达标）
+- 下一步：M4 事件评估（mdl-m4-warning，bloom 标签召回率+提前量，依赖本训练产物）；端到端 `scripts/train.py` 重建可复用 train_v020.py；如需覆盖达 80% 可试更长 Stage2 / 只训分位头
+
 
 ### [2026-08-10 16:50] K 方向探索——两阶段训练（解"精度 vs 校准"矛盾，部分解开）
 - 目标：A 方向证实单任务增量点精度好（CRPS 0.857）但区间欠校准（覆盖 0.672）、多任务保校准（0.806）但稀释精度（0.891）。假设：两阶段（Stage1 单任务训 M1 增量保精度 → Stage2 冻结/解冻 backbone 微调多任务头保校准）能否同时拿到两者。
