@@ -19,26 +19,31 @@
 oracle 注入（保证信息上限被充分使用，避免低估）：
   1. 未来 N 天真实 conc（标准化）作为额外输入通道，重复到全部 T 时刻（骨干 GRU 可见轨迹）；
   2. 同一 oracle 通道末时刻值直接拼接到 M1 头输入（hidden ⊕ oracle）——已知段（h≤M）的
-     "复制"变为近线性操作，模型能近乎完美利用 oracle → 收紧信息上限估计。
+     "复制"变为近线性操作；
+  3. **掩蔽已知段损失**：oracle 臂 M1 分位数损失只算诚实尾（h≥M）——已知段的信息上限是
+     完美复制（CRPS=0），不占训练容量，模型专注诚实尾预报 → 收紧信息上限估计
+     （避免"复制任务稀释尾部训练"导致的探针低估，防止假"世界 A"）。
 
 arm 定义（全部同一 17 窗口协议，3 seed；base/ar_only 用 A/B7 同款 RamsNet 保证可比锚定）：
   base8     H=8  全特征（temp_*+气象+conc 历史）无 oracle   —— 锚定公开基线 CRPS≈0.86
   base      H=64 全特征 无 oracle                            —— 当前模型扩展到 8 天
   ar_only   H=64 仅 conc 历史（无 temp/气象）               —— 强自回归上限（隔离 AR 信息）
-  oracle_1  H=64 全特征 + 未来 1 天真实 conc（8 步，通道+头注入）
-  oracle_3  H=64 全特征 + 未来 3 天真实 conc（24 步，通道+头注入）
-  oracle_7  H=64 全特征 + 未来 7 天真实 conc（56 步，通道+头注入）
+  oracle_1  H=64 全特征 + 未来 1 天真实 conc（8 步，通道+头注入+尾掩蔽）
+  oracle_3  H=64 全特征 + 未来 3 天真实 conc（24 步，通道+头注入+尾掩蔽）
+  oracle_7  H=64 全特征 + 未来 7 天真实 conc（56 步，通道+头注入+尾掩蔽）
 
 评估（全部还原 conc 单位，逐视界 + 按天聚合 d=1..8）：
   a. 每视界 CRPS（分位数闭合形式，与 A/B7 一致）+ p50 RMSE + 覆盖率
-  b. 关键数字（世界观判定）：
+  b. **有效指标**：已知天（h<M）标 0（完美复制=可达的信息上限），诚实尾（h≥M）用模型读数；
+     保留 raw known_crps 作通道利用诊断
+  c. 关键数字（世界观判定）：
      - **1-day-ahead 阶梯**（同难度、不同已知轨迹长度）：base_d1（已知 0 天）
        vs oracle_1_d2（已知 1 天）/ oracle_3_d4（已知 3 天）/ oracle_7_d8（已知 7 天）
        → 每多知道 1 天真实轨迹，1 天前预报能降多少 = 轨迹信号量
      - base_d8 vs oracle_7_d8（固定目标第 8 天，已知轨迹 0 vs 7 天）→ 不可桥接固有噪声
      - base vs ar_only（temp/气象是否贡献 = 非自回归信号量）
      - 逐窗口 base−oracle 差距 vs 浓度波动（World C 检验）
-  c. oracle 启动持久化基线（h≤M 真实=完美，h>M 保持最后已知值）：oracle 臂下界参照
+  d. oracle 启动持久化基线（h≤M 真实=完美，h>M 保持最后已知值）：oracle 臂下界参照
 3 seed 报告均值±std。保密：只输出聚合统计量，不打印原始数据行。
 """
 from __future__ import annotations
@@ -215,19 +220,75 @@ class OracleRamsNet(nn.Module):
 
 
 def train_model(Xw, y_norm, strat_w, warn_w, n_tr, H, oracle_M, epochs, device, seed):
+    """训练。oracle_M>0 时用 OracleRamsNet，并**掩蔽已知段（h<M）损失**：
+    已知段的信息上限是完美复制（CRPS=0），不参与训练 → 模型专注诚实尾（h≥M）的预报，
+    信息上限读数不被"复制任务稀释尾部训练"污染。"""
     torch.manual_seed(seed)
     np.random.seed(seed)
     if oracle_M > 0:
         model = OracleRamsNet(feat_dim=Xw.shape[2], horizon=H, oracle_M=oracle_M,
                               use_m4=True)
-    else:
-        model = RamsNet(feat_dim=Xw.shape[2], horizon=H, use_m4=True)
+        trainer = Trainer(model, device=device, w_m1=W_M1, w_m2=W_M2, w_m4=W_M4)
+        _fit_masked(trainer, model, Xw, y_norm, strat_w, warn_w, n_tr, oracle_M,
+                    epochs, device)
+        return model
+    model = RamsNet(feat_dim=Xw.shape[2], horizon=H, use_m4=True)
     trainer = Trainer(model, device=device, w_m1=W_M1, w_m2=W_M2, w_m4=W_M4)
     trainer.fit(Xw[:n_tr], y_norm[:n_tr], strat_w[:n_tr],
                 Xw[n_tr:], y_norm[n_tr:], strat_w[n_tr:],
                 warn_tr=warn_w[:n_tr], warn_va=warn_w[n_tr:],
                 epochs=epochs, batch_size=128)
     return model
+
+
+def _fit_masked(trainer, model, Xw, y_norm, strat_w, warn_w, n_tr, M, epochs, device):
+    """oracle 臂专用训练：M1 分位数损失**只算诚实尾（h≥M）**，已知段（h<M）不参与梯度。
+
+    已知段的信息上限是完美复制（CRPS=0，评估时标 0），模型无需在已知段花容量；
+    把全部容量留给诚实尾预报 → 收紧信息上限估计。M2/M4 损失照常（标准多任务）。
+    """
+    from torch.utils.data import DataLoader, TensorDataset
+
+    H = model.horizon
+    tensors = [torch.tensor(Xw[:n_tr]), torch.tensor(y_norm[:n_tr]),
+               torch.tensor(strat_w[:n_tr]), torch.tensor(warn_w[:n_tr])]
+    ds = TensorDataset(*tensors)
+    dl = DataLoader(ds, batch_size=128, shuffle=False)
+    Xv = torch.tensor(Xw[n_tr:]).to(device)
+    yv = torch.tensor(y_norm[n_tr:]).to(device)
+    sv = torch.tensor(strat_w[n_tr:]).to(device)
+    wv = torch.tensor(warn_w[n_tr:]).to(device)
+    mask = torch.zeros(H, device=device); mask[M:] = 1.0  # 诚实尾掩码
+
+    opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+    ce = torch.nn.CrossEntropyLoss()
+    for ep in range(epochs):
+        model.train()
+        for xb, yb, sb, wb in dl:
+            xb, yb, sb, wb = xb.to(device), yb.to(device), sb.to(device), wb.to(device)
+            opt.zero_grad()
+            m1, m2, m4 = model(xb)
+            # 掩蔽分位数损失（仅诚实尾）
+            m1q = m1.reshape(-1, 3, H)
+            e = yb.unsqueeze(1) - m1q
+            l1 = torch.stack([
+                torch.mean(torch.maximum(q * e[:, i], (q - 1) * e[:, i]) * mask)
+                for i, q in enumerate((0.1, 0.5, 0.9))
+            ]).mean()
+            l2 = ce(m2, sb)
+            l4 = ce(m4, wb) if m4 is not None else torch.tensor(0.0, device=device)
+            loss = W_M1 * l1 + W_M2 * l2 + W_M4 * l4
+            loss.backward()
+            opt.step()
+        model.eval()
+        with torch.no_grad():
+            m1v, m2v, _ = model(Xv)
+            pred = model.predict_mean(m1v)
+            # 验证 RMSE 只算诚实尾
+            val_rmse = torch.sqrt(((pred[:, M:] - yv[:, M:]) ** 2).mean()).item()
+            val_acc = (m2v.argmax(1) == sv).float().mean().item()
+        if ep % 10 == 0 or ep == epochs - 1:
+            print(f"  ep{ep} loss={loss.item():.4f} val_tail_rmse={val_rmse:.4f} val_acc={val_acc:.4f}", flush=True)
 
 
 def predict_quantiles(model, X_te, device):
@@ -301,6 +362,10 @@ def main():
         "crps_h": np.zeros((Nw, ARMS[a]["H"])), "rmse_h": np.zeros((Nw, ARMS[a]["H"])),
         "cover_h": np.zeros((Nw, ARMS[a]["H"])), "crps": np.zeros(Nw),
         "day_crps": np.zeros((Nw, ARMS[a]["H"] // GRID_PER_DAY)),
+        "eff_day_crps": np.zeros((Nw, ARMS[a]["H"] // GRID_PER_DAY)),  # 已知天=0，诚实尾用模型
+        "eff_crps": np.zeros(Nw),        # 有效总 CRPS（已知段=0 的信息上限读数）
+        "tail_crps": np.zeros(Nw),      # 诚实预报区（h≥M）逐视界 CRPS 均值
+        "known_crps": np.zeros(Nw),     # 已知段（h<M）复制 CRPS 均值（通道利用诊断）
         "crps_p": np.zeros(Nw),       # 标准持久化（conc_t）
         "crps_op": np.zeros(Nw),      # oracle 启动持久化（h≤M 真实，h>M 最后已知）
     } for s in SEEDS_} for a in ARMS}
@@ -368,6 +433,15 @@ def main():
                 g["cover_h"][wi] = cover_h
                 g["crps"][wi] = float(np.mean(crps_h))
                 g["day_crps"][wi] = day_c
+                # 有效按天 CRPS：已知天（h<M）标 0（完美复制可达的信息上限），诚实尾用模型
+                eff_day = day_c.copy()
+                if M > 0:
+                    nd_know = M // GRID_PER_DAY
+                    eff_day[:nd_know] = 0.0
+                g["eff_day_crps"][wi] = eff_day
+                g["eff_crps"][wi] = float(np.mean(eff_day))
+                g["tail_crps"][wi] = (float(np.mean(crps_h[M:])) if M < H else float("nan"))
+                g["known_crps"][wi] = (float(np.mean(crps_h[:M])) if M > 0 else float("nan"))
                 g["crps_p"][wi] = crps_p
                 g["crps_op"][wi] = crps_op
 
@@ -394,14 +468,16 @@ def main():
         return float(np.mean(vals)), float(np.std(vals))
 
     print("\n===== 全窗口平均 CRPS（3-seed 均值±std，17 窗口）=====", flush=True)
-    print(f"  {'arm':<10}{'CRPS_all':<20}{'CRPS_d1':<20}{'CRPS_d8':<20}{'RMSE_d1':<12}",
-          flush=True)
+    print(f"  {'arm':<10}{'CRPS_all':<20}{'eff_d1':<18}{'eff_d8':<18}{'tail_crps':<18}"
+          f"{'RMSE_d1':<12}", flush=True)
     summary = {}
     for a in ARMS:
-        H = ARMS[a]["H"]
+        H = ARMS[a]["H"]; M = ARMS[a]["M"]
         m_all, sd_all = arm_mean_std("crps", a, SEEDS_[0])
-        m_d1, sd_d1 = arm_mean_std("day_crps", a, SEEDS_[0], 0)
-        m_d8, sd_d8 = arm_mean_std("day_crps", a, SEEDS_[0], 7)
+        m_eff, _ = arm_mean_std("eff_crps", a, SEEDS_[0])
+        m_d1, sd_d1 = arm_mean_std("eff_day_crps", a, SEEDS_[0], 0)
+        m_d8, sd_d8 = arm_mean_std("eff_day_crps", a, SEEDS_[0], 7)
+        m_tail, _ = arm_mean_std("tail_crps", a, SEEDS_[0])
         rmse_d1, _ = arm_mean_std("rmse_h", a, SEEDS_[0], h_idx=0)
         crps_p = float(np.mean([agg[a][s]["crps_p"][wi] for s in SEEDS_ for wi in range(Nw)]))
         op_vals = [agg[a][s]["crps_op"][wi]
@@ -409,20 +485,23 @@ def main():
                    if not np.isnan(agg[a][s]["crps_op"][wi])]
         crps_op = float(np.mean(op_vals)) if op_vals else float("nan")
         skill_p = (crps_p - m_all) / crps_p * 100 if crps_p else 0
+        tail_str = f"{m_tail:.4f}" if M > 0 else "n/a"
         print(f"  {a:<10}{m_all:<10.4f}±{sd_all:<7.4f}{m_d1:<10.4f}±{sd_d1:<7.4f}"
-              f"{m_d8:<10.4f}±{sd_d8:<7.4f}{rmse_d1:<12.4f}  persist={crps_p:.4f} "
-              f"skill={skill_p:+.1f}%  opersist={crps_op:.4f}", flush=True)
+              f"{m_d8:<10.4f}±{sd_d8:<7.4f}{tail_str:<18}{rmse_d1:<12.4f}  "
+              f"persist={crps_p:.4f} skill={skill_p:+.1f}%  opersist={crps_op:.4f}", flush=True)
         summary[a] = {
             "crps_all": round(m_all, 4), "crps_all_std": round(sd_all, 4),
-            "crps_day1": round(m_d1, 4), "crps_day1_std": round(sd_d1, 4),
-            "crps_day8": round(m_d8, 4), "crps_day8_std": round(sd_d8, 4),
+            "crps_eff_all": round(m_eff, 4),
+            "crps_day1_eff": round(m_d1, 4), "crps_day1_eff_std": round(sd_d1, 4),
+            "crps_day8_eff": round(m_d8, 4), "crps_day8_eff_std": round(sd_d8, 4),
+            "crps_tail": round(m_tail, 4),
             "rmse_day1_h1": round(rmse_d1, 4),
             "crps_persist": round(crps_p, 4),
             "skill_vs_persist_pct": round(skill_p, 2),
             "crps_oracle_persist": round(crps_op, 4),
         }
 
-    print("\n===== 按天 CRPS（d=1..8，3-seed 均值，17 窗口平均）=====", flush=True)
+    print("\n===== 有效按天 CRPS（已知天标 0=信息上限；诚实尾用模型；d=1..8，17 窗口平均）=====", flush=True)
     print(f"  {'arm':<10}" + "".join([f"{'d'+str(d+1):>10}" for d in range(8)]), flush=True)
     day_tbl = {}
     for a in ARMS:
@@ -431,7 +510,7 @@ def main():
         row = []
         for d in range(8):
             if d < nd:
-                m, _ = arm_mean_std("day_crps", a, SEEDS_[0], d)
+                m, _ = arm_mean_std("eff_day_crps", a, SEEDS_[0], d)
             else:
                 m = float("nan")
             row.append(m)
@@ -442,18 +521,19 @@ def main():
     print("\n===== 世界观判定 =====", flush=True)
     base_d1 = day_tbl["base"][0]
     base_d8 = day_tbl["base"][7]
-    # 1-day-ahead 阶梯：已知 N 天真实轨迹后做 1 天前预报（同难度，不同已知量）
+    # 1-day-ahead 阶梯：已知 N 天真实轨迹后做 1 天前预报（同难度，不同已知量；
+    # 已知天标 0，阶梯读数全来自诚实尾——每个读数都是"已知 N 天轨迹 → 预报其后第 1 天"）
     stair = {
         "known0_base_d1": base_d1,
         "known1_oracle1_d2": day_tbl["oracle_1"][1],
         "known3_oracle3_d4": day_tbl["oracle_3"][3],
         "known7_oracle7_d8": day_tbl["oracle_7"][7],
     }
-    print(f"  1-day-ahead 阶梯（同难度、不同已知轨迹长度）：", flush=True)
+    print(f"  1-day-ahead 阶梯（已知 N 天真实轨迹 → 预报其后第 1 天）：", flush=True)
     for k, v in stair.items():
         rel = 100 * (base_d1 - v) / base_d1 if base_d1 else 0
         print(f"    {k:<24} CRPS={v:.4f}  vs base_d1 提升 {rel:+.1f}%", flush=True)
-    # 固定目标第 8 天：已知轨迹 0 vs 7 天
+    # 固定目标第 8 天：已知轨迹 0 vs 7 天（同一天，只有已知量不同）——不可桥接固有噪声
     gap_d8 = base_d8 - day_tbl["oracle_7"][7]
     print(f"  固定目标第8天：base_d8={base_d8:.4f} vs oracle7_d8={day_tbl['oracle_7'][7]:.4f} "
           f"→ 差 {gap_d8:.4f}（= 未来7天未知的固有代价，不可桥接）", flush=True)
@@ -503,7 +583,7 @@ def main():
                      "arch": "base/ar_only: RamsNet; oracle arms: OracleRamsNet(通道+头注入)",
                      "oracle_note": "oracle 通道=未来 N 天真实 conc（诊断探针，非部署，明确标注未来真实值）"},
         "arms": summary,
-        "day_crps": {a: [round(v, 4) for v in day_tbl[a]] for a in ARMS},
+        "eff_day_crps": {a: [round(v, 4) for v in day_tbl[a]] for a in ARMS},
         "worldview": {
             "staircase_1day": {k: round(v, 4) for k, v in stair.items()},
             "base_day1": round(base_d1, 4),
