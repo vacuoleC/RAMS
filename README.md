@@ -42,6 +42,11 @@ RAMS-Net 是一个面向水库藻类监测的多任务深度学习框架，基�
 3. **Daily-scale process matching / 日尺度过程匹配** — daily sampling with 7-day horizon aligns with algal growth timescales. 日尺度采样配合 7 天视界，匹配藻类生长时间尺度。
 4. **Probabilistic bloom warning / 概率化藻华预警** — calibrated probability output provides 3.6× lead time with half the false positives. 校准后的概率输出提供 3.6 倍提前量，误报减半。
 
+<p align="center">
+  <img src="docs/paper_figs/fig5_increment_vs_baseline.png" width="600" alt="Forecasting skill vs baselines / 预测技巧对比基线">
+  <img src="docs/paper_figs/fig8_lead_time.png" width="450" alt="Warning lead time / 预警提前量">
+</p>
+
 ---
 
 ## Architecture / 架构
@@ -56,6 +61,10 @@ Input (B, T=30, D=20, C)
 
 Two-stage training / 两阶段训练: Stage 1 single-task M1 (20 epochs) → Stage 2 freeze backbone, fine-tune multi-head (10 epochs). Multi-task loss L = w1·L_q(M1) + w2·CE(M2) + w4·CE(M4), w=(1,3,2).
 第一阶段单任务训练 M1（20 轮）→ 第二阶段冻结主干、微调多任务头（10 轮）。
+
+<p align="center">
+  <img src="docs/paper_figs/fig4_architecture.png" width="600" alt="RAMS-Net Architecture / RAMS-Net 架构">
+</p>
 
 ---
 
