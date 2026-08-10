@@ -35,6 +35,17 @@
 | 5 | M5 因果时滞结果报告 | 算力机 `docs/m5_pcmci_results.md` / `m5_pcmci_edges.json` / `m5_pcmci_graph.png` | ✅ | 2026-08-09，tau_max=60（30 天） |
 | 3 | M3 点位优化探索脚本 | `scripts/explore/m3_sensor_placement.py` | ✅ | 2026-08-09，GAT+贪心，3-seed |
 | 3 | M3 点位优化结果报告 | `docs/m3_sensor_placement.md` | ✅ | 2026-08-09，最优 5 层部署建议 |
+| T2 | T2 公开对比基线报告 | `docs/t2_public_baseline.md` | ✅ | 2026-08-10，EFI-USGS/复现/公开数据 |
+| T2 | 平凡基线脚本 | `scripts/explore/t2_baseline_local.py` | ✅ | 持久化 1.24 / AR 1.13 / 气候学 9.87 |
+| T2 | EFI-USGS 基线脚本 | `scripts/explore/t2_efi_usgs_baseline.py` | ✅ | 持久化 CRPS=1.50 / 气候学 3.54 |
+| T2 | Tick Tick Bloom 复现脚本 | `scripts/explore/t2_ticktick_repro.py` | ✅ | LightGBM 分级 acc=0.926 |
+| T2 | EFI-USGS 公开数据 | `data/public/efi-usgs/` | ✅ | 25,488 条 10 站点（gitignore） |
+| T2 | THQBCA 公开数据 | `data/public/thqbca/THQBCA-V2.rar` | ✅ | 924.7MB 完整下载，解压待 rar 工具 |
+| T2 | TTB 冠军源码 | `data/public/tick-tick-bloom/lgbmNN_ee_gkf_S_v42g.ipynb` | ✅ | 2.5MB |
+| 3 | 框架比较脚本（3 梯队 12 模型） | `scripts/explore/framework_compare.py` | ✅ | 2026-08-10，GRU vs 传统ML/线性深度/注意力，3-seed×30ep |
+| 3 | 框架比较结果报告 | `docs/framework_compare.md` / `framework_compare_results.json` | ✅ | 2026-08-10，GRU 多任务 3.64 最优，全框架更差 |
+| T4 | CRPS+滚动窗口评估脚本 | `scripts/explore/t4_crps_eval.py` | ✅ | 冒烟通过（正式全量待算力机跑） |
+| T4 | CRPS 评估报告 | `docs/t4_crps_eval.md` | ✅ | 2026-08-10，M1+conc 平均优于持久化 18.8%、气候学 3.85×（冒烟口径） |
 | | | | | |
 
 ---
@@ -50,15 +61,73 @@
 | 2026-06-08 | 0.1 补充 README 更新 | 对 README.md 三次**并行** `replace_in_file` 全部失败，工具提示 `The file was reverted to its original state: <empty>`，实际 `README.md` 被清空丢失 | 在一次响应中**并行发起多个对同一文件的 replace_in_file** 会触发工具的“回滚到原状态”机制，第一个失败时另外两个也会被撤，最终文件被置空。 | （1）以后修改同一个文件**串行**做，且一个响应里只发一个 `replace_in_file`；（2）遇失败时优先 `read_file` 拿真实内容再重试；（3）实在不行用 `write_to_file` 整体重写——但要谨慎，会丢失原内容。最终用户要求“更新一下”时直接走 `write_to_file` 重建 + 一次性嵌入更新。 |
 | 2026-08-09 | 5 PCMCI+ 超参爆炸 | 全图 12²×τmax=27,648 条候选边，PCMCI+ 卡死 182 分钟被杀 | tigramite 官方 #208：总成本 ∝ 链接数 × 条件数，τ_max 是线性放大系数；3h 网格对水库过程过采样 | 12h 均值降采样 + ACF 定 τ_max + link_assumptions 剪枝（6912→1184）+ max_conds=5 约束；全候选空间下 30 天滞仅需 7.4 分钟 |
 | 2026-08-09 | 5 link_assumptions 伪边 | 用 link_assumptions（`-?>`）剪枝后，graph 里出现大量 val=0/p=1 的 `-->` 伪边（未真正过 MCI 检验） | tigramite 5.2 会把 `-?>` 链接带进最终 graph，未检验的边 val/p 保持初值 | 默认跑全候选空间（link_assumptions=None），collect_edges 额外按 p<alpha 过滤，保证每条边都有真实 MCI 统计量 |
+| 2026-08-10 | 3 框架比较持久化基线 | 持久化 RMSE=2.07（本应 ~1.23），LinearRegression/Ridge 却高达 8.5 | `stage1_persistence` 收到的是 train 段 y_prev，却按全窗口偏移索引；`stage1_ml` 把 train 段又切成 70/15/15，val/test 实为真实 train 的段 | 主流程拼接 train+val+test 全量窗口传入 stage1；persistence/ML/DL 统一用全量窗口 + 同一 70/15/15 索引。修复后持久化 1.23 与 LOG 一致 |
 | | | | | |
 
 ---
 
 ## 三、执行日志（按时间追加，最新在最上）
 
+### [2026-08-10 10:45] T4 CRPS + 滚动窗口评估（协议改造）—— 修正固定 70/15/15 的不公平评估
+- 目标：把 M1 评估从"固定 70/15/15"（训练高波动段 2021-24 std13.9、测试低波动段 2025 std3.1，导致模型 RMSE 3.6 反不如持久化 1.24）改为 EFI 口径 **CRPS + 滚动窗口**，并强化逐视界基线。
+- 改动文件：
+  - 新建 `scripts/explore/t4_crps_eval.py`：滚动窗口（训练 2 年/测试 3 月/45 天推进）逐窗口独立训练 GRU 分位数模型；闭合形式分位数 CRPS（p10/p50/p90，已验证 ~1e-11 与数值积分一致）；逐视界持久化（当前值当预测，分视界评估）+ 气候学（同月分位数）；同批测试样本公平对比。开关 `--smoke/--epochs/--max-windows/--device/--m1-only/--with-conc`。
+  - 新建 `docs/t4_crps_eval.md`：协议说明 + 冒烟逐视界对照表 + 结论 + 正式运行命令。
+- 本机冒烟（CPU，2 窗口×2 epoch，seed 固定）：链路跑通，输出统计量无原始数据行。
+- **关键发现（信息结构缺陷）**：默认模型输入只有 temp_0.5~10 + 气象、**没有浓度历史**，而 M5 实证藻类强自回归（conc τ=1 r=0.63）、持久化恰用当前浓度 → 默认配置公平协议下模型被持久化碾压（−120%）。加入过去 3 天 conc_0.5 特征后（`--with-conc`）模型平均 CRPS 1.42 vs 持久化 1.82（**优于 18.8%**）、气候学 5.45（**3.85× 好**），h=2..8 全超越、h=1（3h）不超（此时持久化本就最优）。`--m1-only` 优于多任务 w=1/3/2（+18.8% vs −2.1%）→ 辅助权重稀释 M1 是次级因素。
+- 失误：早期一版窗口边界把 T+H 预测点混入训练段 → 改为按"预测起点"切片（k∈[i0,te_start−T−H) 训练 / ≥te_start 测试）；基线早期版本泄漏"气候学用全窗口含测试段月均值"→ 只取训练段。均已修复。
+- 冒烟：✅ 通过（两种模式 + 有无 conc 共 4 配置链路全通）
+- 交付物：T4 脚本 + 报告（含正式运行命令，待算力机 H100 全量 9 窗口×30ep）
+- 状态：✅ 脚本+报告就绪（正式全量由人跑）
+- 下一步：算力机跑 4 配置填正式表；把 conc 历史加进正式模型输入特征（M5 自回归结论落地）
+
+### [2026-08-10 10:35] Stage 3 · 框架比较：GRU 是否最优（3 梯队统一接口）
+- 目标：追求最大精度，判断当前共享 GRU 架构是否最优、有无更优替换。所有模型同一数据（20 层水温+6 气象，T=24→H=8 预测未来 24h 表层浓度）、同一时序切分 70/15/15、同一评估（测试 RMSE 还原尺度）、torch 模型同一训练量（30ep×bs128×Adam lr1e-3）。
+- 改动文件：
+  - 新建：`scripts/explore/framework_compare.py`（12 模型统一接口；含 --smoke/--stage/--device/--render-only）
+  - 产出：算力机 `docs/framework_compare.md` + `framework_compare_results.json`（已同步本地 `docs/`）
+  - 算力机装包：`pip install --user xgboost==2.0.3 lightgbm==4.1.0`（仅 `/usr/bin/python3`，Python 3.8）
+- 执行命令与结果（H100，GPU 空闲；~6 分钟/全量 3-seed）：
+  - `framework_compare.py --smoke`：全模型冒烟通过
+  - `framework_compare.py`（全量）：RamsNet(多任务 GRU) **RMSE=3.643±0.044**（3 seed 3.68/3.58/3.66，与归档 t1 一致）；DLinear 5.519、TFT 5.571、XGBoost 5.611、TSMixer 5.650、Transformer 5.720、LightGBM 5.754、GRU 单任务 5.890、PatchTST 6.344、Ridge 8.503、LinearRegression 8.577
+  - 持久化平凡基线：**RMSE=1.23**（测试段）——任务书"已知 12.96"是早期脚本误算（持久化了首特征 temp_0.5 水温，见 t2_public_baseline.md）
+- 关键结论：
+  - **GRU 当前架构（多任务）是最优框架**：3.64 显著低于所有替代框架（5.5-6.3，差 34-43%），无更优替换
+  - 多任务+分位数损失贡献大：单任务 GRU 5.89 vs 多任务 3.64（差 2.25）
+  - 线性深度 DLinear（400 参数）在所有替代框架里最强（5.52），但换框架不如加数据/改评估协议
+  - 过拟合观测：XGBoost/LightGBM/TSMixer/TFT val/train 归一化 RMSE 比 1.55-2.56×
+  - 评估协议红线：固定 70/15/15 下持久化 1.23 < 一切学习模型——训练段（2021-24 含藻华 std≈13.9）vs 测试段（2025 std≈3.1）方差失配，RMSE 只用于横向框架排序，不用于绝对能力判断（见 t2_public_baseline.md）
+- 失误：见第二节表格 1 条（持久化/ML 的 train 段重复切分，修复后 1.23 与 LOG 一致）
+- 冒烟：✅ 通过（全模型在真实数据出完整结果）
+- 交付物：框架比较脚本 + 结果报告（对照表/排序/分步 RMSE/诚实记录）
+- 状态：✅ 完成
+- 下一步：GRU 架构保留不动；如需再压精度，方向是数据量/评估协议（滚动窗口 + CRPS），非换框架
+
+
 > 每完成一步追加一条。模板见文末。
 
 <!-- 在这一行下方追加新记录 -->
+
+### [2026-08-10 10:20] T2 公开对比基线（站位占坑）—— EFI-USGS 挑战 / Tick Tick Bloom 复现 / 公开数据集
+- 目标：补齐"单站点、无对比对象"硬伤，建立公开对比基线（standing_plan S1）。本机完成可复现基线 + 方法复现 + 公开数据本地化。
+- 改动文件：
+  - 新增 `docs/t2_public_baseline.md`（T2 主报告）
+  - 新增 `scripts/explore/t2_baseline_local.py`（自家数据平凡基线）
+  - 新增 `scripts/explore/t2_efi_usgs_baseline.py`（EFI-USGS 挑战 CRPS 基线）
+  - 新增 `scripts/explore/t2_ticktick_repro.py`（Tick Tick Bloom 式 GBDT 分级复现）
+  - 新增 `scripts/explore/t2_verify_rmse.py`、`scripts/explore/t2_download_thqbca.py`
+  - 数据（已 gitignore）：`data/public/efi-usgs/`（目标文件 ✅）、`data/public/thqbca/`（🔄）、`data/public/tick-tick-bloom/`（v42 源码 ✅）
+- 执行命令与结果（统计量，无原始值）：
+  - `python scripts/explore/t2_baseline_local.py`：持久化 RMSE=1.24 / 气候学 9.87 / 线性AR 1.13（测试段，0.5m 浓度）
+  - `python scripts/explore/t2_efi_usgs_baseline.py`：EFI-USGS 挑战数据 25,488 条 10 站点；持久化 CRPS=1.50、气候学 CRPS=3.54（技能 2.37×）
+  - `python scripts/explore/t2_ticktick_repro.py`：LightGBM 分级测试 acc=0.926、序数 RMSE=0.271（自家数据 M4 四级）
+  - 本地 CPU GRU 单 seed（无多任务）：测试 RMSE=4.53
+- **重要发现（需修正文档）**：`p2_timeseries_baseline.py` 的"持久化 12.96"是误算——持久化的是首特征 `temp_0.5`（水温），非浓度目标。真实持久化=1.24。RAMS 模型 RMSE（3.44~4.64）在固定时序切分下**不优于平凡基线**（训练段高波动 2021-2024 vs 测试段低波动 2025，std 13.9→3.1），需改用 CRPS + 滚动窗口评估。
+- 失误：① 本机 torch 为 CPU 版，train.py 默认 cuda → 用 device='cpu' 跑通；② `MultiTaskLoss` 在 `quantile=False` 时仍按 3×H reshape 报错（trainer.py 潜在 bug，用默认 quantile=True 规避）；③ numpy 2.x `trapz`→`trapezoid`；④ 气候学 CRPS 曾为负（CRPS 公式符号写反 + sigma 近零），修正后恒非负；⑤ 江西水库数据在 Science Data Bank，本机 SSL 被拦。
+- 冒烟：✅ 全部脚本跑通（无异常、数值合理、形状对）
+- 交付物：见"改动文件"；T2 报告 `docs/t2_public_baseline.md`
+- 状态：✅ 完成（江西水库需人工下载；THQBCA 已完整下载、解压待 rar 工具）
+- 下一步：① THQBCA 下载完成后做公开数据验证；② 补 CRPS 评估到 M1 主线；③ EFI-USGS 注册 + 接 NOAA 驱动正式提交
 
 ### [2026-08-09 06:20] Stage 3 · M5 PCMCI+ 气象-藻类因果时滞分析（算力机实测）
 - 目标：分析"气象/水温 → 藻类浓度"的因果驱动与时滞（谁真正驱动、滞后多久、输出因果图），对标文献滞后（降水 13-20d、风 20-29d、气温 25-30d）
