@@ -15,11 +15,11 @@ ax.set_xlim(0, 14)
 ax.set_ylim(0, 11)
 ax.axis("off")
 
-C_INPUT = "#E8F0FE"
+C_INPUT = "#BBDEFB"   # 深一点蓝
 C_EMBED = "#FFF3E0"
-C_BACKBONE = "#E8F5E9"
-C_HEAD = "#FCE4EC"
-C_OUT = "#F3E5F5"
+C_BACKBONE = "#C8E6C9"  # 深一点绿
+C_HEAD = "#F8BBD0"
+C_OUT = "#D1C4E9"     # 紫
 C_FEED = "#90CAF9"
 EDGE = "#455A64"
 
@@ -70,7 +70,7 @@ arrow(9.1, 5.6, 9.1, 4.6)
 arrow(12.1, 5.6, 12.1, 4.6)
 
 # ===== 6. Loss =====
-box(6.0, 1.6, 6.8, 1.2, "Multi-task Loss\nL = w1*Lq(M1) + w2*CE(M2) + w4*CE(M4)\nw=(1.0, 3.0, 2.0)", C_EMBED, fs=8)
+box(6.0, 1.6, 6.8, 1.2, "Multi-task Loss\nL = w1*Lq(M1) + w2*BCE(M2) + w4*CE(M4)\nw=(1.0, 3.0, 2.0)  Lq=quantile loss\n(w3 omitted: M3 not on backbone)", C_EMBED, fs=8)
 arrow(6.1, 3.4, 7.0, 2.8)
 arrow(9.1, 3.4, 9.0, 2.8)
 arrow(12.1, 3.4, 11.0, 2.8)
@@ -78,8 +78,14 @@ arrow(12.1, 3.4, 11.0, 2.8)
 # ===== 7. Feedback =====
 arrow(13.3, 8.5, 13.3, 5.2, color=C_FEED, ls="--", lw=1)
 ax.text(13.45, 6.8, "M5 causal\nfeedback", fontsize=7, color=C_FEED, rotation=90, ha="center")
-arrow(9.1, 5.6, 6.1, 4.9, color=C_FEED, ls="--", lw=1)
-ax.text(7.6, 5.15, "M2->M1 (optional bypass)", fontsize=6.5, color=C_FEED, ha="center")
+ax.text(13.5, 6.2, "(only if\nfeat-selection\nenabled)", fontsize=6, color="#78909C", ha="center")
+arrow(9.1, 5.6, 6.3, 4.9, color=C_FEED, ls="--", lw=1)
+ax.text(7.5, 5.0, "M2->M1 bypass\n(optional, unverified)", fontsize=6, color="#78909C", ha="center")
+
+# ===== 8. M3 note =====
+box(6.0, 0.1, 6.8, 0.8,
+    "M3 sensor placement: independent GAT+greedy (not on backbone) -- explored, prod integration pending",
+    "#F1F8E9", fs=6.5, lw=1, ec="#8BC34A")
 
 # ===== Legend =====
 legend_items = [
