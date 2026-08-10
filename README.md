@@ -62,7 +62,7 @@ Two-stage training / 两阶段训练: Stage 1 single-task M1 (20 epochs) → Sta
 ## Installation / 安装
 
 ```bash
-# conda environment (GPU PyTorch) / conda 环境（GPU 版 PyTorch）
+# conda environment (GPU PyTorch)
 conda create -n rams python=3.10 -y
 conda activate rams
 conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia -y
@@ -72,14 +72,14 @@ pip install -e .
 ## Quick Start / 快速开始
 
 ```bash
-# Build standard dataset (from raw xlsx, one-time) / 构建标准数据集（一次性）
+# Build standard dataset from raw xlsx (one-time)
 python scripts/build_dataset.py --raw data/raw --out data/processed
 
-# Train formal model (daily scale, incremental target, multi-task) / 训练正式模型
-python scripts/train_v020.py --fast-dev       # smoke test / 冒烟测试
-python scripts/train_v020.py                  # full 3-seed × 17-window training / 全量训练
+# Train formal model (daily scale, incremental target, multi-task)
+python scripts/train_v020.py --fast-dev       # smoke test
+python scripts/train_v020.py                  # full 3-seed × 17-window training
 
-# Evaluate bloom warning (recall / lead time / false positives) / 藻华预警评估
+# Evaluate bloom warning (recall / lead time / false positives)
 python scripts/eval_m4_warning.py --smoke
 ```
 
@@ -98,15 +98,15 @@ Confidential reservoir monitoring data: 258,542 algae observations across 20 dep
 ## Repository Structure / 仓库结构
 
 ```
-├── rams/               # Core package / 核心包
-│   ├── data/           # tensor builder, preprocessing / 张量构建与预处理
-│   ├── models/         # RAMS-Net (GRU + M1/M2/M4 heads) / 模型
-│   └── training/       # two-stage trainer, losses / 训练器与损失
-├── scripts/            # CLI: build_dataset / train_v020 / eval_m4_warning / 命令行入口
-├── tests/              # pytest suite (53 tests, 83% coverage) / 测试套件
-├── docs/               # papers (EN/CN), results, figures / 论文与结果
-├── exp/                # exploration records / 探索记录
-└── environment.yml     # conda dependencies / 依赖
+├── rams/               # core package
+│   ├── data/           # tensor builder, preprocessing
+│   ├── models/         # RAMS-Net (GRU + M1/M2/M4 heads)
+│   └── training/       # two-stage trainer, losses
+├── scripts/            # CLI entry points
+├── tests/              # pytest suite (53 tests, 83% coverage)
+├── docs/               # papers, results, figures
+├── exp/                # exploration records
+└── environment.yml     # conda dependencies
 ```
 
 ## Results & Figures / 结果与图表
