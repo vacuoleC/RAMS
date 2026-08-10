@@ -76,6 +76,8 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["B011"]  # assert False 是测试常用
 "notebooks/**/*.py" = ["E402", "F811"]
+# 张量维度变量（X/T/H/delta_T）沿用张量领域命名约定（与原 0.1.0 一致）
+"rams/data/tensor_builder.py" = ["N806"]
 
 # —— black：与 ruff 对齐 ——
 [tool.black]

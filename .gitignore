@@ -121,3 +121,10 @@ credentials/
 *.blg
 *.toc
 *.out
+
+# ===== 治理运行时（不进版本控制）=====
+.logs/
+monitor.yaml
+whatwedo.jsonl
+.claude/settings.json
+.claude/hooks/
