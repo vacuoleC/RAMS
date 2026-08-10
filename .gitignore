@@ -148,3 +148,4 @@ exp/**/lossing.md
 exp/**/trydoing.jsonl
 exp/**/results_smoke.json
 exp/**/_probe.json
+exp/**/*smoke*.json
