@@ -2,7 +2,7 @@
 
 Multi-task deep learning for vertically stratified reservoir algal forecasting and bloom early warning.
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](environment.yml)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](environment.yml)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.x-orange)](environment.yml)
 
 ---
@@ -70,21 +70,21 @@ Two-stage training: Stage 1 single-task M1 (20 epochs) → Stage 2 freeze backbo
 conda create -n rams python=3.10 -y
 conda activate rams
 conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia -y
-pip install -e .
+pip install -e .   # optional; scripts run from repo root without install
 ```
 
 ## Quick Start
 
 ```bash
 # Build standard dataset from raw xlsx (one-time)
-python scripts/build_dataset.py --raw data/raw --out data/processed
+python3 scripts/build_dataset.py --raw data/raw --out data/processed
 
 # Train formal model (daily scale, incremental target, multi-task)
-python scripts/train_v020.py --fast-dev       # smoke test
-python scripts/train_v020.py                  # full 3-seed × 17-window training
+python3 scripts/train_v020.py --fast-dev       # smoke test (not representative; 2 epochs)
+python3 scripts/train_v020.py                  # full 3-seed × 17-window training
 
 # Evaluate bloom warning (recall / lead time / false positives)
-python scripts/eval_m4_warning.py --smoke
+python3 scripts/eval_m4_warning.py --smoke    # smoke (not representative)
 ```
 
 ---
@@ -209,21 +209,21 @@ RAMS-Net 是一个面向水库藻类监测的多任务深度学习框架，基�
 conda create -n rams python=3.10 -y
 conda activate rams
 conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia -y
-pip install -e .
+pip install -e .   # optional; scripts run from repo root without install
 ```
 
 ## 快速开始
 
 ```bash
 # 构建标准数据集（一次性，从原始 xlsx）
-python scripts/build_dataset.py --raw data/raw --out data/processed
+python3 scripts/build_dataset.py --raw data/raw --out data/processed
 
 # 训练正式模型（日尺度、增量目标、多任务）
-python scripts/train_v020.py --fast-dev       # 冒烟测试
-python scripts/train_v020.py                  # 全量 3 种子 × 17 窗口训练
+python3 scripts/train_v020.py --fast-dev       # 冒烟测试（仅 2 轮，不代表正式结果）
+python3 scripts/train_v020.py                  # 全量 3 种子 × 17 窗口训练
 
 # 藻华预警评估（召回 / 提前量 / 误报）
-python scripts/eval_m4_warning.py --smoke
+python3 scripts/eval_m4_warning.py --smoke    # 冒烟，不代表正式结果
 ```
 
 ---
