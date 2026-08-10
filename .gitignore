@@ -140,3 +140,11 @@ artifacts/
 project_design.yaml
 data_design.yaml
 controller_manifest.json
+
+# ===== 探索内部审计文件（最小复现不保留）=====
+exp/**/whatwedo.md
+exp/**/rethinking.md
+exp/**/lossing.md
+exp/**/trydoing.jsonl
+exp/**/results_smoke.json
+exp/**/_probe.json
