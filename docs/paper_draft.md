@@ -32,7 +32,7 @@ Prior studies have applied deep learning to algal forecasting: LSTM-based predic
 ## 2. Data and Methods
 
 ### 2.1 Study Site and Data
-Single reservoir (site 0902, anonymized), 2021-03 to 2025-09. 258,542 algae measurements across 20 depth layers (0.5-10 m at 0.5 m intervals), 232,067 meteorological observations (10-min sampling). Key variables: water temperature, transmittance, algae concentrations (green/cyanobacteria/diatom/cryptophyte), total concentration, and six meteorological drivers (wind, temperature, humidity, pressure, rainfall).
+A single stratified reservoir in South China (site anonymized), monitored from 2021 to 2025 (~4.5 years). 258,542 algae measurements across 20 depth layers (0.5-10 m at 0.5 m intervals), 232,067 meteorological observations (10-min sampling). Key variables: water temperature, transmittance, algae concentrations (green/cyanobacteria/diatom/cryptophyte), total concentration, and six meteorological drivers (wind, temperature, humidity, pressure, rainfall).
 
 ![Fig1](paper_figs/fig1_data_overview.png)
 **Figure 1.** Daily surface concentration and water temperature (z-scored) time series with the 12 identified bloom events shaded. Bloom events concentrate in 2021 (dominant) with secondary peaks in 2023.
