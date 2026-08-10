@@ -68,6 +68,8 @@
 | 2026-08-09 | 5 PCMCI+ 超参爆炸 | 全图 12²×τmax=27,648 条候选边，PCMCI+ 卡死 182 分钟被杀 | tigramite 官方 #208：总成本 ∝ 链接数 × 条件数，τ_max 是线性放大系数；3h 网格对水库过程过采样 | 12h 均值降采样 + ACF 定 τ_max + link_assumptions 剪枝（6912→1184）+ max_conds=5 约束；全候选空间下 30 天滞仅需 7.4 分钟 |
 | 2026-08-09 | 5 link_assumptions 伪边 | 用 link_assumptions（`-?>`）剪枝后，graph 里出现大量 val=0/p=1 的 `-->` 伪边（未真正过 MCI 检验） | tigramite 5.2 会把 `-?>` 链接带进最终 graph，未检验的边 val/p 保持初值 | 默认跑全候选空间（link_assumptions=None），collect_edges 额外按 p<alpha 过滤，保证每条边都有真实 MCI 统计量 |
 | 2026-08-10 | 3 框架比较持久化基线 | 持久化 RMSE=2.07（本应 ~1.23），LinearRegression/Ridge 却高达 8.5 | `stage1_persistence` 收到的是 train 段 y_prev，却按全窗口偏移索引；`stage1_ml` 把 train 段又切成 70/15/15，val/test 实为真实 train 的段 | 主流程拼接 train+val+test 全量窗口传入 stage1；persistence/ML/DL 统一用全量窗口 + 同一 70/15/15 索引。修复后持久化 1.23 与 LOG 一致 |
+| 2026-08-10 | J 慢变量 head NaN 毒化 | slow arm 训练 loss=nan、预测全 nan | 慢变量 rolling 在数据头有预热期 NaN，ffill 填不了头部块，毒化窗口训练段标准化 | ffill 后用首个有效值常数扩展填剩余头部块（只落第 1 窗口训练段，防泄漏可辩护） |
+| 2026-08-10 | J 方向 AUC 口径错误 | 方向 AUC≈0.40（异常低） | p_gauss 误用 conc 单位分位数（含 +cur_t 平移），B_direction 标准是 Δ 增量单位分位数 | 改 q_delta = q_norm*scale 再算 Φ(q50/σ)；修复后 base AUC≈0.58 ≈ B_direction 0.59 |
 | | | | | |
 
 ---
@@ -93,6 +95,26 @@
 - 交付物：`exp/model_enhancement/k_two_stage/` 全套（脚本/结果/思考/日志）
 - 状态：✅ 完成
 - 下一步：M1 精度优先 + 免费 M2/M4 + 校准优于单任务 → 生产可采纳 ts_freeze（20+10，冻结 backbone）；覆盖达标 80% 仍需多任务或 ts_freeze 加事后共形/更长 Stage2/更高 w_m2/w_m4；可探 Stage2 只训 p10/p90 头
+
+### [2026-08-10 15:20] J 方向探索——中长程慢变量特征（部分负结果：只帮校准std，伤方向+精度）
+- 目标：当前输入只有 T=24（3 天）短期窗口，缺"中长程季节状态"（M5 证 ACF 需 75-90 天）。假设给增量模型加 conc_0.5/air_temp 过去 30/60/90 天滚动均值/斜率/方差（15 通道）显式编码季节状态，同时帮方向判别（短板2，AUC≈0.59）与区间校准（短板1，窗口 std 0.09）
+- 改动文件：
+  - 新建 `exp/model_enhancement/j_slow_vars/`（探索标记）：`run_j.py`（实验）、`results.md`（结果）、`results.json`（统计量，无原始数据行）、`rethinking.md`、`trydoing.jsonl`、`whatwedo.md`
+- 执行命令与结果：
+  - 本地冒烟（CPU 1 窗口 2 epoch）：全链路通过；修复慢变量 head NaN 毒化标准化（ffill+常数扩展）
+  - 方向 AUC 口径修正：p_gauss 需用 Δ 增量单位分位数（B_direction 同口径），此前误用 conc 单位 → AUC≈0.4 修复后合理
+  - H100 全量：`nohup python3 exp/model_enhancement/j_slow_vars/run_j.py --epochs 30 --device cuda` → 25.7 分钟，2 变体 × 3 seed × 17 窗口
+- 结果（3-seed × 17 窗口 展平，conc 单位）：
+  - base（A/B7 同口径）：CRPS 0.8912、RMSE 1.7745、覆盖 0.806（std 0.0875）、方向 AUC 0.581、技能 +21.0% —— **逐位复现 A 多任务**
+  - slow（+15 慢变量通道）：CRPS 0.9064（+1.71%，p=0.109）、RMSE 1.8145（**+2.25%，p=0.023 显著变差**）、覆盖 0.815（p=0.43 不显著，std 0.0818 即 **-6.5%**）、方向 AUC 0.564（**-0.016，p=0.006 显著变差**，17/14 窗口变差）
+  - **结论：慢变量只帮短板1的窗口 std（-6.5%，H 漂移窗口 4/5 改善如 w10 +0.079），伤短板2（方向 AUC 显著 -0.016）+ 点精度（RMSE 显著 +2.25%，w12/w14 +24.9%/+12.1% 大失败窗口）——不值得整体加入。**
+  - 机制：慢变量与 24h Δ 相关全部 ≤0.037（季节状态对未来 24h 变化几乎无线性预测力，与 E/D 负结果一致）；对校准的作用是"让不确定性与季节水平相关"（水平通道 corr>0.7），补 H 的年际脱钩但用点精度+方向判别换
+  - 方向判别弱不是"缺季节状态"造成——方向信号在短程自回归，B_direction AUC≈0.59 是数据上限；校准稳定性线索保留（把年际状态喂给不确定性估计作独立校准层，如 H 的 seas_reg 用慢变量替代月因子）
+- 失误：慢变量 head NaN 毒化（ffill+常数扩展修复）；方向 AUC 误用 conc 单位分位数（改 Δ 单位修复）
+- 冒烟：通过（本地 CPU + H100 全量）
+- 交付物：`exp/model_enhancement/j_slow_vars/` 全套（脚本/结果/思考/日志）
+- 状态：✅ 完成
+- 下一步：生产不加慢变量；若只要校准稳定性用 B2/C/H 的 cqr（零成本，std 0.086 与 slow 的 0.082 接近）；方向判别需从短程输入入手
 
 ### [2026-08-10 13:20] E 方向探索——分层状态趋势喂增量（负结果，与 M5 中介结论互相印证）
 - 目标：M5 证水温对藻类无因果中介（temp→conc 无 MCI 边）。检验补充物理链"分层状态变化 → 垂向混合 → 藻类分布变化"是否在**增量 Δ** 上浮现——把分层状态（delta_T/thermo_grad）的**趋势**（3 天差分/斜率，非当前值）作为特征喂增量预测。
