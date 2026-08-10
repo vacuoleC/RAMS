@@ -44,6 +44,8 @@
 | T2 | TTB 冠军源码 | `data/public/tick-tick-bloom/lgbmNN_ee_gkf_S_v42g.ipynb` | ✅ | 2.5MB |
 | 3 | 框架比较脚本（3 梯队 12 模型） | `scripts/explore/framework_compare.py` | ✅ | 2026-08-10，GRU vs 传统ML/线性深度/注意力，3-seed×30ep |
 | 3 | 框架比较结果报告 | `docs/framework_compare.md` / `framework_compare_results.json` | ✅ | 2026-08-10，GRU 多任务 3.64 最优，全框架更差 |
+| 3 | A 方向探索脚本 | `exp/model_enhancement/a_mt_increment/run_a.py` | ✅ | 2026-08-10，增量×单任务 vs 多任务，3-seed 17 窗口 |
+| 3 | A 方向探索结果报告 | `exp/model_enhancement/a_mt_increment/results.md` / `results.json` | ✅ | 2026-08-10，多任务不叠加点精度但校准达标（覆盖 0.672→0.806） |
 | T4 | CRPS+滚动窗口评估脚本 | `scripts/explore/t4_crps_eval.py` | ✅ | 冒烟通过（正式全量待算力机跑） |
 | T4 | CRPS 评估报告 | `docs/t4_crps_eval.md` | ✅ | 2026-08-10，M1+conc 平均优于持久化 18.8%、气候学 3.85×（冒烟口径） |
 | | | | | |
@@ -67,6 +69,24 @@
 ---
 
 ## 三、执行日志（按时间追加，最新在最上）
+
+### [2026-08-10 15:10] A 方向探索——增量目标 × 完整多任务叠加实证
+- 目标：两条已验证的线从未同协议组合测过——增量目标（B1/B2/B7，但 B1 单任务 28-fold vs B7 多任务 17 窗口协议不同）+ 多任务（框架比较单→多差 2.25，绝对浓度口径）。验证增量 × 多任务是否叠加。
+- 改动文件：
+  - 新建 `exp/model_enhancement/a_mt_increment/`（探索标记）：`run_a.py`（实验）、`results.md`（结果）、`results.json`（统计量，无原始数据行）、`run_full.log`、`rethinking.md`、`trydoing.jsonl`、`whatwedo.md`
+- 执行命令与结果：
+  - 本地冒烟（`--smoke` CPU 1 窗口 3 seed）：全链路通过
+  - H100 全量：`cd /data/RAMS/proj && nohup python3 exp/model_enhancement/a_mt_increment/run_a.py --epochs 30 --device cuda` → 40.8 分钟完成，17 窗口 × 2 arm × 3 seed
+- 结果（3-seed 均值，17 窗口，conc 单位）：
+  - 单任务增量：CRPS 0.857±0.357（+24.0% 技能）、RMSE 1.665±0.759（+6.0%）、覆盖 0.672（欠覆盖）
+  - 多任务增量 w=1/3/2：CRPS 0.891±0.422（+21.0%）、RMSE 1.774±1.052（−0.2%）、覆盖 0.806（达标 80%）、M2 acc 0.955 / M4 acc 0.863
+  - **结论：多任务在增量基础上不叠加点精度（CRPS/RMSE 轻微稀释，Wilcoxon p=0.24/0.33 不显著），但把区间校准从欠覆盖拉回理想——增量×多任务叠加的是"校准"而非"精度"**
+  - 协议一致性：多任务 arm 复现 B7 abs_delta（0.891/1.774/0.806 vs 0.895/1.789/0.794）；持久化 CRPS 1.1281 与 B7 逐位一致
+- 失误：m2/m4 头直接接 raw 输入报 shape 错（应接 backbone 隐藏态）→ 改 model.forward 取隐藏态；冒烟 2 epoch 不收敛，数字不作结论
+- 冒烟：通过（本地 CPU + H100 全量）
+- 交付物：`exp/model_enhancement/a_mt_increment/` 全套（脚本/结果/思考/日志）
+- 状态：✅ 完成
+- 下一步：生产系统保留多任务增量（w=1/3/2）；若要再压点精度可探多任务权重（降 w_m2/w_m4）或单任务增量 + 事后共形（F 方向已启动）
 
 ### [2026-08-10 10:45] T4 CRPS + 滚动窗口评估（协议改造）—— 修正固定 70/15/15 的不公平评估
 - 目标：把 M1 评估从"固定 70/15/15"（训练高波动段 2021-24 std13.9、测试低波动段 2025 std3.1，导致模型 RMSE 3.6 反不如持久化 1.24）改为 EFI 口径 **CRPS + 滚动窗口**，并强化逐视界基线。
