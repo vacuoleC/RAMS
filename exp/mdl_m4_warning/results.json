@@ -1,0 +1,980 @@
+{
+  "meta": {
+    "protocol": "rolling 730/90/45/17",
+    "eval_period": [
+      "2023-03-01",
+      "2025-05-19"
+    ],
+    "T": 30,
+    "H": 7,
+    "ep1": 20,
+    "ep2": 10,
+    "batch": 128,
+    "hidden": 64,
+    "n_windows": 17,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "m4_mode": "bloom",
+    "m4_levels": 2,
+    "Lmax": 30,
+    "device": "cuda",
+    "smoke": false
+  },
+  "daily_events": [
+    {
+      "start": "2021-03-30 00:00:00",
+      "end": "2021-06-28 00:00:00",
+      "duration_days": 91.0,
+      "n_days": 91
+    },
+    {
+      "start": "2021-08-15 00:00:00",
+      "end": "2021-08-16 00:00:00",
+      "duration_days": 2.0,
+      "n_days": 2
+    },
+    {
+      "start": "2021-10-08 00:00:00",
+      "end": "2021-10-10 00:00:00",
+      "duration_days": 3.0,
+      "n_days": 3
+    },
+    {
+      "start": "2023-04-06 00:00:00",
+      "end": "2023-04-20 00:00:00",
+      "duration_days": 15.0,
+      "n_days": 15
+    },
+    {
+      "start": "2023-04-23 00:00:00",
+      "end": "2023-04-25 00:00:00",
+      "duration_days": 3.0,
+      "n_days": 3
+    }
+  ],
+  "n_events_in_period": 5,
+  "n_events_in_period_list": [
+    {
+      "start": "2023-04-02",
+      "end": "2023-05-03"
+    },
+    {
+      "start": "2023-05-04",
+      "end": "2023-05-15"
+    },
+    {
+      "start": "2023-10-17",
+      "end": "2023-10-22"
+    },
+    {
+      "start": "2024-08-16",
+      "end": "2024-08-23"
+    },
+    {
+      "start": "2024-08-25",
+      "end": "2024-08-27"
+    }
+  ],
+  "m4_acc_window_mean": 0.8255567778888098,
+  "coverage_days": 787,
+  "sweep_n_events": [
+    {
+      "theta": 0.3,
+      "n_events": 5,
+      "n_hit": 2,
+      "recall": 0.4,
+      "lead_median": 12.5,
+      "lead_mean": 12.5,
+      "lead_min": 2.0,
+      "lead_max": 23.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-02",
+          "event_end": "2023-05-03",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-05-04",
+          "event_end": "2023-05-15",
+          "hit": true,
+          "lead_days": 23
+        },
+        {
+          "event_start": "2023-10-17",
+          "event_end": "2023-10-22",
+          "hit": true,
+          "lead_days": 2
+        },
+        {
+          "event_start": "2024-08-16",
+          "event_end": "2024-08-23",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2024-08-25",
+          "event_end": "2024-08-27",
+          "hit": false,
+          "lead_days": null
+        }
+      ],
+      "n_warning_episodes": 12,
+      "false_positive_episodes": 8,
+      "false_positive_days": 159,
+      "fpr_days": 0.2,
+      "fp_episodes": [
+        {
+          "start": "2023-05-18",
+          "end": "2023-05-18",
+          "days": 1
+        },
+        {
+          "start": "2023-05-22",
+          "end": "2023-06-13",
+          "days": 23
+        },
+        {
+          "start": "2023-10-15",
+          "end": "2023-10-23",
+          "days": 9
+        },
+        {
+          "start": "2023-11-09",
+          "end": "2023-12-08",
+          "days": 30
+        },
+        {
+          "start": "2023-12-10",
+          "end": "2023-12-13",
+          "days": 4
+        },
+        {
+          "start": "2024-04-07",
+          "end": "2024-05-03",
+          "days": 27
+        },
+        {
+          "start": "2024-09-22",
+          "end": "2024-09-23",
+          "days": 2
+        },
+        {
+          "start": "2024-09-28",
+          "end": "2024-11-29",
+          "days": 63
+        }
+      ]
+    },
+    {
+      "theta": 0.5,
+      "n_events": 5,
+      "n_hit": 2,
+      "recall": 0.4,
+      "lead_median": 14.5,
+      "lead_mean": 14.5,
+      "lead_min": 13.0,
+      "lead_max": 16.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-02",
+          "event_end": "2023-05-03",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-05-04",
+          "event_end": "2023-05-15",
+          "hit": true,
+          "lead_days": 16
+        },
+        {
+          "event_start": "2023-10-17",
+          "event_end": "2023-10-22",
+          "hit": true,
+          "lead_days": 13
+        },
+        {
+          "event_start": "2024-08-16",
+          "event_end": "2024-08-23",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2024-08-25",
+          "event_end": "2024-08-27",
+          "hit": false,
+          "lead_days": null
+        }
+      ],
+      "n_warning_episodes": 9,
+      "false_positive_episodes": 6,
+      "false_positive_days": 84,
+      "fpr_days": 0.10566037735849057,
+      "fp_episodes": [
+        {
+          "start": "2023-05-31",
+          "end": "2023-06-01",
+          "days": 2
+        },
+        {
+          "start": "2023-06-06",
+          "end": "2023-06-07",
+          "days": 2
+        },
+        {
+          "start": "2023-11-13",
+          "end": "2023-11-13",
+          "days": 1
+        },
+        {
+          "start": "2023-11-18",
+          "end": "2023-12-06",
+          "days": 19
+        },
+        {
+          "start": "2024-04-17",
+          "end": "2024-04-24",
+          "days": 8
+        },
+        {
+          "start": "2024-10-06",
+          "end": "2024-11-26",
+          "days": 52
+        }
+      ]
+    },
+    {
+      "theta": 0.6,
+      "n_events": 5,
+      "n_hit": 2,
+      "recall": 0.4,
+      "lead_median": 16.0,
+      "lead_mean": 16.0,
+      "lead_min": 11.0,
+      "lead_max": 21.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-02",
+          "event_end": "2023-05-03",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-05-04",
+          "event_end": "2023-05-15",
+          "hit": true,
+          "lead_days": 21
+        },
+        {
+          "event_start": "2023-10-17",
+          "event_end": "2023-10-22",
+          "hit": true,
+          "lead_days": 11
+        },
+        {
+          "event_start": "2024-08-16",
+          "event_end": "2024-08-23",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2024-08-25",
+          "event_end": "2024-08-27",
+          "hit": false,
+          "lead_days": null
+        }
+      ],
+      "n_warning_episodes": 5,
+      "false_positive_episodes": 3,
+      "false_positive_days": 56,
+      "fpr_days": 0.07044025157232704,
+      "fp_episodes": [
+        {
+          "start": "2023-11-19",
+          "end": "2023-12-05",
+          "days": 17
+        },
+        {
+          "start": "2024-10-15",
+          "end": "2024-10-17",
+          "days": 3
+        },
+        {
+          "start": "2024-10-19",
+          "end": "2024-11-23",
+          "days": 36
+        }
+      ]
+    },
+    {
+      "theta": 0.7,
+      "n_events": 5,
+      "n_hit": 1,
+      "recall": 0.2,
+      "lead_median": 21.0,
+      "lead_mean": 21.0,
+      "lead_min": 21.0,
+      "lead_max": 21.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-02",
+          "event_end": "2023-05-03",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-05-04",
+          "event_end": "2023-05-15",
+          "hit": true,
+          "lead_days": 21
+        },
+        {
+          "event_start": "2023-10-17",
+          "event_end": "2023-10-22",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2024-08-16",
+          "event_end": "2024-08-23",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2024-08-25",
+          "event_end": "2024-08-27",
+          "hit": false,
+          "lead_days": null
+        }
+      ],
+      "n_warning_episodes": 4,
+      "false_positive_episodes": 3,
+      "false_positive_days": 39,
+      "fpr_days": 0.04905660377358491,
+      "fp_episodes": [
+        {
+          "start": "2023-11-23",
+          "end": "2023-11-27",
+          "days": 5
+        },
+        {
+          "start": "2023-11-30",
+          "end": "2023-12-04",
+          "days": 5
+        },
+        {
+          "start": "2024-10-25",
+          "end": "2024-11-22",
+          "days": 29
+        }
+      ]
+    },
+    {
+      "theta": 0.8,
+      "n_events": 5,
+      "n_hit": 1,
+      "recall": 0.2,
+      "lead_median": 20.0,
+      "lead_mean": 20.0,
+      "lead_min": 20.0,
+      "lead_max": 20.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-02",
+          "event_end": "2023-05-03",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-05-04",
+          "event_end": "2023-05-15",
+          "hit": true,
+          "lead_days": 20
+        },
+        {
+          "event_start": "2023-10-17",
+          "event_end": "2023-10-22",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2024-08-16",
+          "event_end": "2024-08-23",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2024-08-25",
+          "event_end": "2024-08-27",
+          "hit": false,
+          "lead_days": null
+        }
+      ],
+      "n_warning_episodes": 4,
+      "false_positive_episodes": 3,
+      "false_positive_days": 14,
+      "fpr_days": 0.01761006289308176,
+      "fp_episodes": [
+        {
+          "start": "2023-11-24",
+          "end": "2023-11-26",
+          "days": 3
+        },
+        {
+          "start": "2024-11-09",
+          "end": "2024-11-09",
+          "days": 1
+        },
+        {
+          "start": "2024-11-12",
+          "end": "2024-11-21",
+          "days": 10
+        }
+      ]
+    }
+  ],
+  "sweep_daily_events": [
+    {
+      "theta": 0.3,
+      "n_events": 2,
+      "n_hit": 1,
+      "recall": 0.5,
+      "lead_median": 12.0,
+      "lead_mean": 12.0,
+      "lead_min": 12.0,
+      "lead_max": 12.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-06",
+          "event_end": "2023-04-20",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-04-23",
+          "event_end": "2023-04-25",
+          "hit": true,
+          "lead_days": 12
+        }
+      ],
+      "n_warning_episodes": 12,
+      "false_positive_episodes": 12,
+      "false_positive_days": 198,
+      "fpr_days": 0.2490566037735849,
+      "fp_episodes": [
+        {
+          "start": "2023-04-11",
+          "end": "2023-04-29",
+          "days": 19
+        },
+        {
+          "start": "2023-05-08",
+          "end": "2023-05-15",
+          "days": 8
+        },
+        {
+          "start": "2023-05-18",
+          "end": "2023-05-18",
+          "days": 1
+        },
+        {
+          "start": "2023-05-22",
+          "end": "2023-06-13",
+          "days": 23
+        },
+        {
+          "start": "2023-10-01",
+          "end": "2023-10-11",
+          "days": 11
+        },
+        {
+          "start": "2023-10-13",
+          "end": "2023-10-13",
+          "days": 1
+        },
+        {
+          "start": "2023-10-15",
+          "end": "2023-10-23",
+          "days": 9
+        },
+        {
+          "start": "2023-11-09",
+          "end": "2023-12-08",
+          "days": 30
+        },
+        {
+          "start": "2023-12-10",
+          "end": "2023-12-13",
+          "days": 4
+        },
+        {
+          "start": "2024-04-07",
+          "end": "2024-05-03",
+          "days": 27
+        },
+        {
+          "start": "2024-09-22",
+          "end": "2024-09-23",
+          "days": 2
+        },
+        {
+          "start": "2024-09-28",
+          "end": "2024-11-29",
+          "days": 63
+        }
+      ]
+    },
+    {
+      "theta": 0.5,
+      "n_events": 2,
+      "n_hit": 1,
+      "recall": 0.5,
+      "lead_median": 5.0,
+      "lead_mean": 5.0,
+      "lead_min": 5.0,
+      "lead_max": 5.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-06",
+          "event_end": "2023-04-20",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-04-23",
+          "event_end": "2023-04-25",
+          "hit": true,
+          "lead_days": 5
+        }
+      ],
+      "n_warning_episodes": 9,
+      "false_positive_episodes": 7,
+      "false_positive_days": 91,
+      "fpr_days": 0.11446540880503145,
+      "fp_episodes": [
+        {
+          "start": "2023-05-31",
+          "end": "2023-06-01",
+          "days": 2
+        },
+        {
+          "start": "2023-06-06",
+          "end": "2023-06-07",
+          "days": 2
+        },
+        {
+          "start": "2023-10-04",
+          "end": "2023-10-10",
+          "days": 7
+        },
+        {
+          "start": "2023-11-13",
+          "end": "2023-11-13",
+          "days": 1
+        },
+        {
+          "start": "2023-11-18",
+          "end": "2023-12-06",
+          "days": 19
+        },
+        {
+          "start": "2024-04-17",
+          "end": "2024-04-24",
+          "days": 8
+        },
+        {
+          "start": "2024-10-06",
+          "end": "2024-11-26",
+          "days": 52
+        }
+      ]
+    },
+    {
+      "theta": 0.6,
+      "n_events": 2,
+      "n_hit": 1,
+      "recall": 0.5,
+      "lead_median": 10.0,
+      "lead_mean": 10.0,
+      "lead_min": 10.0,
+      "lead_max": 10.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-06",
+          "event_end": "2023-04-20",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-04-23",
+          "event_end": "2023-04-25",
+          "hit": true,
+          "lead_days": 10
+        }
+      ],
+      "n_warning_episodes": 5,
+      "false_positive_episodes": 4,
+      "false_positive_days": 59,
+      "fpr_days": 0.07421383647798742,
+      "fp_episodes": [
+        {
+          "start": "2023-10-06",
+          "end": "2023-10-08",
+          "days": 3
+        },
+        {
+          "start": "2023-11-19",
+          "end": "2023-12-05",
+          "days": 17
+        },
+        {
+          "start": "2024-10-15",
+          "end": "2024-10-17",
+          "days": 3
+        },
+        {
+          "start": "2024-10-19",
+          "end": "2024-11-23",
+          "days": 36
+        }
+      ]
+    },
+    {
+      "theta": 0.7,
+      "n_events": 2,
+      "n_hit": 1,
+      "recall": 0.5,
+      "lead_median": 10.0,
+      "lead_mean": 10.0,
+      "lead_min": 10.0,
+      "lead_max": 10.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-06",
+          "event_end": "2023-04-20",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-04-23",
+          "event_end": "2023-04-25",
+          "hit": true,
+          "lead_days": 10
+        }
+      ],
+      "n_warning_episodes": 4,
+      "false_positive_episodes": 3,
+      "false_positive_days": 39,
+      "fpr_days": 0.04905660377358491,
+      "fp_episodes": [
+        {
+          "start": "2023-11-23",
+          "end": "2023-11-27",
+          "days": 5
+        },
+        {
+          "start": "2023-11-30",
+          "end": "2023-12-04",
+          "days": 5
+        },
+        {
+          "start": "2024-10-25",
+          "end": "2024-11-22",
+          "days": 29
+        }
+      ]
+    },
+    {
+      "theta": 0.8,
+      "n_events": 2,
+      "n_hit": 1,
+      "recall": 0.5,
+      "lead_median": 9.0,
+      "lead_mean": 9.0,
+      "lead_min": 9.0,
+      "lead_max": 9.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-06",
+          "event_end": "2023-04-20",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-04-23",
+          "event_end": "2023-04-25",
+          "hit": true,
+          "lead_days": 9
+        }
+      ],
+      "n_warning_episodes": 4,
+      "false_positive_episodes": 3,
+      "false_positive_days": 14,
+      "fpr_days": 0.01761006289308176,
+      "fp_episodes": [
+        {
+          "start": "2023-11-24",
+          "end": "2023-11-26",
+          "days": 3
+        },
+        {
+          "start": "2024-11-09",
+          "end": "2024-11-09",
+          "days": 1
+        },
+        {
+          "start": "2024-11-12",
+          "end": "2024-11-21",
+          "days": 10
+        }
+      ]
+    }
+  ],
+  "baseline_p75": [
+    {
+      "theta": 0.5,
+      "n_events": 5,
+      "n_hit": 5,
+      "recall": 1.0,
+      "lead_median": 4.0,
+      "lead_mean": 7.0,
+      "lead_min": 2.0,
+      "lead_max": 17.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-02",
+          "event_end": "2023-05-03",
+          "hit": true,
+          "lead_days": 4
+        },
+        {
+          "event_start": "2023-05-04",
+          "event_end": "2023-05-15",
+          "hit": true,
+          "lead_days": 2
+        },
+        {
+          "event_start": "2023-10-17",
+          "event_end": "2023-10-22",
+          "hit": true,
+          "lead_days": 4
+        },
+        {
+          "event_start": "2024-08-16",
+          "event_end": "2024-08-23",
+          "hit": true,
+          "lead_days": 8
+        },
+        {
+          "event_start": "2024-08-25",
+          "event_end": "2024-08-27",
+          "hit": true,
+          "lead_days": 17
+        }
+      ],
+      "n_warning_episodes": 20,
+      "false_positive_episodes": 14,
+      "false_positive_days": 60,
+      "fpr_days": 0.07547169811320754,
+      "fp_episodes": [
+        {
+          "start": "2023-05-17",
+          "end": "2023-05-17",
+          "days": 1
+        },
+        {
+          "start": "2023-06-01",
+          "end": "2023-06-01",
+          "days": 1
+        },
+        {
+          "start": "2023-06-06",
+          "end": "2023-06-06",
+          "days": 1
+        },
+        {
+          "start": "2023-11-13",
+          "end": "2023-11-13",
+          "days": 1
+        },
+        {
+          "start": "2023-11-24",
+          "end": "2023-11-25",
+          "days": 2
+        },
+        {
+          "start": "2023-12-04",
+          "end": "2023-12-04",
+          "days": 1
+        },
+        {
+          "start": "2024-08-29",
+          "end": "2024-08-31",
+          "days": 3
+        },
+        {
+          "start": "2024-09-06",
+          "end": "2024-09-08",
+          "days": 3
+        },
+        {
+          "start": "2024-09-24",
+          "end": "2024-09-24",
+          "days": 1
+        },
+        {
+          "start": "2024-09-26",
+          "end": "2024-09-27",
+          "days": 2
+        },
+        {
+          "start": "2024-09-29",
+          "end": "2024-09-30",
+          "days": 2
+        },
+        {
+          "start": "2024-10-03",
+          "end": "2024-11-01",
+          "days": 30
+        },
+        {
+          "start": "2024-11-04",
+          "end": "2024-11-09",
+          "days": 6
+        },
+        {
+          "start": "2024-11-15",
+          "end": "2024-11-20",
+          "days": 6
+        }
+      ]
+    }
+  ],
+  "event_alignment": [
+    {
+      "i": 1,
+      "start": "2021-03-27",
+      "end": "2021-07-07",
+      "in_eval_period": false,
+      "bloom_days_near": 92,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 2,
+      "start": "2021-08-06",
+      "end": "2021-08-08",
+      "in_eval_period": false,
+      "bloom_days_near": 0,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 3,
+      "start": "2021-08-09",
+      "end": "2021-08-20",
+      "in_eval_period": false,
+      "bloom_days_near": 2,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 4,
+      "start": "2021-10-01",
+      "end": "2021-10-12",
+      "in_eval_period": false,
+      "bloom_days_near": 3,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 5,
+      "start": "2022-05-18",
+      "end": "2022-05-24",
+      "in_eval_period": false,
+      "bloom_days_near": 0,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 6,
+      "start": "2022-06-01",
+      "end": "2022-06-03",
+      "in_eval_period": false,
+      "bloom_days_near": 0,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 7,
+      "start": "2023-04-02",
+      "end": "2023-05-03",
+      "in_eval_period": true,
+      "bloom_days_near": 17,
+      "max_p_lead": 0.040553043906887375,
+      "hit_0.5": "✗",
+      "lead_0.5": null
+    },
+    {
+      "i": 8,
+      "start": "2023-05-04",
+      "end": "2023-05-15",
+      "in_eval_period": true,
+      "bloom_days_near": 1,
+      "max_p_lead": 0.8483529289563496,
+      "hit_0.5": "✓",
+      "lead_0.5": 16
+    },
+    {
+      "i": 9,
+      "start": "2023-10-17",
+      "end": "2023-10-22",
+      "in_eval_period": true,
+      "bloom_days_near": 0,
+      "max_p_lead": 0.6386896967887878,
+      "hit_0.5": "✓",
+      "lead_0.5": 13
+    },
+    {
+      "i": 10,
+      "start": "2024-08-16",
+      "end": "2024-08-23",
+      "in_eval_period": true,
+      "bloom_days_near": 0,
+      "max_p_lead": 0.2180035213629405,
+      "hit_0.5": "✗",
+      "lead_0.5": null
+    },
+    {
+      "i": 11,
+      "start": "2024-08-25",
+      "end": "2024-08-27",
+      "in_eval_period": true,
+      "bloom_days_near": 0,
+      "max_p_lead": 0.2731999705235163,
+      "hit_0.5": "✗",
+      "lead_0.5": null
+    },
+    {
+      "i": 12,
+      "start": "2025-09-27",
+      "end": "2025-09-30",
+      "in_eval_period": false,
+      "bloom_days_near": 0,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    }
+  ],
+  "wall_seconds": 132.9
+}

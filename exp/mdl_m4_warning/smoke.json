@@ -1,0 +1,541 @@
+{
+  "meta": {
+    "protocol": "rolling 730/90/45/17",
+    "eval_period": [
+      "2023-03-01",
+      "2023-05-30"
+    ],
+    "T": 30,
+    "H": 7,
+    "ep1": 20,
+    "ep2": 10,
+    "batch": 128,
+    "hidden": 64,
+    "n_windows": 1,
+    "seeds": [
+      0
+    ],
+    "m4_mode": "bloom",
+    "m4_levels": 2,
+    "Lmax": 30,
+    "device": "cpu",
+    "smoke": true
+  },
+  "daily_events": [
+    {
+      "start": "2021-03-30 00:00:00",
+      "end": "2021-06-28 00:00:00",
+      "duration_days": 91.0,
+      "n_days": 91
+    },
+    {
+      "start": "2021-08-15 00:00:00",
+      "end": "2021-08-16 00:00:00",
+      "duration_days": 2.0,
+      "n_days": 2
+    },
+    {
+      "start": "2021-10-08 00:00:00",
+      "end": "2021-10-10 00:00:00",
+      "duration_days": 3.0,
+      "n_days": 3
+    },
+    {
+      "start": "2023-04-06 00:00:00",
+      "end": "2023-04-20 00:00:00",
+      "duration_days": 15.0,
+      "n_days": 15
+    },
+    {
+      "start": "2023-04-23 00:00:00",
+      "end": "2023-04-25 00:00:00",
+      "duration_days": 3.0,
+      "n_days": 3
+    }
+  ],
+  "n_events_in_period": 2,
+  "n_events_in_period_list": [
+    {
+      "start": "2023-04-02",
+      "end": "2023-05-03"
+    },
+    {
+      "start": "2023-05-04",
+      "end": "2023-05-15"
+    }
+  ],
+  "m4_acc_window_mean": 0.8620689655172413,
+  "coverage_days": 80,
+  "sweep_n_events": [
+    {
+      "theta": 0.3,
+      "n_events": 2,
+      "n_hit": 2,
+      "recall": 1.0,
+      "lead_median": 48.0,
+      "lead_mean": 48.0,
+      "lead_min": 32.0,
+      "lead_max": 64.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-02",
+          "event_end": "2023-05-03",
+          "hit": true,
+          "lead_days": 32
+        },
+        {
+          "event_start": "2023-05-04",
+          "event_end": "2023-05-15",
+          "hit": true,
+          "lead_days": 64
+        }
+      ],
+      "n_warning_episodes": 1,
+      "false_positive_episodes": 1,
+      "false_positive_days": 80,
+      "fpr_days": 0.9090909090909091,
+      "fp_episodes": [
+        {
+          "start": "2023-03-01",
+          "end": "2023-05-21",
+          "days": 80
+        }
+      ]
+    },
+    {
+      "theta": 0.5,
+      "n_events": 2,
+      "n_hit": 1,
+      "recall": 0.5,
+      "lead_median": 18.0,
+      "lead_mean": 18.0,
+      "lead_min": 18.0,
+      "lead_max": 18.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-02",
+          "event_end": "2023-05-03",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-05-04",
+          "event_end": "2023-05-15",
+          "hit": true,
+          "lead_days": 18
+        }
+      ],
+      "n_warning_episodes": 2,
+      "false_positive_episodes": 0,
+      "false_positive_days": 0,
+      "fpr_days": 0.0,
+      "fp_episodes": []
+    },
+    {
+      "theta": 0.6,
+      "n_events": 2,
+      "n_hit": 0,
+      "recall": 0.0,
+      "lead_median": null,
+      "lead_mean": null,
+      "lead_min": null,
+      "lead_max": null,
+      "per_event": [
+        {
+          "event_start": "2023-04-02",
+          "event_end": "2023-05-03",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-05-04",
+          "event_end": "2023-05-15",
+          "hit": false,
+          "lead_days": null
+        }
+      ],
+      "n_warning_episodes": 0,
+      "false_positive_episodes": 0,
+      "false_positive_days": 0,
+      "fpr_days": 0.0,
+      "fp_episodes": []
+    },
+    {
+      "theta": 0.7,
+      "n_events": 2,
+      "n_hit": 0,
+      "recall": 0.0,
+      "lead_median": null,
+      "lead_mean": null,
+      "lead_min": null,
+      "lead_max": null,
+      "per_event": [
+        {
+          "event_start": "2023-04-02",
+          "event_end": "2023-05-03",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-05-04",
+          "event_end": "2023-05-15",
+          "hit": false,
+          "lead_days": null
+        }
+      ],
+      "n_warning_episodes": 0,
+      "false_positive_episodes": 0,
+      "false_positive_days": 0,
+      "fpr_days": 0.0,
+      "fp_episodes": []
+    },
+    {
+      "theta": 0.8,
+      "n_events": 2,
+      "n_hit": 0,
+      "recall": 0.0,
+      "lead_median": null,
+      "lead_mean": null,
+      "lead_min": null,
+      "lead_max": null,
+      "per_event": [
+        {
+          "event_start": "2023-04-02",
+          "event_end": "2023-05-03",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-05-04",
+          "event_end": "2023-05-15",
+          "hit": false,
+          "lead_days": null
+        }
+      ],
+      "n_warning_episodes": 0,
+      "false_positive_episodes": 0,
+      "false_positive_days": 0,
+      "fpr_days": 0.0,
+      "fp_episodes": []
+    }
+  ],
+  "sweep_daily_events": [
+    {
+      "theta": 0.3,
+      "n_events": 2,
+      "n_hit": 2,
+      "recall": 1.0,
+      "lead_median": 44.5,
+      "lead_mean": 44.5,
+      "lead_min": 36.0,
+      "lead_max": 53.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-06",
+          "event_end": "2023-04-20",
+          "hit": true,
+          "lead_days": 36
+        },
+        {
+          "event_start": "2023-04-23",
+          "event_end": "2023-04-25",
+          "hit": true,
+          "lead_days": 53
+        }
+      ],
+      "n_warning_episodes": 1,
+      "false_positive_episodes": 1,
+      "false_positive_days": 80,
+      "fpr_days": 0.9090909090909091,
+      "fp_episodes": [
+        {
+          "start": "2023-03-01",
+          "end": "2023-05-21",
+          "days": 80
+        }
+      ]
+    },
+    {
+      "theta": 0.5,
+      "n_events": 2,
+      "n_hit": 1,
+      "recall": 0.5,
+      "lead_median": 7.0,
+      "lead_mean": 7.0,
+      "lead_min": 7.0,
+      "lead_max": 7.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-06",
+          "event_end": "2023-04-20",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-04-23",
+          "event_end": "2023-04-25",
+          "hit": true,
+          "lead_days": 7
+        }
+      ],
+      "n_warning_episodes": 2,
+      "false_positive_episodes": 1,
+      "false_positive_days": 1,
+      "fpr_days": 0.011363636363636364,
+      "fp_episodes": [
+        {
+          "start": "2023-05-08",
+          "end": "2023-05-08",
+          "days": 1
+        }
+      ]
+    },
+    {
+      "theta": 0.6,
+      "n_events": 2,
+      "n_hit": 0,
+      "recall": 0.0,
+      "lead_median": null,
+      "lead_mean": null,
+      "lead_min": null,
+      "lead_max": null,
+      "per_event": [
+        {
+          "event_start": "2023-04-06",
+          "event_end": "2023-04-20",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-04-23",
+          "event_end": "2023-04-25",
+          "hit": false,
+          "lead_days": null
+        }
+      ],
+      "n_warning_episodes": 0,
+      "false_positive_episodes": 0,
+      "false_positive_days": 0,
+      "fpr_days": 0.0,
+      "fp_episodes": []
+    },
+    {
+      "theta": 0.7,
+      "n_events": 2,
+      "n_hit": 0,
+      "recall": 0.0,
+      "lead_median": null,
+      "lead_mean": null,
+      "lead_min": null,
+      "lead_max": null,
+      "per_event": [
+        {
+          "event_start": "2023-04-06",
+          "event_end": "2023-04-20",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-04-23",
+          "event_end": "2023-04-25",
+          "hit": false,
+          "lead_days": null
+        }
+      ],
+      "n_warning_episodes": 0,
+      "false_positive_episodes": 0,
+      "false_positive_days": 0,
+      "fpr_days": 0.0,
+      "fp_episodes": []
+    },
+    {
+      "theta": 0.8,
+      "n_events": 2,
+      "n_hit": 0,
+      "recall": 0.0,
+      "lead_median": null,
+      "lead_mean": null,
+      "lead_min": null,
+      "lead_max": null,
+      "per_event": [
+        {
+          "event_start": "2023-04-06",
+          "event_end": "2023-04-20",
+          "hit": false,
+          "lead_days": null
+        },
+        {
+          "event_start": "2023-04-23",
+          "event_end": "2023-04-25",
+          "hit": false,
+          "lead_days": null
+        }
+      ],
+      "n_warning_episodes": 0,
+      "false_positive_episodes": 0,
+      "false_positive_days": 0,
+      "fpr_days": 0.0,
+      "fp_episodes": []
+    }
+  ],
+  "baseline_p75": [
+    {
+      "theta": 0.5,
+      "n_events": 2,
+      "n_hit": 2,
+      "recall": 1.0,
+      "lead_median": 3.0,
+      "lead_mean": 3.0,
+      "lead_min": 2.0,
+      "lead_max": 4.0,
+      "per_event": [
+        {
+          "event_start": "2023-04-02",
+          "event_end": "2023-05-03",
+          "hit": true,
+          "lead_days": 4
+        },
+        {
+          "event_start": "2023-05-04",
+          "event_end": "2023-05-15",
+          "hit": true,
+          "lead_days": 2
+        }
+      ],
+      "n_warning_episodes": 5,
+      "false_positive_episodes": 1,
+      "false_positive_days": 1,
+      "fpr_days": 0.011363636363636364,
+      "fp_episodes": [
+        {
+          "start": "2023-05-17",
+          "end": "2023-05-17",
+          "days": 1
+        }
+      ]
+    }
+  ],
+  "event_alignment": [
+    {
+      "i": 1,
+      "start": "2021-03-27",
+      "end": "2021-07-07",
+      "in_eval_period": false,
+      "bloom_days_near": 92,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 2,
+      "start": "2021-08-06",
+      "end": "2021-08-08",
+      "in_eval_period": false,
+      "bloom_days_near": 0,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 3,
+      "start": "2021-08-09",
+      "end": "2021-08-20",
+      "in_eval_period": false,
+      "bloom_days_near": 2,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 4,
+      "start": "2021-10-01",
+      "end": "2021-10-12",
+      "in_eval_period": false,
+      "bloom_days_near": 3,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 5,
+      "start": "2022-05-18",
+      "end": "2022-05-24",
+      "in_eval_period": false,
+      "bloom_days_near": 0,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 6,
+      "start": "2022-06-01",
+      "end": "2022-06-03",
+      "in_eval_period": false,
+      "bloom_days_near": 0,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 7,
+      "start": "2023-04-02",
+      "end": "2023-05-03",
+      "in_eval_period": true,
+      "bloom_days_near": 17,
+      "max_p_lead": 0.45715275406837463,
+      "hit_0.5": "✗",
+      "lead_0.5": null
+    },
+    {
+      "i": 8,
+      "start": "2023-05-04",
+      "end": "2023-05-15",
+      "in_eval_period": true,
+      "bloom_days_near": 1,
+      "max_p_lead": 0.5095581412315369,
+      "hit_0.5": "✓",
+      "lead_0.5": 18
+    },
+    {
+      "i": 9,
+      "start": "2023-10-17",
+      "end": "2023-10-22",
+      "in_eval_period": false,
+      "bloom_days_near": 0,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 10,
+      "start": "2024-08-16",
+      "end": "2024-08-23",
+      "in_eval_period": false,
+      "bloom_days_near": 0,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 11,
+      "start": "2024-08-25",
+      "end": "2024-08-27",
+      "in_eval_period": false,
+      "bloom_days_near": 0,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    },
+    {
+      "i": 12,
+      "start": "2025-09-27",
+      "end": "2025-09-30",
+      "in_eval_period": false,
+      "bloom_days_near": 0,
+      "max_p_lead": null,
+      "hit_0.5": "—",
+      "lead_0.5": null
+    }
+  ],
+  "wall_seconds": 3.3
+}

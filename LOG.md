@@ -54,6 +54,8 @@
 | 3 | J 方向慢变量特征结果报告 | `exp/model_enhancement/j_slow_vars/results.md` / `results.json` | ✅ | 2026-08-10，只帮覆盖窗口std（-6.5%），伤方向AUC（-0.016 显著）+点精度（RMSE +2.25% 显著），不建议加 |
 | 3 | **st-train-v020 正式训练验收脚本** | `scripts/train_v020.py` | ✅ | 2026-08-10，日级两阶段 ts_freeze（T=30/H=7，M4 bloom），`--fast-dev` 冒烟 / 全量 3-seed |
 | 3 | **st-train-v020 正式训练结果** | `exp/model_enhancement/st-train-v020/results.json` + `docs/mdl_model_integrate_results.md` §6 | ✅ | 2026-08-10，sensecore H100 109s；CRPS 1.182、技能 **+21.9%**、覆盖 **0.776**，3-seed 全超 +20%，验收达标 |
+| 3 | **mdl-m4-warning 预警评估脚本** | `scripts/eval_m4_warning.py` | ✅ | 2026-08-10，M4 bloom 头召回/提前量/误报评估（3-seed × 17 窗口），`--smoke` 冒烟 / 全量 |
+| 3 | **mdl-m4-warning 预警评估结果** | `exp/mdl_m4_warning/results.json` + `docs/mdl_m4_warning_results.md` | ✅ | 2026-08-10，sensecore H100 133s；θ=0.5 召回 2/5、提前量中位 14.5 天、误报 6 段/84 天；12 事件对齐 |
 | | | | | |
 
 ---
@@ -77,6 +79,29 @@
 ---
 
 ## 三、执行日志（按时间追加，最新在最上）
+
+### [2026-08-10 22:45] mdl-m4-warning —— M4 藻华预警召回/提前量/误报评估（mdl-m4-warning ✅）
+- 目标：按冻结设计评估 M4 藻华预警头——召回率 + 提前量 + 误报率，并与 N 探索 12 事件对齐；冒烟→全量（sensecore H100）。
+- 改动文件：
+  - 新建 `scripts/eval_m4_warning.py`（评估脚本：BloomLabeler 日级事件 + RamsNet M4 bloom 头 3-seed × 17 窗口两阶段训练 + 测试段 P(bloom) 跨窗口/seed 均值 + 阈值扫描召回/提前量/误报 + 12 事件对齐 + 基线对照）
+  - 新建 `exp/mdl_m4_warning/`（results.json + smoke.json + run.log，统计量无原始数据行；`_analyze_events.py` 预分析临时）
+  - 新建 `docs/mdl_m4_warning_results.md`（模块结果报告）
+- 执行命令与结果（sensecore H100，torch 2.3.1+cu121）：
+  - 本地 CPU 冒烟（`--smoke --windows 1 --seeds 1`）：窗口1 M4 acc 0.862，评估链路（事件标签/阈值扫描/对齐/基线）全通
+  - 全量：`nohup python3 scripts/eval_m4_warning.py --windows 17 --seeds 3` → **133s**，17 窗口 × 3 seed 两阶段训练 + 评估
+- 结果（评估期 2023-03-01 → 2025-05-19，795 天，期内 N 事件 5 个）：
+  - **阈值扫描**：θ=0.3 召回 0.4/误报 8 段（20.0%）；**θ=0.5 召回 0.4（2/5）、提前量中位 14.5 天（13-16）、误报 6 段/84 天（10.6%）**；θ=0.6 提前 16 天/误报 3 段（7.0%）；θ=0.8 召回 0.2/提前 20 天/误报 3 段（1.8%）
+  - **逐事件（θ=0.5）**：N8（2023-05）命中提前 16 天、N9（2023-10）命中提前 13 天；N7（2023-04 主事件，lead P=0.04）、N10/N11（2024-08 小事件，lead P 0.22/0.27）漏报；N1-N6/N12 在滚动协议训练段内（无样本外）
+  - **基线对照**：顶层带 p75 阈值召回 5/5 但只提前 4 天 + 14 误报段 → 模型用一半误报换 3.6 倍提前量（爬升期早期预警 vs 临近触发才报）
+  - **误报定位**：集中在 2023-11/12 与 2024-10/11 两个秋冬窗口（2024-10-06→11-26 最长 52 天），为浓度未达事件定义但 P(bloom) 抬升的长尾低幅段
+  - **M4 acc（窗口均值）** 0.826，与 st-train-v020 正式训练一致（0.826），链路可复现
+- 关键口径说明：日级网格 `BloomLabeler` 识别 5 个事件（vs N 探索 3h 网格 12 个），因日级均值把 2-5 天小事件摊平；评估以 N 探索 12 事件为准（冻结清单），日级事件作次级参考
+- 失误：`evaluate_threshold` 事件集 str/Timestamp 混用 + JSON 序列化 Timestamp（两处，已修）；Windows 控制台 GBK 打印 ✓/✗ 乱码（仅显示，数据正确）
+- 冒烟：通过（本地 CPU 链路全通；H100 全量与冒烟同配置）
+- 交付物：`scripts/eval_m4_warning.py`、`exp/mdl_m4_warning/`、`docs/mdl_m4_warning_results.md`
+- 状态：✅ 完成（mdl-m4-warning · evt-m4-bloom · st-m4-eval 验收达标：召回/提前量/误报评估 + 12 事件对齐）
+- 下一步：**停下等主会话评审**。M4 预警改进方向：M4 标签改 3h 网格恢复 12 事件口径 / 加垂直联动确认门控压秋冬误报 / θ=0.5-0.6 为推荐工作点
+
 
 ### [2026-08-10 22:20] st-train-v020 —— mdl-model-integrate 正式训练验收（CRPS>+20% 达标 ✅）
 - 目标：在算力机 sensecore H100 上跑 3-seed × 17 窗口日级两阶段正式训练，验证冻结验收标准（CRPS 相对持久化 >+20%、覆盖率接近/超过探索 ts_freeze 0.704），冒烟→全量顺序确认链路。
