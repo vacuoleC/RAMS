@@ -1,0 +1,246 @@
+budgets:
+  attempts: unlimited
+  compute: unlimited（H100 充足）
+  money: unlimited
+  network: unlimited（限公开/算力机）
+  storage: unlimited
+  time: unlimited
+  tokens: unlimited
+controller:
+  controller_revision: 1
+  path: skills/rams-algae-controller/SKILL.md
+  skill_name: rams-algae-controller
+deliverables:
+- acceptance_criteria:
+  - M1 目标改增量Δ + q9 分位数输出
+  - 采样尺度改日级（T=30, H=7天）
+  - M4 用藻华状态定义（顶层带+多层联动）
+  - M2/M3/M5 结论整合（多任务头/选层输入/因果特征）
+  deliverable_uid: a02dbf9f-fab8-465a-88d2-ac8500e1a14c
+  evidence_requirements:
+  - CRPS-vs-persistence
+  - coverage
+  - bloom-recall
+  format: python package
+  required: true
+  review_policy: 每个模块冒烟通过即评审
+  target_path: rams/
+  validators:
+  - pytest
+  - smoke-test
+- acceptance_criteria:
+  - 含 0.2.0 模型架构描述
+  - 含对比基线结果表
+  - 含探索证据链索引
+  deliverable_uid: 3a91c313-2855-4608-876c-186aab46e9d3
+  evidence_requirements:
+  - baseline-comparison
+  format: markdown report
+  required: true
+  review_policy: 报告评审
+  target_path: docs/model_v020_report.md
+  validators:
+  - doc-completeness
+- acceptance_criteria:
+  - 对比 PDF 基线（FLARE/GLM/rLakeAnalyzer/Qiu巢湖/Pontchartrain/统计ML）
+  - 同协议（日级+滚动窗口+CRPS）
+  - 算力机跑，跑不掉的记录降级方案
+  deliverable_uid: 7ea896ae-3c15-48df-8015-4916de8965ef
+  evidence_requirements:
+  - baseline-crps-table
+  format: markdown baseline report
+  required: true
+  review_policy: 基线报告评审
+  target_path: docs/baseline_comparison.md
+  validators:
+  - baseline-reproducible
+- acceptance_criteria:
+  - pytest 全链路通过
+  - 冒烟测试记录
+  deliverable_uid: 74cb7a1f-9ecf-41c0-a716-03f72ab50e7b
+  evidence_requirements:
+  - pytest-output
+  format: markdown test report
+  required: true
+  review_policy: 测试评审
+  target_path: docs/test_report.md
+  validators:
+  - pytest-pass
+environments:
+- connection_method: local
+  credential_references: []
+  data_retention_policy: 涉密数据本地
+  environment_id: local-dev
+  environment_manager: conda
+  environment_type: control
+  host_alias: local-windows
+  interpreter: python 3.13 / 3.10
+  network_policy_ref: network_permissions
+  os: Windows 11
+  path_mappings: []
+  project_path: D:/coding/26AIendwork
+  resources:
+    cpu: '16'
+    disk: 100G
+    gpu: RTX4060-8G
+    memory: 32G
+  responsibility: 代码开发 + 冒烟测试 + 文档
+  shell: bash
+  writable_paths:
+  - rams
+  - scripts
+  - tests
+  - docs
+  - exp
+- connection_method: ssh
+  credential_references: []
+  data_retention_policy: 涉密数据算力机，不外传
+  environment_id: sensecore-h100
+  environment_manager: other
+  environment_type: compute
+  host_alias: sensecore
+  interpreter: python 3.8
+  network_policy_ref: network_permissions
+  os: Ubuntu 20.04
+  path_mappings: []
+  project_path: /data/RAMS/proj
+  resources:
+    cpu: '192'
+    disk: 1.5T
+    gpu: H100-80G
+    memory: 2TB
+  responsibility: 正式训练 + 对比基线 + 全量验证
+  shell: bash
+  writable_paths:
+  - /data/RAMS/proj
+final_acceptance:
+- 正式模型（日级+滚动窗口）CRPS 相对持久化 >+20%
+- M4 用藻华事件定义（N 探索）评估：召回率 + 提前量
+- 落地代码通过 pytest 全链路
+- 报告含完整探索证据链 + 对比基线结果
+framework_adapters:
+- adapter_id: claude-code
+  required: true
+  required_capabilities:
+  - auto_continue
+  - tool_post_observe
+governance:
+  cancellation_rules: []
+  change_request_rules:
+  - rule: 改已冻结设计需用户批准
+  pause_rules:
+  - rule: 遇到数据/架构红线冲突时暂停
+  recovery_rules:
+  - rule: 探索失败回滚到上一提交
+  review_rules:
+  - rule: 每个模块冒烟通过即停，交用户评审
+  - rule: 涉密数据绝不打印原始值/不上传
+inputs:
+- format: parquet
+  input_id: standard-parquet
+  license: 涉密数据，仅本地
+  path_or_reference: data/processed/standard.parquet
+  provenance: 单站0902，2021-03至2025-09，藻类+气象实测
+  read_only: true
+  scale: 258542 rows x 23 cols
+  schema: configs/data/schema.yaml
+  sensitivity: confidential
+  sha256: null
+  version: '1.0'
+modules:
+- dependencies: []
+  module_id: mdl-data-scale
+  module_uid: baa82870-454d-4849-9139-9c9d660f5df7
+  path: modules/mdl-data-scale/module_design.yaml
+- dependencies:
+  - mdl-data-scale
+  module_id: mdl-model-integrate
+  module_uid: 242d4bb6-2f8d-4414-a8d5-014ff9a883d5
+  path: modules/mdl-model-integrate/module_design.yaml
+- dependencies:
+  - mdl-model-integrate
+  module_id: mdl-m4-warning
+  module_uid: e4a6869d-7b84-4c3e-830c-6d2abbadb3bf
+  path: modules/mdl-m4-warning/module_design.yaml
+- dependencies:
+  - mdl-data-scale
+  module_id: mdl-baseline-compare
+  module_uid: 56f3a458-10f0-4eba-b696-85eeebe3c9d4
+  path: modules/mdl-baseline-compare/module_design.yaml
+- dependencies:
+  - mdl-model-integrate
+  - mdl-baseline-compare
+  module_id: mdl-test-package
+  module_uid: fa5dc76f-551c-453a-ac9b-a72863e6039b
+  path: modules/mdl-test-package/module_design.yaml
+network_permissions:
+  dependency_installation:
+    allowed_scope:
+    - pip
+    - conda
+    approval_rule: auto-allowed-known
+    data_level: public
+  free_api:
+    allowed_scope: []
+    approval_rule: ask-first
+    data_level: public
+  literature_and_web_search:
+    allowed_scope:
+    - reservoir-algae-literature
+    approval_rule: auto-allowed
+    data_level: public
+  paid_api:
+    allowed_scope: []
+    approval_rule: blocked
+    data_level: public
+  private_remote_service:
+    allowed_scope: []
+    approval_rule: blocked
+    data_level: confidential
+  project_data_upload:
+    allowed_scope: []
+    approval_rule: blocked
+    data_level: confidential
+  public_data_download:
+    allowed_scope:
+    - efi-usgs
+    - thqbca
+    - tick-tick-bloom
+    approval_rule: auto-allowed
+    data_level: public
+  remote_compute_start:
+    allowed_scope:
+    - sensecore
+    approval_rule: auto-allowed
+    data_level: confidential
+permissions:
+  commands:
+  - python
+  - pytest
+  - pip
+  - ssh sensecore
+  - sync_sensecore.py
+  dependency_changes:
+  - pip install into sensecore
+  - 本地 pip 补装需批准
+  external_side_effects: []
+  filesystem:
+  - rams
+  - scripts
+  - tests
+  - docs
+  - exp
+project_design_revision: 1
+project_id: RAMS-Algae-Monitoring
+project_slug: rams-algae
+project_uid: 47077f0c-1772-47c8-ae2a-b99a38928335
+root_goal: 将探索验证的最优模型形态落地为 RAMS 0.2.0 正式模型系统：五头整合（M1/M2/M4 多任务预测头 + M3 选层输入 + M5 因果特征），采用增量Δ+日级+藻华状态预警，对比
+  PDF 文献基线，产出真实科研结果
+schema_version: 0.1.0
+unresolved_non_blocking_items:
+- decision_ref: DEC-001
+  item: M3 选层输入与 M5 因果特征的具体接口
+  item_id: UNB-M35-INTERFACE
+- decision_ref: DEC-001
+  item: 日级正式模型的精确超参
+  item_id: UNB-HYPERPARAMS

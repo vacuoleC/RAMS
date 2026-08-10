@@ -1,0 +1,37 @@
+acceptance_criteria:
+- M1 增量Δ + q9 分位数
+- M2/M4 多任务头（M4 用藻华状态）
+- 两阶段训练（ts_freeze）
+- CRPS 相对持久化 >+20%
+budget_scope: []
+deliverable_uids:
+- a02dbf9f-fab8-465a-88d2-ac8500e1a14c
+dependencies:
+- mdl-data-scale
+environment_ids:
+- sensecore-h100
+events:
+- acceptance_criteria:
+  - CRPS>+20%
+  - 覆盖率达标
+  dependencies: []
+  event_id: evt-model-v020
+  first_wave_subtasks:
+  - acceptance_criteria:
+    - CRPS 相对持久化 >+20%
+    action: 训练 0.2.0 正式模型（五头整合，3-seed 日级滚动窗口）
+    subtask_id: st-train-v020
+  goal: 正式模型训练
+  inputs:
+  - daily-tensor
+  outputs:
+  - trained-model
+  - crps-results
+  split_rule: single
+goal: 五头整合正式模型（增量Δ+q9+多任务+日级）
+module_id: mdl-model-integrate
+module_uid: 242d4bb6-2f8d-4414-a8d5-014ff9a883d5
+permission_scope:
+- filesystem
+- commands
+- remote_compute_start

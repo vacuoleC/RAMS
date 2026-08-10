@@ -1,0 +1,110 @@
+{
+  "adapters": [
+    {
+      "adapter_id": "claude-code",
+      "required": true,
+      "required_capabilities": [
+        "auto_continue",
+        "tool_post_observe"
+      ]
+    }
+  ],
+  "controller_revision": 1,
+  "controller_skill": {
+    "name": "rams-algae-controller",
+    "path": "skills/rams-algae-controller/SKILL.md"
+  },
+  "generated_at": "2026-08-10T09:20:32.316129Z",
+  "managed_files": [
+    {
+      "category": "managed_control",
+      "ownership": "generator",
+      "path": "adapters/claude-code/settings.json",
+      "sha256": "a6a56de4c9d53cf4a7c00d7bee8ae855c587610d6f623d27f24aa7778435d3f2"
+    },
+    {
+      "category": "frozen_design",
+      "ownership": "generator",
+      "path": "data_design.yaml",
+      "sha256": "87a6073178f023c62ca80e1668cb6a387d1d35636a137c0198771e91aa6c42d7"
+    },
+    {
+      "category": "frozen_design",
+      "ownership": "generator",
+      "path": "modules/mdl-baseline-compare/module_design.yaml",
+      "sha256": "c8da5ff0b841487eb1e929d0aadcacee54b616c27b2562ca8adb87ce0913cf19"
+    },
+    {
+      "category": "frozen_design",
+      "ownership": "generator",
+      "path": "modules/mdl-data-scale/module_design.yaml",
+      "sha256": "664e9e1a2f4a1ee7365fb291700798fb2aaa1da9de840a74cf45028a8aff25f9"
+    },
+    {
+      "category": "frozen_design",
+      "ownership": "generator",
+      "path": "modules/mdl-m4-warning/module_design.yaml",
+      "sha256": "dc4cd9bba7753bd3fcf306d02145711d911e6500e5cbdd35a1820560b42a6caa"
+    },
+    {
+      "category": "frozen_design",
+      "ownership": "generator",
+      "path": "modules/mdl-model-integrate/module_design.yaml",
+      "sha256": "e69aa1a7054c90aa1a0d0897bc54606aa7a12fe85d134d7486ba490461d1f0ae"
+    },
+    {
+      "category": "frozen_design",
+      "ownership": "generator",
+      "path": "modules/mdl-test-package/module_design.yaml",
+      "sha256": "4165059db9794f38da66a50c2a385b8deee0d07c59053b548951f3c8f71cb3ff"
+    },
+    {
+      "category": "frozen_design",
+      "ownership": "generator",
+      "path": "project_design.yaml",
+      "sha256": "9a2077ca6f0224c14b2d3553e0066dc7f28e59fb211801451dee65c98a4c5163"
+    },
+    {
+      "category": "policy_snapshot",
+      "ownership": "generator",
+      "path": "schemas/state-transitions.schema.json",
+      "sha256": "5267d657772f53136c5ab278ed9a9d2723dc43a3ad1c6cb8faa841401ae5542f"
+    },
+    {
+      "category": "policy_snapshot",
+      "ownership": "generator",
+      "path": "schemas/state-transitions.yaml",
+      "sha256": "94270670475941c1e4acdda03341e451f1032f22ad9981c088e3a91966938965"
+    },
+    {
+      "category": "policy_snapshot",
+      "ownership": "generator",
+      "path": "schemas/work-item-lifecycle.schema.json",
+      "sha256": "067433ec97b50e5dfa47a291a7d2d2c3119374cb08b8eecf5dcfa51586196247"
+    },
+    {
+      "category": "policy_snapshot",
+      "ownership": "generator",
+      "path": "schemas/work-item-lifecycle.yaml",
+      "sha256": "f3cd0086086beaca07ee210104cd0340adb27f5a1d1f233c836f912179b713e2"
+    },
+    {
+      "category": "controller_skill",
+      "ownership": "generator",
+      "path": "skills/rams-algae-controller/SKILL.md",
+      "sha256": "45708e60b1f0bbaf27c3aaf8a94527bf84b1061c3c7e49fa7090a18f310c118d"
+    }
+  ],
+  "project_design_revision": 1,
+  "project_slug": "rams-algae",
+  "project_uid": "47077f0c-1772-47c8-ae2a-b99a38928335",
+  "schema_version": "0.1.0",
+  "versions": {
+    "adapter": "0.1.0",
+    "controller_spec": "0.1.0",
+    "generator": "0.1.0",
+    "guard_registry": "0.1.0",
+    "runtime": "0.1.9",
+    "schema": "0.1.0"
+  }
+}

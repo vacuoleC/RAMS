@@ -1,0 +1,4 @@
+bloom_warning_definition: 顶层带(0.5-3.0m)中位数>带p90 且 0.5-5.0m>=3层>各自p90，连续>=2天
+bloom_warning_reference: exp/model_enhancement/n_bloom_identify/results.md
+daily_scale_config: T=30 回看 / H=7 天视界 / 日平均浓度目标
+daily_scale_reference: exp/model_enhancement/l_daily_scale/results.md

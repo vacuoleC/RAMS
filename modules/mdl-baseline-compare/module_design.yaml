@@ -1,0 +1,37 @@
+acceptance_criteria:
+- 统计 ML 基线：持久化/AR/XGBoost/LightGBM 分位数（已跑通 17 窗口 CRPS）
+- rLakeAnalyzer 温跃层深度基线（R 已装，非冗余：与 delta_T 相关仅 0.4）
+- 概率 vs 阈值预警对比（Qiu/Pontchartrain 方法复现）
+- 物理模型（GLM/CE-QUAL-W2/FLARE）降级为方法借鉴（缺 bathymetry 数据）
+- 同协议日级+滚动窗口+CRPS
+budget_scope: []
+deliverable_uids:
+- 7ea896ae-3c15-48df-8015-4916de8965ef
+dependencies:
+- mdl-data-scale
+environment_ids:
+- sensecore-h100
+events:
+- acceptance_criteria:
+  - 同协议对比表
+  dependencies: []
+  event_id: evt-baseline
+  first_wave_subtasks:
+  - acceptance_criteria:
+    - 对比表产出
+    action: 跑统计ML分位数基线 + rLakeAnalyzer温跃层基线 + 概率vs阈值预警对比，出 CRPS 对比表；物理模型记录降级依据
+    subtask_id: st-baseline-run
+  goal: 对比基线跑算力机
+  inputs:
+  - daily-tensor
+  outputs:
+  - baseline-crps-table
+  split_rule: single
+goal: 对比基线（已验证可行范围）
+module_id: mdl-baseline-compare
+module_uid: 56f3a458-10f0-4eba-b696-85eeebe3c9d4
+permission_scope:
+- filesystem
+- commands
+- remote_compute_start
+- dependency_installation

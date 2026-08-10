@@ -1,0 +1,32 @@
+acceptance_criteria:
+- 召回率 + 提前量评估
+- 与 12 个藻华事件对齐
+budget_scope: []
+deliverable_uids:
+- a02dbf9f-fab8-465a-88d2-ac8500e1a14c
+dependencies:
+- mdl-model-integrate
+environment_ids:
+- sensecore-h100
+events:
+- acceptance_criteria:
+  - 召回率+提前量报告
+  dependencies: []
+  event_id: evt-m4-bloom
+  first_wave_subtasks:
+  - acceptance_criteria:
+    - 召回率报告
+    action: 用 N 定义评估 M4 预警召回/提前量
+    subtask_id: st-m4-eval
+  goal: M4 预警评估
+  inputs:
+  - trained-model
+  outputs:
+  - bloom-recall
+  split_rule: single
+goal: M4 藻华预警按 N 事件定义评估
+module_id: mdl-m4-warning
+module_uid: e4a6869d-7b84-4c3e-830c-6d2abbadb3bf
+permission_scope:
+- filesystem
+- commands

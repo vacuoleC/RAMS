@@ -1,0 +1,445 @@
+schema_version: "0.1.0"
+catalog_version: "0.1.0"
+guard_registry_version: "0.1.0"
+
+states:
+  - draft
+  - ready
+  - active
+  - active_remote
+  - review
+  - paused
+  - blocked
+  - failed
+  - cancelling
+  - cancelled
+  - complete
+
+terminal_states: [cancelled, complete]
+
+transitions:
+  - id: TR-001
+    from: draft
+    to: ready
+    allowed_actors: {initiators: [user], requesters: [meta-skill]}
+    approval_policy: {type: explicit, action: freeze_candidate, reusable: false}
+    guards:
+      - {id: G-CANDIDATE-FROZEN, kind: runtime, on_failure: deny}
+      - {id: G-CANDIDATE-VALID, kind: validator, on_failure: deny}
+      - {id: G-CANDIDATE-APPROVAL-BOUND, kind: runtime, on_failure: deny}
+    evidence_required: [candidate_manifest, validation_report, approval_record]
+    transition_reason_codes: [candidate_materialized]
+
+  - id: TR-002
+    from: ready
+    to: active
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: explicit, action: activate_project, reusable: false}
+    guards:
+      - {id: G-NO-LIVE-LEASE, kind: runtime, on_failure: deny}
+      - {id: G-CONTROLLER-INTEGRITY, kind: runtime, on_failure: block}
+      - {id: G-ADAPTER-CAPABILITIES, kind: runtime, on_failure: deny}
+      - {id: G-NO-OPEN-BLOCKERS, kind: runtime, on_failure: deny}
+    evidence_required: [approval_record, capability_report, integrity_report]
+    transition_reason_codes: [user_activation]
+
+  - id: TR-003
+    from: active
+    to: active_remote
+    allowed_actors: {initiators: [agent], requesters: [controller]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-REMOTE-JOB-RUNNING, kind: runtime, on_failure: deny}
+      - {id: G-PROJECT-EXECUTION-ALLOWED, kind: runtime, on_failure: deny}
+    evidence_required: [remote_job_record]
+    transition_reason_codes: [remote_job_started]
+
+  - id: TR-004
+    from: active_remote
+    to: active
+    allowed_actors: {initiators: [agent], requesters: [controller]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-NO-RUNNING-REMOTE-JOBS, kind: runtime, on_failure: deny}
+      - {id: G-LOCAL-WORK-REMAINS, kind: attestation, on_failure: deny}
+    evidence_required: [remote_job_record, work_selection_attestation]
+    transition_reason_codes: [remote_jobs_settled]
+
+  - id: TR-005
+    from: active
+    to: review
+    allowed_actors: {initiators: [agent], requesters: [controller]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-REVIEW-ENTRY-ALLOWED, kind: attestation, on_failure: deny}
+    evidence_required: [review_entry_attestation]
+    transition_reason_codes: [review_requested]
+
+  - id: TR-006
+    from: active_remote
+    to: review
+    allowed_actors: {initiators: [agent], requesters: [controller]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-REVIEW-ENTRY-ALLOWED, kind: attestation, on_failure: deny}
+      - {id: G-REMOTE-JOBS-SAFE-WHILE-GATED, kind: runtime, on_failure: block}
+    evidence_required: [review_entry_attestation, remote_monitoring_evidence]
+    transition_reason_codes: [review_requested]
+
+  - id: TR-007
+    from: active
+    to: review
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: user-directive, action: request_review, reusable: false}
+    guards:
+      - {id: G-DIRECTIVE-BOUND, kind: runtime, on_failure: deny}
+    evidence_required: [directive_record]
+    transition_reason_codes: [review_requested]
+
+  - id: TR-008
+    from: active_remote
+    to: review
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: user-directive, action: request_review, reusable: false}
+    guards:
+      - {id: G-DIRECTIVE-BOUND, kind: runtime, on_failure: deny}
+      - {id: G-REMOTE-JOBS-SAFE-WHILE-GATED, kind: runtime, on_failure: block}
+    evidence_required: [directive_record, remote_monitoring_evidence]
+    transition_reason_codes: [review_requested]
+
+  - id: TR-009
+    from: review
+    to: complete
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: explicit, action: final_acceptance, reusable: false}
+    guards:
+      - {id: G-COMPLETE-ACCEPTANCE, kind: attestation, on_failure: deny}
+      - {id: G-NO-OPEN-BLOCKERS, kind: runtime, on_failure: deny}
+      - {id: G-NO-UNRESOLVED-REMOTE-JOBS, kind: runtime, on_failure: deny}
+      - {id: G-NO-UNBOUND-MATERIAL-RECORDS, kind: runtime, on_failure: deny}
+    evidence_required: [final_acceptance_attestation, approval_record]
+    transition_reason_codes: [final_acceptance]
+
+  - id: TR-010
+    from: review
+    to: active
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: user-directive, action: request_rework, reusable: false}
+    guards:
+      - {id: G-DIRECTIVE-BOUND, kind: runtime, on_failure: deny}
+      - {id: G-REWORK-SCOPE-VALID, kind: attestation, on_failure: deny}
+      - {id: G-ADAPTER-CAPABILITIES, kind: runtime, on_failure: deny}
+    evidence_required: [directive_record, rework_scope_attestation]
+    transition_reason_codes: [rework_requested]
+
+  - id: TR-011
+    from: active
+    to: paused
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: user-directive, action: pause_project, reusable: false}
+    guards:
+      - {id: G-DIRECTIVE-BOUND, kind: runtime, on_failure: deny}
+    evidence_required: [directive_record]
+    transition_reason_codes: [pause_requested]
+
+  - id: TR-012
+    from: active_remote
+    to: paused
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: user-directive, action: pause_project, reusable: false}
+    guards:
+      - {id: G-DIRECTIVE-BOUND, kind: runtime, on_failure: deny}
+      - {id: G-REMOTE-PAUSE-SAFE, kind: runtime, on_failure: deny}
+    evidence_required: [directive_record, remote_monitoring_evidence]
+    transition_reason_codes: [pause_requested]
+
+  - id: TR-013
+    from: active
+    to: paused
+    allowed_actors: {initiators: [agent], requesters: [controller]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-AUTOMATIC-PAUSE-ALLOWED, kind: runtime, on_failure: deny}
+    evidence_required: [progress_or_time_evidence]
+    transition_reason_codes: [automatic_pause]
+
+  - id: TR-014
+    from: active_remote
+    to: paused
+    allowed_actors: {initiators: [agent], requesters: [controller]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-AUTOMATIC-PAUSE-ALLOWED, kind: runtime, on_failure: deny}
+      - {id: G-REMOTE-PAUSE-SAFE, kind: runtime, on_failure: deny}
+    evidence_required: [progress_or_time_evidence, remote_monitoring_evidence]
+    transition_reason_codes: [automatic_pause]
+
+  - id: TR-015
+    from: paused
+    to: active
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: explicit, action: resume_project, reusable: false}
+    guards:
+      - {id: G-CONTROLLER-INTEGRITY, kind: runtime, on_failure: block}
+      - {id: G-ADAPTER-CAPABILITIES, kind: runtime, on_failure: deny}
+      - {id: G-NO-OPEN-BLOCKERS, kind: runtime, on_failure: deny}
+    evidence_required: [approval_record, capability_report, integrity_report]
+    transition_reason_codes: [resumed]
+
+  - id: TR-016
+    from: paused
+    to: active
+    allowed_actors: {initiators: [hook], requesters: [hook]}
+    approval_policy: {type: preauthorized, action: scheduled_resume, reusable: false}
+    guards:
+      - {id: G-PAUSE-IS-SCHEDULED, kind: runtime, on_failure: deny}
+      - {id: G-SCHEDULED-RESUME-DUE, kind: runtime, on_failure: deny}
+      - {id: G-PREAUTHORIZATION-VALID, kind: runtime, on_failure: deny}
+      - {id: G-CONTROLLER-INTEGRITY, kind: runtime, on_failure: block}
+      - {id: G-ADAPTER-CAPABILITIES, kind: runtime, on_failure: deny}
+      - {id: G-NO-OPEN-BLOCKERS, kind: runtime, on_failure: deny}
+    evidence_required: [approval_record, schedule_evidence, capability_report]
+    transition_reason_codes: [resumed]
+
+  - id: TR-017
+    from: ready
+    to: blocked
+    allowed_actors: {initiators: [agent, hook], requesters: [controller, hook]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-ACTOR-PAIR-VALID, kind: runtime, on_failure: deny}
+      - {id: G-BLOCK-EVIDENCE-VALID, kind: validator, on_failure: deny}
+    evidence_required: [blocker_evidence]
+    transition_reason_codes: [blocker_detected]
+
+  - id: TR-018
+    from: active
+    to: blocked
+    allowed_actors: {initiators: [agent, hook], requesters: [controller, hook]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-ACTOR-PAIR-VALID, kind: runtime, on_failure: deny}
+      - {id: G-BLOCK-EVIDENCE-VALID, kind: validator, on_failure: deny}
+    evidence_required: [blocker_evidence]
+    transition_reason_codes: [blocker_detected]
+
+  - id: TR-019
+    from: active_remote
+    to: blocked
+    allowed_actors: {initiators: [agent, hook, remote_monitor], requesters: [controller, hook, remote-monitor]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-ACTOR-PAIR-VALID, kind: runtime, on_failure: deny}
+      - {id: G-BLOCK-EVIDENCE-VALID, kind: validator, on_failure: deny}
+    evidence_required: [blocker_evidence, remote_job_record]
+    transition_reason_codes: [blocker_detected]
+
+  - id: TR-020
+    from: review
+    to: blocked
+    allowed_actors: {initiators: [agent, hook], requesters: [controller, hook]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-ACTOR-PAIR-VALID, kind: runtime, on_failure: deny}
+      - {id: G-BLOCK-EVIDENCE-VALID, kind: validator, on_failure: deny}
+    evidence_required: [blocker_evidence]
+    transition_reason_codes: [blocker_detected]
+
+  - id: TR-021
+    from: paused
+    to: blocked
+    allowed_actors: {initiators: [agent, hook], requesters: [controller, hook]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-ACTOR-PAIR-VALID, kind: runtime, on_failure: deny}
+      - {id: G-BLOCK-EVIDENCE-VALID, kind: validator, on_failure: deny}
+    evidence_required: [blocker_evidence]
+    transition_reason_codes: [blocker_detected]
+
+  - id: TR-022
+    from: failed
+    to: blocked
+    allowed_actors: {initiators: [agent, hook], requesters: [controller, hook]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-ACTOR-PAIR-VALID, kind: runtime, on_failure: deny}
+      - {id: G-BLOCK-EVIDENCE-VALID, kind: validator, on_failure: deny}
+    evidence_required: [blocker_evidence]
+    transition_reason_codes: [blocker_detected]
+
+  - id: TR-023
+    from: cancelling
+    to: blocked
+    allowed_actors: {initiators: [agent, hook], requesters: [controller, hook]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-ACTOR-PAIR-VALID, kind: runtime, on_failure: deny}
+      - {id: G-CANCELLATION-INCOMPLETE, kind: attestation, on_failure: deny}
+    evidence_required: [cancellation_report, blocker_evidence]
+    transition_reason_codes: [blocker_detected]
+
+  - id: TR-024
+    from: blocked
+    to: ready
+    allowed_actors: {initiators: [user, agent], requesters: [cli, controller]}
+    approval_policy: {type: explicit, action: confirm_blocker_resolution, reusable: false}
+    guards:
+      - {id: G-BLOCKERS-RESOLVED, kind: validator, on_failure: deny}
+      - {id: G-RESUME-TARGET, kind: runtime, on_failure: deny, parameters: {expected: ready}}
+    evidence_required: [blocker_resolution_evidence, approval_record]
+    transition_reason_codes: [blocker_resolved]
+
+  - id: TR-025
+    from: blocked
+    to: paused
+    allowed_actors: {initiators: [user, agent], requesters: [cli, controller]}
+    approval_policy: {type: explicit, action: confirm_blocker_resolution, reusable: false}
+    guards:
+      - {id: G-BLOCKERS-RESOLVED, kind: validator, on_failure: deny}
+      - {id: G-RESUME-TARGET, kind: runtime, on_failure: deny, parameters: {expected: paused}}
+    evidence_required: [blocker_resolution_evidence, approval_record]
+    transition_reason_codes: [blocker_resolved]
+
+  - id: TR-026
+    from: blocked
+    to: review
+    allowed_actors: {initiators: [user, agent], requesters: [cli, controller]}
+    approval_policy: {type: explicit, action: confirm_blocker_resolution, reusable: false}
+    guards:
+      - {id: G-BLOCKERS-RESOLVED, kind: validator, on_failure: deny}
+      - {id: G-RESUME-TARGET, kind: runtime, on_failure: deny, parameters: {expected: review}}
+    evidence_required: [blocker_resolution_evidence, approval_record]
+    transition_reason_codes: [blocker_resolved]
+
+  - id: TR-027
+    from: blocked
+    to: cancelling
+    allowed_actors: {initiators: [user, agent], requesters: [cli, controller]}
+    approval_policy: {type: explicit, action: confirm_blocker_resolution, reusable: false}
+    guards:
+      - {id: G-BLOCKERS-RESOLVED, kind: validator, on_failure: deny}
+      - {id: G-RESUME-TARGET, kind: runtime, on_failure: deny, parameters: {expected: cancelling}}
+    evidence_required: [blocker_resolution_evidence, approval_record]
+    transition_reason_codes: [blocker_resolved]
+
+  - id: TR-028
+    from: ready
+    to: cancelling
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: explicit, action: cancel_project, reusable: false}
+    guards: []
+    evidence_required: [approval_record]
+    transition_reason_codes: [cancellation_requested]
+
+  - id: TR-029
+    from: active
+    to: cancelling
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: explicit, action: cancel_project, reusable: false}
+    guards: []
+    evidence_required: [approval_record]
+    transition_reason_codes: [cancellation_requested]
+
+  - id: TR-030
+    from: active_remote
+    to: cancelling
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: explicit, action: cancel_project, reusable: false}
+    guards: []
+    evidence_required: [approval_record]
+    transition_reason_codes: [cancellation_requested]
+
+  - id: TR-031
+    from: review
+    to: cancelling
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: explicit, action: cancel_project, reusable: false}
+    guards: []
+    evidence_required: [approval_record]
+    transition_reason_codes: [cancellation_requested]
+
+  - id: TR-032
+    from: paused
+    to: cancelling
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: explicit, action: cancel_project, reusable: false}
+    guards: []
+    evidence_required: [approval_record]
+    transition_reason_codes: [cancellation_requested]
+
+  - id: TR-033
+    from: blocked
+    to: cancelling
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: explicit, action: cancel_project, reusable: false}
+    guards: []
+    evidence_required: [approval_record]
+    transition_reason_codes: [cancellation_requested]
+
+  - id: TR-034
+    from: failed
+    to: cancelling
+    allowed_actors: {initiators: [user], requesters: [cli]}
+    approval_policy: {type: explicit, action: cancel_project, reusable: false}
+    guards: []
+    evidence_required: [approval_record]
+    transition_reason_codes: [cancellation_requested]
+
+  - id: TR-035
+    from: cancelling
+    to: cancelled
+    allowed_actors: {initiators: [agent], requesters: [controller]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-CANCELLATION-COMPLETE, kind: validator, on_failure: deny}
+    evidence_required: [cancellation_report]
+    transition_reason_codes: [cancellation_completed]
+
+  - id: TR-036
+    from: active
+    to: failed
+    allowed_actors: {initiators: [agent], requesters: [controller]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-NO-SAFE-ALTERNATIVE, kind: attestation, on_failure: deny}
+    evidence_required: [no_safe_alternative_attestation]
+    transition_reason_codes: [failure_declared]
+
+  - id: TR-037
+    from: active_remote
+    to: failed
+    allowed_actors: {initiators: [agent], requesters: [controller]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-NO-SAFE-ALTERNATIVE, kind: attestation, on_failure: deny}
+      - {id: G-REMOTE-JOBS-SAFE-WHILE-GATED, kind: runtime, on_failure: block}
+    evidence_required: [no_safe_alternative_attestation, remote_monitoring_evidence]
+    transition_reason_codes: [failure_declared]
+
+  - id: TR-038
+    from: failed
+    to: paused
+    allowed_actors: {initiators: [user, agent], requesters: [cli, controller]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-REPAIR-VALIDATED, kind: validator, on_failure: deny}
+      - {id: G-RECOVERY-TARGET, kind: runtime, on_failure: deny, parameters: {expected: paused}}
+    evidence_required: [repair_report]
+    transition_reason_codes: [repair_validated]
+
+  - id: TR-039
+    from: failed
+    to: ready
+    allowed_actors: {initiators: [user, agent], requesters: [cli, controller]}
+    approval_policy: {type: none, action: null, reusable: false}
+    guards:
+      - {id: G-REPAIR-VALIDATED, kind: validator, on_failure: deny}
+      - {id: G-RECOVERY-TARGET, kind: runtime, on_failure: deny, parameters: {expected: ready}}
+    evidence_required: [repair_report]
+    transition_reason_codes: [repair_validated]
+
+failsafe:
+  is_transition: false
+  latch_path: .logs/failsafe.json
+  effective_state: blocked
+  clearance: supervised repair or supervised acknowledge with approval

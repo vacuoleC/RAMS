@@ -1,0 +1,101 @@
+schema_version: "0.1.0"
+catalog_version: "0.1.0"
+
+base_states:
+  - not_started
+  - queued
+  - active
+  - awaiting_review
+  - paused
+  - blocked
+  - complete
+  - failed
+  - cancelled
+  - skipped_with_evidence
+  - superseded
+
+type_policies:
+  module:
+    states: [not_started, active, awaiting_review, paused, blocked, complete, failed, cancelled, superseded]
+    terminal_states: [complete, failed, cancelled, superseded]
+    acceptable_for_parent_completion:
+      complete: {allowed: true, approval: never}
+      failed: {allowed: false, approval: never}
+      cancelled: {allowed: true, approval: always}
+      superseded: {allowed: true, approval: cr_or_replacement}
+    transitions:
+      - {from: not_started, to: active, decision: controller, guards: [G-PARENT-ACTIVE, G-DEPENDENCIES-SATISFIED]}
+      - {from: active, to: awaiting_review, decision: controller, guards: [G-REVIEW-ENTRY-ALLOWED]}
+      - {from: awaiting_review, to: active, decision: controller, guards: [G-REWORK-SCOPE-VALID]}
+      - {from: awaiting_review, to: complete, decision: controller, guards: [G-CHILDREN-ACCEPTABLE, G-ACCEPTANCE-PASSED]}
+      - {from: active, to: paused, decision: controller, guards: [G-AUTOMATIC-PAUSE-ALLOWED]}
+      - {from: active, to: blocked, decision: controller, guards: [G-BLOCK-EVIDENCE-VALID]}
+      - {from: active, to: failed, decision: controller, guards: [G-NO-SAFE-ALTERNATIVE]}
+      - {from: active, to: cancelled, decision: user_approval, guards: []}
+      - {from: active, to: superseded, decision: cr, guards: [G-REPLACEMENT-BOUND]}
+
+  event:
+    states: [not_started, queued, active, awaiting_review, paused, blocked, complete, failed, cancelled, skipped_with_evidence, superseded]
+    terminal_states: [complete, failed, cancelled, skipped_with_evidence, superseded]
+    acceptable_for_parent_completion:
+      complete: {allowed: true, approval: never}
+      failed: {allowed: false, approval: never}
+      cancelled: {allowed: true, approval: always}
+      skipped_with_evidence: {allowed: true, approval: when_required}
+      superseded: {allowed: true, approval: cr_or_replacement}
+    transitions:
+      - {from: not_started, to: queued, decision: controller, guards: [G-DEPENDENCIES-SATISFIED]}
+      - {from: queued, to: active, decision: controller, guards: [G-PARENT-ACTIVE, G-LOCAL-WRITER-AVAILABLE]}
+      - {from: active, to: awaiting_review, decision: controller, guards: [G-REVIEW-ENTRY-ALLOWED]}
+      - {from: awaiting_review, to: active, decision: controller, guards: [G-REWORK-SCOPE-VALID]}
+      - {from: awaiting_review, to: complete, decision: controller, guards: [G-CHILDREN-ACCEPTABLE, G-ACCEPTANCE-PASSED]}
+      - {from: active, to: complete, decision: controller, guards: [G-CHILDREN-ACCEPTABLE, G-ACCEPTANCE-PASSED]}
+      - {from: active, to: paused, decision: controller, guards: [G-AUTOMATIC-PAUSE-ALLOWED]}
+      - {from: active, to: blocked, decision: controller, guards: [G-BLOCK-EVIDENCE-VALID]}
+      - {from: active, to: failed, decision: controller, guards: [G-NO-SAFE-ALTERNATIVE]}
+      - {from: not_started, to: skipped_with_evidence, decision: controller, guards: [G-SKIP-DISPOSITION-VALID]}
+      - {from: active, to: cancelled, decision: user_approval, guards: []}
+      - {from: not_started, to: superseded, decision: controller, guards: [G-REPLACEMENT-BOUND]}
+
+  subtask:
+    states: [not_started, queued, active, awaiting_review, paused, blocked, complete, failed, cancelled, skipped_with_evidence, superseded]
+    terminal_states: [complete, failed, cancelled, skipped_with_evidence, superseded]
+    acceptable_for_parent_completion:
+      complete: {allowed: true, approval: never}
+      failed: {allowed: false, approval: never}
+      cancelled: {allowed: true, approval: always}
+      skipped_with_evidence: {allowed: true, approval: when_required}
+      superseded: {allowed: true, approval: cr_or_replacement}
+    transitions:
+      - {from: not_started, to: queued, decision: controller, guards: [G-DEPENDENCIES-SATISFIED]}
+      - {from: queued, to: active, decision: controller, guards: [G-PARENT-ACTIVE, G-LOCAL-WRITER-AVAILABLE]}
+      - {from: active, to: awaiting_review, decision: controller, guards: [G-REVIEW-ENTRY-ALLOWED]}
+      - {from: awaiting_review, to: active, decision: controller, guards: [G-REWORK-SCOPE-VALID]}
+      - {from: awaiting_review, to: complete, decision: controller, guards: [G-ACCEPTANCE-PASSED]}
+      - {from: active, to: complete, decision: controller, guards: [G-ACCEPTANCE-PASSED]}
+      - {from: active, to: paused, decision: controller, guards: [G-AUTOMATIC-PAUSE-ALLOWED]}
+      - {from: active, to: blocked, decision: controller, guards: [G-BLOCK-EVIDENCE-VALID]}
+      - {from: active, to: failed, decision: controller, guards: [G-NO-SAFE-ALTERNATIVE]}
+      - {from: not_started, to: skipped_with_evidence, decision: controller, guards: [G-SKIP-DISPOSITION-VALID]}
+      - {from: active, to: cancelled, decision: user_approval, guards: []}
+      - {from: not_started, to: superseded, decision: controller, guards: [G-REPLACEMENT-BOUND]}
+
+dependency_rules:
+  module: Module dependencies form a DAG and cycles are forbidden.
+  event: Events have one parent and may depend only on events in the same module.
+  subtask: Subtasks may depend only on subtasks in the same event.
+  cross_module_leaf: Cross-module Event or Subtask dependencies are forbidden and require promotion or CR.
+
+propagation_rules:
+  isolated_blocker: A blocked item does not block the project while another safe path remains.
+  exhausted_paths: The project becomes blocked when every executable path is externally blocked.
+  failed_with_alternative: A failed item does not fail the project when a safe alternative is attested.
+  required_failed_without_alternative: A required item with no safe alternative fails the project.
+  paused_item: A paused item pauses the project only when no other safe work can progress.
+
+execution_constraints:
+  local_writer: At most one local active work item may own the primary lease.
+  remote_parallelism: Multiple remote jobs may be in flight when each has an owner_item_uid.
+  parent_start: A child starts only while its parent is active and dependencies are satisfied.
+  parent_completion: A parent completes only after required children have acceptable dispositions and acceptance passes.
+  completed_parent_extension: Adding an ordinary child to a completed parent requires reopen or CR.

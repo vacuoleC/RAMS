@@ -1,0 +1,34 @@
+acceptance_criteria:
+- pytest 全链路通过
+- 冒烟测试记录
+budget_scope: []
+deliverable_uids:
+- 74cb7a1f-9ecf-41c0-a716-03f72ab50e7b
+dependencies:
+- mdl-model-integrate
+- mdl-baseline-compare
+environment_ids:
+- local-dev
+events:
+- acceptance_criteria:
+  - pytest 通过
+  dependencies: []
+  event_id: evt-test
+  first_wave_subtasks:
+  - acceptance_criteria:
+    - 通过
+    action: 跑 pytest 全链路 + 冒烟
+    subtask_id: st-pytest
+  goal: 全链路测试
+  inputs:
+  - trained-model
+  - baseline-crps-table
+  outputs:
+  - pytest-output
+  split_rule: single
+goal: 测试与打包
+module_id: mdl-test-package
+module_uid: fa5dc76f-551c-453a-ac9b-a72863e6039b
+permission_scope:
+- filesystem
+- commands

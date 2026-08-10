@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://supervised-project.local/schemas/state-transitions.schema.json",
+  "title": "Supervised project state transition policy",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "catalog_version",
+    "guard_registry_version",
+    "states",
+    "terminal_states",
+    "transitions",
+    "failsafe"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1.0"},
+    "catalog_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "guard_registry_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "states": {
+      "type": "array",
+      "minItems": 11,
+      "maxItems": 11,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/project_state"}
+    },
+    "terminal_states": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {"enum": ["cancelled", "complete"]}
+    },
+    "transitions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/transition"}
+    },
+    "failsafe": {
+      "type": "object",
+      "required": ["is_transition", "latch_path", "effective_state", "clearance"],
+      "properties": {
+        "is_transition": {"const": false},
+        "latch_path": {"const": ".logs/failsafe.json"},
+        "effective_state": {"const": "blocked"},
+        "clearance": {"const": "supervised repair or supervised acknowledge with approval"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "project_state": {
+      "enum": [
+        "draft",
+        "ready",
+        "active",
+        "active_remote",
+        "review",
+        "paused",
+        "blocked",
+        "failed",
+        "cancelling",
+        "cancelled",
+        "complete"
+      ]
+    },
+    "approval_policy": {
+      "type": "object",
+      "required": ["type", "action", "reusable"],
+      "properties": {
+        "type": {"enum": ["none", "explicit", "preauthorized", "user-directive", "cr-bound"]},
+        "action": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9_-]*$"},
+        "reusable": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "allowed_actors": {
+      "type": "object",
+      "required": ["initiators", "requesters"],
+      "properties": {
+        "initiators": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["user", "agent", "hook", "remote_monitor"]}
+        },
+        "requesters": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "cli",
+              "controller",
+              "hook",
+              "remote-monitor",
+              "meta-skill",
+              "installer",
+              "runtime-recovery"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "guard_ref": {
+      "type": "object",
+      "required": ["id", "kind", "on_failure"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^G-[A-Z0-9-]+$"},
+        "kind": {"enum": ["runtime", "validator", "attestation"]},
+        "on_failure": {"enum": ["deny", "block", "failsafe"]},
+        "parameters": {"type": "object"}
+      },
+      "additionalProperties": false
+    },
+    "transition": {
+      "type": "object",
+      "required": [
+        "id",
+        "from",
+        "to",
+        "allowed_actors",
+        "approval_policy",
+        "guards",
+        "evidence_required"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^TR-[0-9]{3}$"},
+        "from": {"$ref": "#/$defs/project_state"},
+        "to": {"$ref": "#/$defs/project_state"},
+        "allowed_actors": {"$ref": "#/$defs/allowed_actors"},
+        "approval_policy": {"$ref": "#/$defs/approval_policy"},
+        "guards": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/guard_ref"}
+        },
+        "evidence_required": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"}
+        },
+        "transition_reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^(?:[a-z][a-z0-9_]*|x-[a-z0-9]+-[a-z0-9-]+)$"}
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "unevaluatedProperties": false
+}
