@@ -1,0 +1,62 @@
+{
+  "A 基线20层+气象": {
+    "feat_dim": 26,
+    "seeds": [
+      0
+    ],
+    "epochs": 2,
+    "rmse_mean": 4.2964725777943125,
+    "rmse_std": 0.0,
+    "acc_mean": 0.9570747017860413,
+    "acc_std": 0.0,
+    "warn_acc_mean": 0.9401165843009949,
+    "warn_acc_std": 0.0,
+    "coverage_mean": 0.8538685744568097,
+    "coverage_std": 0.0
+  },
+  "B A+wind_u(M5)": {
+    "feat_dim": 27,
+    "seeds": [
+      0
+    ],
+    "epochs": 2,
+    "rmse_mean": 4.352563272748783,
+    "rmse_std": 0.0,
+    "acc_mean": 0.9570747017860413,
+    "acc_std": 0.0,
+    "warn_acc_mean": 0.9459459185600281,
+    "warn_acc_std": 0.0,
+    "coverage_mean": 0.8791732909379968,
+    "coverage_std": 0.0
+  },
+  "C M3最优5层(近表1+中层1+深3)": {
+    "feat_dim": 11,
+    "seeds": [
+      0
+    ],
+    "epochs": 2,
+    "rmse_mean": 3.237729310846839,
+    "rmse_std": 0.0,
+    "acc_mean": 0.8717541098594666,
+    "acc_std": 0.0,
+    "warn_acc_mean": 0.9459459185600281,
+    "warn_acc_std": 0.0,
+    "coverage_mean": 0.7526497085320615,
+    "coverage_std": 0.0
+  },
+  "D M5+M3": {
+    "feat_dim": 12,
+    "seeds": [
+      0
+    ],
+    "epochs": 2,
+    "rmse_mean": 3.2180440381386575,
+    "rmse_std": 0.0,
+    "acc_mean": 0.7530471682548523,
+    "acc_std": 0.0,
+    "warn_acc_mean": 0.9459459185600281,
+    "warn_acc_std": 0.0,
+    "coverage_mean": 0.7621224165341812,
+    "coverage_std": 0.0
+  }
+}
