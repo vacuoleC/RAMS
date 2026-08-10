@@ -7,8 +7,12 @@ import io
 import sys
 from pathlib import Path
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+# UTF-8 控制台输出（Windows）：仅在作为脚本运行时生效；
+# 被 pytest 等导入时不劫持 sys.stdout（否则会包住/关闭 capture 缓冲）。
+if __name__ == "__main__" and hasattr(sys.stdout, "buffer"):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 import numpy as np  # noqa: E402
 
